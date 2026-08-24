@@ -41,8 +41,18 @@ export default function AdminDashboard() {
     setLoading(true);
     fetch(`${API_URL}/artistas`)
       .then((r) => r.json())
-      .then((data) => { setArtistas(data); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setArtistas(data);
+        } else {
+          setArtistas([]);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setArtistas([]);
+        setLoading(false);
+      });
   };
 
   useEffect(() => { fetchArtistas(); }, []);

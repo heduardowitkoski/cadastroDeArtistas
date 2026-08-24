@@ -49,8 +49,18 @@ export default function Portal() {
   useEffect(() => {
     fetch(`${API_URL}/artistas/aprovados`)
       .then((res) => res.json())
-      .then((data) => { setArtistas(data); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setArtistas(data);
+        } else {
+          setArtistas([]);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setArtistas([]);
+        setLoading(false);
+      });
   }, [API_URL]);
 
   const filtered = artistas.filter((a) => {
