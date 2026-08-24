@@ -1,0 +1,48 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+}
+.login-brand { text-align: center; margin-bottom: 32px; }
+.login-brand .brand-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--purple-primary), var(--indigo));
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  margin: 0 auto 16px;
+}
+.login-brand h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.login-brand p { font-size: 13px; color: var(--text-muted); }
+.login-form { display: flex; flex-direction: column; gap: 18px; }
+.login-error {
+  background: rgba(244,63,94,0.1);
+  border: 1px solid rgba(244,63,94,0.3);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--rose);
+}
+.login-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+.login-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.spin { animation: spin 1s linear infinite; }

@@ -1,0 +1,119 @@
+.admin-page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.brand-title { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; }
+.brand-sub { display: block; font-size: 11px; color: var(--text-muted); }
+.sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  text-align: left;
+}
+.sidebar-nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.sidebar-nav-item.active { background: rgba(124,58,237,0.15); color: var(--purple-light); }
+.nav-count {
+  margin-left: auto;
+  background: var(--purple-primary);
+  color: white;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.sidebar-stats { padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 16px 0; }
+.mini-stat { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rose);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+}
+.sidebar-logout:hover { background: rgba(244,63,94,0.1); }
+
+/* Main */
+.admin-main { flex: 1; padding: 32px; overflow-y: auto; }
+.admin-header { margin-bottom: 28px; }
+.admin-header h1 { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+.admin-header-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.admin-loading, .admin-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 80px 0; color: var(--text-muted); text-align: center;
+}
+.admin-empty h3 { font-size: 18px; color: var(--text-secondary); }
+
+/* Artist Row */
+.artistas-list { display: flex; flex-direction: column; gap: 14px; }
+.artista-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+}
+.artista-row:hover { transform: none; box-shadow: none; }
+.artista-row-photo { width: 64px; height: 64px; border-radius: var(--radius-md); overflow: hidden; flex-shrink: 0; }
+.artista-row-photo img { width: 100%; height: 100%; object-fit: cover; }
+.artista-row-placeholder {
+  width: 100%; height: 100%;
+  background: var(--bg-secondary);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+}
+.artista-row-info { flex: 1; min-width: 0; }
+.artista-row-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.artista-row-top h3 { font-size: 16px; font-weight: 700; }
+.artista-area { font-size: 12px; color: var(--purple-light); font-weight: 600; margin-bottom: 6px; }
+.artista-bio-preview { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.artista-contacts { display: flex; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
+.artista-row-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .admin-page { flex-direction: column; }
+  .admin-sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; }
+  .artista-row { flex-wrap: wrap; }
+}
