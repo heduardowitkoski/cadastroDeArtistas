@@ -181,7 +181,7 @@ node "Nuvem Render.com (Hospedagem Backend)" {
 
 node "Nuvem Supabase (BaaS)" {
   database "PostgreSQL Database" as DB_Postgres {
-    table "artistas"
+    storage "Tabela: artistas" as TabArtistas
   }
   component "Supabase Auth Service" as Auth
 }
