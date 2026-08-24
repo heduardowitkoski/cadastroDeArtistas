@@ -3,7 +3,7 @@
 ## 1. Arquitetura Tecnológica Implementada
 
 - **Front-end:** React (v19) + TypeScript + Vite + Vanilla CSS. Aplicação SPA (Single Page Application) responsiva, estruturada em componentes modulares.
-- **Back-end:** NestJS (Node.js com TypeScript). API RESTful com arquitetura modular (Controllers, Services e Modules) e habilitação de CORS.
+- **Back-end:** NestJS (Node.js com TypeScript). API RESTful com arquitetura modular (Controllers, Services e Modules).
 - **Banco de Dados e Autenticação:** Supabase (PostgreSQL para armazenamento relacional e Supabase Auth para autenticação administrativa).
 
 ---
@@ -14,7 +14,7 @@
 
 - **Formulário de Cadastro Autônomo**
   - **Status:** Concluído.
-  - **Detalhamento:** Interface em quatro etapas progressivas (Dados Pessoais, Área Artística/Bio, Portfólio/Links e Revisão Final). Inclui validações de campos obrigatórios, tamanho mínimo de biografia, conformidade com a LGPD e envio com estado inicial "Pendente".
+  - **Detalhamento:** Interface em quatro etapas progressivas (Dados Pessoais, Área Artística/Bio, Portfólio/Links e Revisão Final). Inclui validações de campos obrigatórios, tamanho mínimo de biografia e envio com estado inicial "Pendente".
 
 - **Catálogo Público em Formato de Mural**
   - **Status:** Concluído.
@@ -26,7 +26,7 @@
 
 - **Ferramenta de Busca e Filtragem Avançada**
   - **Status:** Concluído.
-  - **Detalhamento:** Mecanismo de busca textual em tempo real por nome do artista ou área de atuação, integrado a seletores por categorias de arte (Música, Artes Visuais, Fotografia, Literatura, Teatro, Dança, Artesanato).
+  - **Detalhamento:** Mecanismo de busca textual por nome do artista ou área de atuação, integrado a seletores por categorias de arte (Música, Artes Visuais, Fotografia, Literatura, Teatro, Dança, Artesanato).
 
 - **Painel Administrativo com Autenticação**
   - **Status:** Parcialmente Concluído.
@@ -37,10 +37,6 @@
 ---
 
 ### 2.3. Marco 3: Qualidade, Avaliação e Implantação
-
-- **Segurança de Dados e RLS (Row-Level Security)**
-  - **Status:** Concluído.
-  - **Detalhamento:** Configuração das políticas de acesso à tabela de artistas no Supabase e envio de dados sob consentimento expresso da LGPD.
 
 - **Formulário de Avaliação e Feedback do Público**
   - **Status:** Pendente.
@@ -59,12 +55,12 @@
 ## 3. Resumo das Tarefas Pendentes para Conclusão do Projeto
 
 1. **Implementar Edição e Remoção de Cadastros no Painel Administrativo:**
-   - Adicionar modal ou formulário de edição de dados dos artistas na visão do administrador.
+   - Adicionar edição de dados dos artistas na visão do administrador.
    - Adicionar endpoint e botão de exclusão de registros (`DELETE /artistas/:id`).
 
 2. **Desenvolver Módulo de Feedback do Público:**
    - Criar formulário de avaliação da plataforma para coleta de sugestões de melhoria por parte da população.
 
 3. **Homologação e Treinamento:**
-   - Realizar sessão de apresentação e capacitação com a equipe da Secretaria Municipal de Cultura de Bagé.
+   - Realizar sessão de apresentação e capacitação com a equipe do Conselho Municipal de Políticas Culturais de Bagé.
    - Finalizar manuais operacionais do sistema.
