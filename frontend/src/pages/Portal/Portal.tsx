@@ -44,7 +44,7 @@ export default function Portal() {
   const [loading, setLoading] = useState(true);
   const [selectedArtista, setSelectedArtista] = useState<Artista | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   useEffect(() => {
     fetch(`${API_URL}/artistas/aprovados`)

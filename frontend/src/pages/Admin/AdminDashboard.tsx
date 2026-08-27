@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const fetchArtistas = () => {
     setLoading(true);

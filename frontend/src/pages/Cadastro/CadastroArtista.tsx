@@ -37,7 +37,7 @@ export default function CadastroArtista() {
     return true;
   };
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -48,10 +48,20 @@ export default function CadastroArtista() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      if (!res.ok) throw new Error("Erro ao enviar cadastro.");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        const detail = errData?.message ? (Array.isArray(errData.message) ? errData.message.join(", ") : errData.message) : `Erro ${res.status}`;
+        throw new Error(detail);
+      }
       setSuccess(true);
-    } catch {
-      setError("Não foi possível enviar. Verifique sua conexão e tente novamente.");
+    } catch (err: unknown) {
+      console.error("Erro ao enviar cadastro:", err);
+      const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
+      if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("http://localhost")) {
+        setError("Não foi possível conectar ao servidor. Verifique se o servidor de API (Render) está ativo ou se as variáveis na Vercel foram configuradas.");
+      } else {
+        setError(`Erro ao enviar: ${msg}`);
+      }
     } finally {
       setLoading(false);
     }
