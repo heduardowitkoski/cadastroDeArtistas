@@ -28,11 +28,9 @@
   - **Status:** Concluído.
   - **Detalhamento:** Mecanismo de busca textual por nome do artista ou área de atuação, integrado a seletores por categorias de arte (Música, Artes Visuais, Fotografia, Literatura, Teatro, Dança, Artesanato).
 
-- **Painel Administrativo com Autenticação**
-  - **Status:** Parcialmente Concluído.
-  - **Detalhamento:** 
-    - *Implementado:* Autenticação de administradores via Supabase Auth (`/admin/login`), proteção de rota via `PrivateRoute`, painel de controle (`/admin`) com navegação por abas de status (Pendentes, Aprovados e Rejeitados), contadores e ações para alteração de status (Aprovação, Rejeição e Desaprovação).
-    - *Pendente:* Edição direta dos dados dos cadastros pelos administradores no painel e funcionalidade de exclusão definitiva (remoção de registro).
+- **Painel Administrativo com Autenticação e Gestão Completa (CRUD)**
+  - **Status:** Concluído.
+  - **Detalhamento:** Autenticação via Supabase Auth (`/admin/login`), proteção de rota via `PrivateRoute`, painel de controle (`/admin`) com abas por status (Pendentes, Aprovados e Rejeitados), contadores, alteração de status (Aprovar/Rejeitar/Desaprovar), **edição direta de dados dos cadastros** via modal e **exclusão definitiva de registros** com confirmação de segurança.
 
 ---
 
@@ -54,13 +52,9 @@
 
 ## 3. Resumo das Tarefas Pendentes para Conclusão do Projeto
 
-1. **Implementar Edição e Remoção de Cadastros no Painel Administrativo:**
-   - Adicionar edição de dados dos artistas na visão do administrador.
-   - Adicionar endpoint e botão de exclusão de registros (`DELETE /artistas/:id`).
-
-2. **Desenvolver Módulo de Feedback do Público:**
+1. **Desenvolver Módulo de Feedback do Público:**
    - Criar formulário de avaliação da plataforma para coleta de sugestões de melhoria por parte da população.
 
-3. **Homologação e Treinamento:**
+2. **Homologação e Treinamento:**
    - Realizar sessão de apresentação e capacitação com a equipe do Conselho Municipal de Políticas Culturais de Bagé.
    - Finalizar manuais operacionais do sistema.

@@ -52,4 +52,28 @@ export class ArtistasService {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  async update(id: number, updateDto: Record<string, unknown>) {
+    const { data, error } = await this.supabaseService
+      .getClient()
+      .from('artistas')
+      .update(updateDto)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async delete(id: number) {
+    const { error } = await this.supabaseService
+      .getClient()
+      .from('artistas')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw new Error(error.message);
+    return { message: 'Artista excluído com sucesso.' };
+  }
 }
