@@ -103,9 +103,7 @@ export default function Portal() {
           </div>
 
           <nav className="header-nav-links">
-            {["Início", "Catálogo", "Como funciona"].map((item) => (
-              <button key={item} className={`header-nav-item ${item === "Catálogo" ? "active" : ""}`}>{item}</button>
-            ))}
+            <Link to="/como-funciona" className="header-nav-item">Como funciona</Link>
           </nav>
 
           <div className="header-nav">

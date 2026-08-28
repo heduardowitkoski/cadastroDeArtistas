@@ -54,10 +54,15 @@ export class ArtistasService {
   }
 
   async update(id: number, updateDto: Record<string, unknown>) {
+    const payload = { ...updateDto };
+    const forceStatus = payload.forceStatus === true;
+    delete payload.forceStatus;
+    if (!forceStatus) payload.status = 'Pendente';
+
     const { data, error } = await this.supabaseService
       .getClient()
       .from('artistas')
-      .update(updateDto)
+      .update(payload)
       .eq('id', id)
       .select()
       .single();

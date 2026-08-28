@@ -1,0 +1,112 @@
+/* Como Funciona - tema claro */
+.cf-hero {
+  background: linear-gradient(135deg, #1A1035 0%, #2D1B69 100%);
+  color: white;
+  text-align: center;
+  padding: 64px 32px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cf-hero-title {
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  max-width: 680px;
+}
+.cf-hero-text { color: #DDD6FE; font-size: 16px; }
+
+.cf-section { padding: 56px 0; }
+.cf-steps-bg { background: var(--bg-secondary); }
+.cf-ctas-bg { background: var(--bg-secondary); }
+
+.cf-title { font-size: 28px; font-weight: 800; text-align: center; }
+.cf-subtitle { text-align: center; color: var(--text-secondary); font-size: 14px; margin: 6px 0 32px; }
+
+/* Ideia */
+.cf-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.cf-idea-icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: var(--purple-glow);
+  color: var(--purple-primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cf-idea h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.cf-idea p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; margin-bottom: 10px; }
+.cf-idea p:last-child { margin-bottom: 0; }
+.cf-idea strong { color: var(--text-primary); }
+
+/* Passos */
+.cf-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.cf-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+.cf-step:hover { transform: translateY(-4px); box-shadow: var(--shadow-glow); border-color: var(--border-hover); }
+.cf-step-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 15px var(--purple-glow);
+}
+.cf-step h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.cf-step p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+/* Audiências */
+.cf-audiencias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.cf-audiencia {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.cf-audiencia-icon {
+  width: 52px; height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+}
+.cor-purple .cf-audiencia-icon { background: linear-gradient(135deg, var(--purple-primary), var(--purple-light)); box-shadow: 0 6px 15px var(--purple-glow); }
+.cor-amber .cf-audiencia-icon { background: linear-gradient(135deg, #F59E0B, #FBBF24); box-shadow: 0 6px 15px rgba(245,158,11,0.3); }
+.cor-teal .cf-audiencia-icon { background: linear-gradient(135deg, #10B981, #34D399); box-shadow: 0 6px 15px rgba(16,185,129,0.3); }
+.cf-audiencia h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.cf-audiencia p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+/* CTAs */
+.cf-ctas { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.cf-cta-big { padding: 14px 26px; font-size: 15px; }
+.cf-ou { color: var(--text-muted); font-size: 13px; font-weight: 600; }
+.cf-aviso { text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .cf-steps { grid-template-columns: repeat(2, 1fr); }
+  .cf-audiencias { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .cf-steps { grid-template-columns: 1fr; }
+  .cf-card { flex-direction: column; padding: 24px; }
+}

@@ -331,6 +331,32 @@
   margin-top: 8px;
 }
 
+/* Senha no cadastro */
+.form-senha-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--purple-primary);
+  background: var(--purple-glow);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.senha-hint { font-size: 12px; color: var(--rose); margin-top: 6px; display: block; }
+.cadastro-login-aviso {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  line-height: 1.7;
+}
+.cadastro-login-aviso a { color: var(--purple-primary); font-weight: 600; text-decoration: none; }
+.cadastro-login-aviso a:hover { text-decoration: underline; }
+
 /* ─── Nav ─── */
 .artista-nav {
   display: flex;

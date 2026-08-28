@@ -54,6 +54,8 @@
   cursor: pointer;
   transition: var(--transition);
   font-family: 'Inter', sans-serif;
+  text-decoration: none;
+  display: inline-flex;
 }
 .header-nav-item:hover { color: var(--text-primary); }
 .header-nav-item.active { color: var(--purple-primary); font-weight: 600; }

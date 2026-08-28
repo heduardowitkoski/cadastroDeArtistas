@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "../../lib/supabase";
 import {
   ChevronRight, Star, Clock, CheckCircle, AlertCircle,
   Image, Video, Headphones, Link as LinkIcon, Upload, MapPin, Check,
-  Loader, ArrowLeft, User
+  Loader, ArrowLeft, User, Sparkles
 } from "lucide-react";
 import "./Cadastro.css";
 
@@ -52,6 +53,9 @@ export default function CadastroArtista() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [precisaConfirmarEmail, setPrecisaConfirmarEmail] = useState(false);
 
   const update = (field: keyof FormData, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -65,7 +69,7 @@ export default function CadastroArtista() {
     }));
 
   const isStepValid = () => {
-    if (step === 0) return form.nome.trim() && form.email.trim() && form.contato.trim();
+    if (step === 0) return form.nome.trim() && form.email.trim() && form.contato.trim() && senha.length >= 6 && senha === confirmarSenha;
     if (step === 1) return form.area_atuacao && form.bio.trim().length >= 20;
     return true;
   };
@@ -102,6 +106,13 @@ export default function CadastroArtista() {
     setLoading(true);
     setError("");
     try {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: form.email,
+        password: senha,
+      });
+      if (signUpError) throw new Error(signUpError.message);
+      setPrecisaConfirmarEmail(!signUpData.session);
+
       const res = await fetch(`${API_URL}/artistas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,12 +123,15 @@ export default function CadastroArtista() {
         const detail = errData?.message ? (Array.isArray(errData.message) ? errData.message.join(", ") : errData.message) : `Erro ${res.status}`;
         throw new Error(detail);
       }
+      await supabase.auth.signOut();
       setSuccess(true);
     } catch (err: unknown) {
       console.error("Erro ao enviar cadastro:", err);
       const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
       if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("http://localhost")) {
         setError("Não foi possível conectar ao servidor. Verifique se o servidor de API (Render) está ativo.");
+      } else if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("já registrado") || msg.toLowerCase().includes("email")) {
+        setError("Este e-mail já possui cadastro. Entre na Área do Artista para editar seus dados, ou use outro e-mail.");
       } else {
         setError(`Erro ao enviar: ${msg}`);
       }
@@ -133,7 +147,15 @@ export default function CadastroArtista() {
           <div className="success-icon"><Check size={36} /></div>
           <h2>Cadastro enviado para análise!</h2>
           <p>Seu cadastro foi recebido pela Secretaria de Cultura e aparecerá no catálogo assim que for aprovado.</p>
-          <Link to="/" className="btn btn-primary">Ver catálogo de artistas</Link>
+          {precisaConfirmarEmail && (
+            <p style={{ background: "var(--purple-glow)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 12, padding: "12px 16px", fontSize: 13 }}>
+              📧 Verifique seu e-mail e confirme o cadastro no link enviado para <strong>{form.email}</strong>. Assim você poderá entrar na Área do Artista para editar seus dados depois.
+            </p>
+          )}
+          <div className="cadastro-success-actions" style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+            <Link to="/" className="btn btn-primary">Ver catálogo de artistas</Link>
+            <Link to="/artista/login" className="btn btn-outline">Entrar na Área do Artista</Link>
+          </div>
         </div>
       </div>
     );
@@ -239,7 +261,32 @@ export default function CadastroArtista() {
                       <label>Cidade</label>
                       <input value={form.cidade} onChange={(e) => update("cidade", e.target.value)} placeholder="Bagé/RS" />
                     </div>
+                    <div className="input-group col-span-2" style={{ marginTop: 8 }}>
+                      <div className="form-senha-titulo">
+                        <Sparkles size={14} />
+                        <span>Crie uma senha para editar o cadastro depois</span>
+                      </div>
+                      <div className="form-grid-2" style={{ gap: 14 }}>
+                        <div className="input-group">
+                          <label>Senha *</label>
+                          <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Mínimo 6 caracteres" />
+                        </div>
+                        <div className="input-group">
+                          <label>Confirmar senha *</label>
+                          <input type="password" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} placeholder="Repita a senha" />
+                        </div>
+                      </div>
+                      {senha.length > 0 && senha.length < 6 && (
+                        <span className="senha-hint">A senha precisa ter pelo menos 6 caracteres.</span>
+                      )}
+                      {senha.length >= 6 && confirmarSenha && senha !== confirmarSenha && (
+                        <span className="senha-hint">As senhas não coincidem.</span>
+                      )}
+                    </div>
                   </div>
+                  <p className="cadastro-login-aviso">
+                    Com esse e-mail e senha você poderá entrar na <Link to="/artista/login">Área do Artista</Link> para editar seu cadastro quando quiser.
+                  </p>
                 </div>
               )}
 

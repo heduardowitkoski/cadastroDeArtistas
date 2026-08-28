@@ -1,0 +1,68 @@
+/* Área do Artista - login e edição de cadastro */
+.artista-login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F8F7FF 0%, #EDE9FE 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.artista-login-top {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 16px;
+}
+.artista-login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 50px rgba(124,58,237,0.12);
+  padding: 40px;
+}
+.artista-login-brand { text-align: center; margin-bottom: 28px; }
+.artista-login-brand .brand-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  margin: 0 auto 14px;
+  box-shadow: 0 8px 20px var(--purple-glow);
+}
+.artista-login-brand h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.artista-login-brand p { font-size: 13px; color: var(--text-secondary); }
+.artista-login-form { display: flex; flex-direction: column; gap: 18px; }
+.artista-login-error { margin: 0; }
+.artista-login-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+.artista-login-dica {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.artista-login-dica svg { color: var(--purple-primary); flex-shrink: 0; }
+.artista-login-dica a { color: var(--purple-primary); font-weight: 600; text-decoration: none; }
+.artista-login-dica a:hover { text-decoration: underline; }
+
+/* Editar cadastro */
+.editar-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.editar-banner.ok {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #047857;
+}

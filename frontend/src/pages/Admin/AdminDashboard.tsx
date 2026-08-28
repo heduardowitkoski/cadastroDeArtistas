@@ -133,6 +133,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           ...editForm,
           tags: editTagsText.split(",").map((t) => t.trim()).filter(Boolean),
+          forceStatus: true,
         }),
       });
       if (res.ok) {
