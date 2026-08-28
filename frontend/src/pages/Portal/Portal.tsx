@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, Music, Paintbrush, Camera, BookOpen, Theater, Mic, Palette, MapPin, ChevronRight, Star, Users, Globe, Phone, ExternalLink } from "lucide-react";
+import {
+  Search, Heart, MapPin, Music, Paintbrush, Camera, BookOpen, Theater,
+  Mic, Palette, Star, Award, Users, Tag, Filter, Eye, ChevronRight,
+  Globe, Phone, ExternalLink, Sparkles
+} from "lucide-react";
 import "./Portal.css";
 
 const CATEGORIAS = [
@@ -14,19 +18,20 @@ const CATEGORIAS = [
   { label: "Artesanato", value: "Artesanato", icon: Palette },
 ];
 
-const CATEGORIA_COLORS: Record<string, string> = {
-  "Música": "badge-purple",
-  "Artes Visuais": "badge-amber",
-  "Fotografia": "badge-teal",
-  "Literatura": "badge-indigo",
-  "Teatro": "badge-rose",
-  "Dança": "badge-purple",
-  "Artesanato": "badge-amber",
+const CATEGORIA_ICON: Record<string, React.ReactNode> = {
+  "Música": <Music size={14} />,
+  "Artes Visuais": <Paintbrush size={14} />,
+  "Fotografia": <Camera size={14} />,
+  "Literatura": <BookOpen size={14} />,
+  "Teatro": <Theater size={14} />,
+  "Dança": <Mic size={14} />,
+  "Artesanato": <Palette size={14} />,
 };
 
 interface Artista {
   id: number;
   nome: string;
+  nome_artistico?: string;
   area_atuacao: string;
   bio: string;
   foto_url?: string;
@@ -34,6 +39,8 @@ interface Artista {
   site?: string;
   contato?: string;
   cidade?: string;
+  tags?: string[];
+  disponibilidade?: string[];
   status: string;
 }
 
@@ -41,6 +48,7 @@ export default function Portal() {
   const [artistas, setArtistas] = useState<Artista[]>([]);
   const [busca, setBusca] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("all");
+  const [favoritos, setFavoritos] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedArtista, setSelectedArtista] = useState<Artista | null>(null);
 
@@ -64,85 +72,80 @@ export default function Portal() {
   }, [API_URL]);
 
   const filtered = artistas.filter((a) => {
-    const matchBusca = a.nome.toLowerCase().includes(busca.toLowerCase()) ||
-      a.area_atuacao.toLowerCase().includes(busca.toLowerCase());
+    const nomeBusca = a.nome.toLowerCase().includes(busca.toLowerCase());
+    const categoriaBusca = a.area_atuacao.toLowerCase().includes(busca.toLowerCase());
+    const tagsBusca = (a.tags || []).some((t) => t.toLowerCase().includes(busca.toLowerCase()));
+    const matchBusca = !busca || nomeBusca || categoriaBusca || tagsBusca;
     const matchCategoria = categoriaFiltro === "all" || a.area_atuacao === categoriaFiltro;
     return matchBusca && matchCategoria;
   });
+
+  const featured = artistas[0] || null;
+  const totalCategorias = new Set(artistas.map((a) => a.area_atuacao)).size;
+  const totalCidades = new Set(artistas.map((a) => a.cidade || "Bagé")).size;
+
+  const toggleFavorito = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavoritos((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
+  };
 
   return (
     <div className="portal-page">
       {/* ─── Header ─── */}
       <header className="portal-header">
-        <div className="container">
-          <div className="header-content">
-            <div className="header-brand">
-              <div className="brand-icon"><Palette size={22} /></div>
-              <div>
-                <span className="brand-title">Artistas de Bagé</span>
-                <span className="brand-subtitle">Cadastro Municipal de Cultura</span>
-              </div>
+        <div className="container header-content">
+          <div className="header-brand">
+            <div className="brand-icon"><Star size={16} /></div>
+            <div className="brand-text">
+              <span className="brand-title">Cadastro Municipal</span>
+              <span className="brand-subtitle">de Artistas</span>
             </div>
-            <nav className="header-nav">
-              <Link to="/cadastrar" className="btn btn-primary">
-                <Star size={16} /> Cadastrar-se como Artista
-              </Link>
-            </nav>
+          </div>
+
+          <nav className="header-nav-links">
+            {["Início", "Catálogo", "Como funciona"].map((item) => (
+              <button key={item} className={`header-nav-item ${item === "Catálogo" ? "active" : ""}`}>{item}</button>
+            ))}
+          </nav>
+
+          <div className="header-nav">
+            <Link to="/cadastrar" className="btn btn-outline btn-sm">Sou artista</Link>
+            <Link to="/admin/login" className="btn btn-primary btn-sm">Área administrativa</Link>
           </div>
         </div>
       </header>
 
       {/* ─── Hero ─── */}
       <section className="portal-hero">
-        <div className="container">
-          <div className="hero-content">
-            <span className="hero-eyebrow">
-              <MapPin size={14} /> Bagé, Rio Grande do Sul
-            </span>
-            <h1 className="hero-title">
-              Conheça os <span className="gradient-text">Talentos</span> da nossa cidade
-            </h1>
-            <p className="hero-description">
-              Um catálogo vivo com artistas, artesãos e criadores culturais de Bagé.
-              Explore portfólios, descubra novas expressões e conecte-se com a arte local.
-            </p>
-            <div className="hero-search">
-              <div className="search-wrapper">
-                <Search className="search-icon" size={18} />
-                <input
-                  type="text"
-                  placeholder="Buscar artista ou categoria..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="search-input"
-                />
-              </div>
-            </div>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="stat-number">{artistas.length}</span>
-                <span className="stat-label">Artistas Cadastrados</span>
-              </div>
-              <div className="stat-divider" />
-              <div className="stat">
-                <span className="stat-number">{CATEGORIAS.length - 1}</span>
-                <span className="stat-label">Categorias</span>
-              </div>
-              <div className="stat-divider" />
-              <div className="stat">
-                <span className="stat-number">1</span>
-                <span className="stat-label">Município</span>
-              </div>
-            </div>
-          </div>
+        <div className="hero-badge">
+          <Award size={12} /> Plataforma oficial da Prefeitura de Bagé
         </div>
-        <div className="hero-glow" />
+        <h1 className="hero-title">
+          Descubra talentos<br />
+          <span className="hero-title-highlight">da nossa cidade</span>
+        </h1>
+        <p className="hero-description">
+          Encontre artistas locais por categoria, cidade e disponibilidade para o seu próximo evento.
+        </p>
+
+        <div className="hero-search">
+          <Search className="search-icon" size={20} />
+          <input
+            type="text"
+            placeholder="Buscar por nome, categoria ou palavra-chave..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="search-input"
+          />
+          <button className="search-btn">Buscar</button>
+        </div>
       </section>
 
       {/* ─── Filtros ─── */}
       <section className="portal-filters">
         <div className="container">
           <div className="filters-scroll">
+            <Filter size={16} className="filters-icon" />
             {CATEGORIAS.map((cat) => {
               const Icon = cat.icon;
               return (
@@ -151,7 +154,7 @@ export default function Portal() {
                   onClick={() => setCategoriaFiltro(cat.value)}
                   className={`filter-btn ${categoriaFiltro === cat.value ? "filter-btn-active" : ""}`}
                 >
-                  <Icon size={15} />
+                  {<Icon size={14} />}
                   {cat.label}
                 </button>
               );
@@ -160,88 +163,138 @@ export default function Portal() {
         </div>
       </section>
 
-      {/* ─── Catálogo / Mural ─── */}
-      <section className="portal-catalog">
+      {/* ─── Catálogo ─── */}
+      <main className="portal-catalog">
         <div className="container">
-          {loading ? (
-            <div className="catalog-loading">
-              <div className="spinner" />
-              <p>Carregando artistas...</p>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="catalog-empty">
-              <Palette size={48} style={{ color: "var(--text-muted)", marginBottom: 16 }} />
-              <h3>Nenhum artista encontrado</h3>
-              <p>Tente buscar por outro nome ou categoria.</p>
-            </div>
-          ) : (
-            <div className="artists-grid">
-              {filtered.map((artista) => (
-                <div key={artista.id} className="artist-card card" onClick={() => setSelectedArtista(artista)}>
-                  <div className="artist-card-photo">
-                    {artista.foto_url ? (
-                      <img src={artista.foto_url} alt={artista.nome} />
-                    ) : (
-                      <div className="artist-card-placeholder">
-                        <Users size={40} />
+          <div className="catalog-layout">
+            <div className="catalog-main">
+              <div className="catalog-topbar">
+                <p className="catalog-count">
+                  <span className="catalog-count-number">{filtered.length}</span> artistas encontrados
+                </p>
+                <button className="catalog-sort">Relevância <ChevronRight size={14} /></button>
+              </div>
+
+              {loading ? (
+                <div className="catalog-loading">
+                  <div className="spinner" />
+                  <p>Carregando artistas...</p>
+                </div>
+              ) : filtered.length === 0 ? (
+                <div className="catalog-empty">
+                  <Palette size={48} style={{ color: "var(--text-muted)", marginBottom: 16 }} />
+                  <h3>Nenhum artista encontrado</h3>
+                  <p>Tente buscar por outro nome ou categoria.</p>
+                </div>
+              ) : (
+                <div className="artists-grid">
+                  {filtered.map((artista) => (
+                    <div key={artista.id} className="artist-card card" onClick={() => setSelectedArtista(artista)}>
+                      <div className="artist-card-photo">
+                        {artista.foto_url ? (
+                          <img src={artista.foto_url} alt={artista.nome} />
+                        ) : (
+                          <div className="artist-card-placeholder"><Users size={40} /></div>
+                        )}
+                        <button
+                          onClick={(e) => toggleFavorito(artista.id, e)}
+                          className={`artist-fav ${favoritos.includes(artista.id) ? "artist-fav-active" : ""}`}
+                          aria-label="Favoritar"
+                        >
+                          <Heart size={15} />
+                        </button>
+                        <span className="artist-status-badge">
+                          <span className="status-dot" /> Disponível
+                        </span>
                       </div>
-                    )}
-                    <span className={`badge ${CATEGORIA_COLORS[artista.area_atuacao] || "badge-purple"} artist-card-badge`}>
-                      {artista.area_atuacao}
-                    </span>
-                  </div>
-                  <div className="artist-card-body">
-                    <h3 className="artist-card-name">{artista.nome}</h3>
-                    <p className="artist-card-bio">{artista.bio || "Artista local de Bagé."}</p>
-                    <div className="artist-card-links">
-                      {artista.instagram && (
-                        <a href={`https://instagram.com/${artista.instagram.replace("@", "")}`}
-                          target="_blank" rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="artist-social-link">
-                          <ExternalLink size={14} />
-                        </a>
-                      )}
-                      {artista.site && (
-                        <a href={artista.site} target="_blank" rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="artist-social-link">
-                          <Globe size={14} />
-                        </a>
-                      )}
-                      {artista.contato && (
-                        <a href={`tel:${artista.contato}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="artist-social-link">
-                          <Phone size={14} />
-                        </a>
-                      )}
+                      <div className="artist-card-body">
+                        <div className="artist-card-head">
+                          <h3 className="artist-card-name">{artista.nome_artistico || artista.nome}</h3>
+                        </div>
+                        <div className="artist-card-meta">
+                          <span className="artist-cat-badge">
+                            {CATEGORIA_ICON[artista.area_atuacao] || <Star size={14} />}
+                            {artista.area_atuacao}
+                          </span>
+                          <span className="artist-city">
+                            <MapPin size={11} /> {artista.cidade || "Bagé"}
+                          </span>
+                        </div>
+                        <p className="artist-card-bio">{artista.bio || "Artista local de Bagé."}</p>
+                        <button className="artist-card-cta">
+                          <Eye size={14} /> Ver perfil
+                        </button>
+                      </div>
                     </div>
-                    <button className="artist-card-cta">
-                      Ver portfólio <ChevronRight size={14} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* ─── Sidebar ─── */}
+            <aside className="catalog-sidebar">
+              {featured && (
+                <div className="featured-card">
+                  <div className="featured-photo">
+                    {featured.foto_url ? (
+                      <img src={featured.foto_url} alt={featured.nome} />
+                    ) : (
+                      <div className="featured-placeholder"><Users size={36} /></div>
+                    )}
+                    <div className="featured-overlay" />
+                    <span className="featured-badge"><Star size={11} /> Destaque</span>
+                    <div className="featured-heading">
+                      <p className="featured-name">{featured.nome_artistico || featured.nome}</p>
+                      <p className="featured-sub">{featured.area_atuacao} · {featured.cidade || "Bagé"}</p>
+                    </div>
+                  </div>
+                  <div className="featured-body">
+                    <p className="featured-bio">{featured.bio || "Artista local de Bagé."}</p>
+                    <div className="featured-stats">
+                      <div className="featured-stat">
+                        <p className="featured-stat-value">—</p>
+                        <p className="featured-stat-label">Eventos</p>
+                      </div>
+                      <div className="featured-stat">
+                        <p className="featured-stat-value">—</p>
+                        <p className="featured-stat-label">Avaliação</p>
+                      </div>
+                    </div>
+                    <button className="featured-cta" onClick={() => setSelectedArtista(featured)}>
+                      Ver perfil completo
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+              )}
 
-      {/* ─── CTA de Cadastro ─── */}
-      <section className="portal-cta">
-        <div className="container">
-          <div className="cta-box">
-            <div className="cta-content">
-              <h2>Você é artista em Bagé?</h2>
-              <p>Cadastre seu portfólio gratuitamente e apareça neste mural para toda a cidade!</p>
-            </div>
-            <Link to="/cadastrar" className="btn btn-primary">
-              Fazer meu cadastro <ChevronRight size={16} />
-            </Link>
+              <div className="stats-card card">
+                <h4 className="stats-title">Números da plataforma</h4>
+                <div className="stat-row">
+                  <span className="stat-row-label"><Users size={16} /> Artistas cadastrados</span>
+                  <span className="stat-row-value">{artistas.length}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-row-label"><Tag size={16} /> Categorias</span>
+                  <span className="stat-row-value">{totalCategorias}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-row-label"><MapPin size={16} /> Cidades representadas</span>
+                  <span className="stat-row-value">{totalCidades}</span>
+                </div>
+              </div>
+
+              <div className="cta-card">
+                <Mic size={24} />
+                <h4>É artista?</h4>
+                <p>Cadastre-se e apareça para contratantes e eventos na sua cidade.</p>
+                <Link to="/cadastrar" className="cta-card-btn">
+                  <Sparkles size={14} /> Fazer cadastro
+                </Link>
+              </div>
+            </aside>
           </div>
         </div>
-      </section>
+      </main>
 
       {/* ─── Modal Artista ─── */}
       {selectedArtista && (
@@ -256,11 +309,25 @@ export default function Portal() {
               )}
             </div>
             <div className="modal-info">
-              <span className={`badge ${CATEGORIA_COLORS[selectedArtista.area_atuacao] || "badge-purple"}`}>
+              <span className="artist-cat-badge">
+                {CATEGORIA_ICON[selectedArtista.area_atuacao] || <Star size={14} />}
                 {selectedArtista.area_atuacao}
               </span>
-              <h2>{selectedArtista.nome}</h2>
+              <h2>{selectedArtista.nome_artistico || selectedArtista.nome}</h2>
               {selectedArtista.cidade && <p className="modal-city"><MapPin size={14} /> {selectedArtista.cidade}</p>}
+              {selectedArtista.tags && selectedArtista.tags.length > 0 && (
+                <div className="modal-tags">
+                  {selectedArtista.tags.map((t) => (
+                    <span key={t} className="modal-tag">{t}</span>
+                  ))}
+                </div>
+              )}
+              {selectedArtista.disponibilidade && selectedArtista.disponibilidade.length > 0 && (
+                <p className="modal-avail">
+                  <span className="availability-label">Disponibilidade:</span>{" "}
+                  {selectedArtista.disponibilidade.join(" · ")}
+                </p>
+              )}
               <p className="modal-bio">{selectedArtista.bio || "Artista local de Bagé."}</p>
               <div className="modal-links">
                 {selectedArtista.instagram && (
@@ -286,13 +353,17 @@ export default function Portal() {
 
       {/* ─── Footer ─── */}
       <footer className="portal-footer">
-        <div className="container">
-          <p>
-            © 2026 Cadastro Municipal de Artistas · Bagé, RS · Projeto de Extensão UNIPAMPA ·{" "}
-            <Link to="/feedback" className="footer-feedback-link">
-              Deixe seu feedback
-            </Link>
-          </p>
+        <div className="container footer-content">
+          <div className="footer-brand">
+            <div className="brand-icon brand-icon-sm"><Star size={13} /></div>
+            <span>Cadastro Municipal de Artistas</span>
+          </div>
+          <p>© 2025 Prefeitura de Bagé · Secretaria de Cultura</p>
+          <div className="footer-links">
+            <button>Termos de uso</button>
+            <button>Privacidade</button>
+            <Link to="/feedback">Dar feedback</Link>
+          </div>
         </div>
       </footer>
     </div>
