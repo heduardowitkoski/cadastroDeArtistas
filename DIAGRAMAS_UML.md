@@ -1,10 +1,12 @@
 # Diagramas UML - Cadastro Municipal de Artistas
 
-Este documento reúne a especificação em código **PlantUML** dos principais diagramas de modelagem do sistema Cadastro Municipal de Artistas. Os códigos abaixo podem ser copiados e colados em editores como o [PlantText](https://www.planttext.com/) ou o servidor oficial do [PlantUML](http://www.plantuml.com/plantuml/).
+Este documento reúne os diagramas do sistema **Cadastro Municipal de Artistas** em formato **PlantUML**, com linguagem simples para ser apresentado à equipe da Secretaria de Cultura e ao Conselho Municipal de Políticas Culturais. Os códigos podem ser copiados e colados em editores como o [PlantText](https://www.planttext.com/) ou o servidor oficial do [PlantUML](http://www.plantuml.com/plantuml/).
 
 ---
 
 ## 1. Diagrama de Casos de Uso
+
+Mostra **quem** usa o sistema e **o que** cada um pode fazer:
 
 ```plantuml
 @startuml Diagrama_de_Casos_de_Uso
@@ -14,21 +16,21 @@ skinparam shadowing false
 
 actor "Artista" as artista
 actor "Cidadão / Visitante" as visitante
-actor "Administrador (Secretaria de Cultura)" as admin
+actor "Equipe da Cultura (Administrador)" as admin
 
-rectangle "Sistema Cadastro Municipal de Artistas" {
-  usecase "Cadastrar-se no Sistema" as UC1
-  usecase "Visualizar Catálogo / Mural Público" as UC2
-  usecase "Buscar e Filtrar Artistas por Categoria" as UC3
-  usecase "Visualizar Detalhes do Perfil Artístico" as UC4
-  usecase "Enviar Feedback / Avaliação da Plataforma" as UC10
-  usecase "Autenticar-se no Painel Admin" as UC5
-  usecase "Visualizar Cadastros (Pendentes, Aprovados, Rejeitados)" as UC6
-  usecase "Aprovar Cadastro de Artista" as UC7
-  usecase "Rejeitar Cadastro de Artista" as UC8
-  usecase "Desaprovar Cadastro de Artista" as UC9
-  usecase "Visualizar Feedbacks do Público" as UC11
-  usecase "Excluir Feedback" as UC12
+rectangle "Sistema Cadastro de Artistas de Bagé" {
+  usecase "Fazer a inscrição (4 passos)" as UC1
+  usecase "Ver o mural de artistas" as UC2
+  usecase "Buscar e filtrar por categoria" as UC3
+  usecase "Ver o perfil de um artista" as UC4
+  usecase "Avaliar a plataforma (feedback)" as UC10
+  usecase "Entrar com usuário e senha" as UC5
+  usecase "Ver as inscrições recebidas" as UC6
+  usecase "Aprovar inscrição" as UC7
+  usecase "Rejeitar inscrição" as UC8
+  usecase "Retirar um artista do mural" as UC9
+  usecase "Ler as avaliações do público" as UC11
+  usecase "Remover uma avaliação" as UC12
 }
 
 artista --> UC1
@@ -45,100 +47,60 @@ admin --> UC9
 admin --> UC11
 admin --> UC12
 
-UC1 .> UC6 : <<include>>
+UC1 .> UC6 : <<inclui>>
 @enduml
 ```
 
 ---
 
-## 2. Diagrama de Classes (Domínio e Serviços)
+## 2. Diagrama de Entidades e Perfis
+
+Mostra quem participa do sistema e **o que é guardado** sobre cada pessoa:
 
 ```plantuml
-@startuml Diagrama_de_Classes
+@startuml Diagrama_de_Entidades
 skinparam classAttributeIconSize 0
 skinparam shadowing false
 
-enum StatusArtista {
-  PENDENTE
-  APROVADO
-  REJEITADO
+actor "Artista" as A
+actor "Cidadão / Visitante" as V
+actor "Equipe da Cultura" as E
+
+class "Ficha do Artista" {
+  nome
+  email
+  telefone
+  cidade
+  área artística
+  mini-bio
+  foto
+  instagram
+  site
+  situação: Pendente / Aprovado / Rejeitado
+  data do cadastro
 }
 
-class Artista {
-  +id: number
-  +nome: string
-  +email: string
-  +contato: string
-  +cidade: string
-  +area_atuacao: string
-  +bio: string
-  +foto_url: string
-  +instagram: string
-  +site: string
-  +status: StatusArtista
-  +created_at: Date
+class "Avaliação (Feedback)" {
+  nome (opcional)
+  email (opcional)
+  tipo: Elogio / Sugestão / Crítica / Outro
+  nota (1 a 5)
+  mensagem
+  data
 }
 
-class ArtistasController {
-  -artistasService: ArtistasService
-  +findAll(): Promise<Artista[]>
-  +findAprovados(): Promise<Artista[]>
-  +create(body: Record<string, unknown>): Promise<Artista>
-  +updateStatus(id: string, body: { status: string }): Promise<Artista>
-}
-
-class ArtistasService {
-  -supabaseService: SupabaseService
-  +findAll(): Promise<Artista[]>
-  +findAprovados(): Promise<Artista[]>
-  +create(createDto: Record<string, unknown>): Promise<Artista>
-  +updateStatus(id: number, status: string): Promise<Artista>
-}
-
-class FeedbackController {
-  -feedbackService: FeedbackService
-  +findAll(): Promise<Feedback[]>
-  +create(body: Record<string, unknown>): Promise<Feedback>
-  +delete(id: string): Promise<object>
-}
-
-class FeedbackService {
-  -supabaseService: SupabaseService
-  +findAll(): Promise<Feedback[]>
-  +create(createDto: Record<string, unknown>): Promise<Feedback>
-  +delete(id: number): Promise<object>
-}
-
-class Feedback {
-  +id: number
-  +nome: string
-  +email: string
-  +tipo: string
-  +nota: number
-  +mensagem: string
-  +created_at: Date
-}
-
-class SupabaseService {
-  -logger: Logger
-  -supabase: SupabaseClient
-  +getClient(): SupabaseClient
-}
-
-ArtistasController --> ArtistasService : utiliza
-ArtistasService --> SupabaseService : utiliza
-ArtistasService ..> Artista : manipula
-Artista --> StatusArtista
-
-FeedbackController --> FeedbackService : utiliza
-FeedbackService --> SupabaseService : utiliza
-FeedbackService ..> Feedback : manipula
+A --> "Ficha do Artista" : preenche
+V --> "Avaliação (Feedback)" : envia
+E --> "Ficha do Artista" : analisa e muda a situação
+E --> "Avaliação (Feedback)" : lê e pode remover
 @enduml
 ```
 
 ---
 
-## 3. Diagrama de Sequência: Cadastro de Artista e Aprovação
+## 3. Diagrama de Sequência: Inscrição e Aprovação
+
+A jornada completa, da inscrição de um artista até ele aparecer no mural público:
 
 ```plantuml
 @startuml Diagrama_de_Sequencia
@@ -146,105 +108,119 @@ autonumber
 skinparam shadowing false
 
 actor "Artista" as Artista
-participant "Frontend (React / Vite)" as Front
-participant "Backend (NestJS API)" as Back
-database "Supabase (PostgreSQL)" as DB
-actor "Administrador" as Admin
+participant "Site" as Front
+participant "Central do sistema" as Back
+database "Almoxarifado (banco de dados)" as DB
+actor "Equipe da Cultura" as Admin
 
-== Fluxo de Cadastro Autônomo ==
-Artista -> Front: Preenche e envia formulário de cadastro
-Front -> Back: POST /artistas (payload com dados do artista)
-Back -> DB: INSERT INTO artistas (status = 'Pendente')
-DB --> Back: Confirmação e dados inseridos
-Back --> Front: HTTP 201 Created (Objeto Artista)
-Front --> Artista: Exibe mensagem "Cadastro enviado com sucesso!"
+== 1. Inscrição do artista ==
+Artista -> Front: Preenche o formulário (nome, contato, área, história)
+Front -> Back: Envia a inscrição
+Back -> DB: Guarda a ficha com a marca "Pendente"
+DB --> Back: Confirma que a ficha foi guardada
+Back --> Front: Avisa o site
+Front --> Artista: Mostra "Cadastro enviado com sucesso!"
 
-== Fluxo de Moderação Administrativa ==
-Admin -> Front: Realiza login em /admin/login
-Front -> DB: Auth via Supabase Client (signInWithPassword)
-DB --> Front: Sessão / Token retornado
-Front -> Back: GET /artistas (com cabeçalho de autenticação)
-Back -> DB: SELECT * FROM artistas ORDER BY created_at DESC
-DB --> Back: Retorna lista completa de artistas
-Back --> Front: HTTP 200 OK (Lista de Artistas)
-Front --> Admin: Renderiza painel com cadastros 'Pendentes'
+== 2. Análise da equipe ==
+Admin -> Front: Entra com usuário e senha
+Admin -> Front: Abre a lista de inscrições
+Front -> Back: Pede a lista de fichas
+Back -> DB: Busca as fichas
+DB --> Back: Devolve as fichas
+Back --> Front: Mostra na tela
+Front --> Admin: Vê os cadastros (Pendentes, Aprovados, Rejeitados)
 
-Admin -> Front: Clica em "Aprovar" no registro do artista
-Front -> Back: PATCH /artistas/{id}/status (status: "Aprovado")
-Back -> DB: UPDATE artistas SET status = 'Aprovado' WHERE id = {id}
-DB --> Back: Registro atualizado
-Back --> Front: HTTP 200 OK (Artista atualizado)
-Front --> Admin: Atualiza lista e contadores na interface
+Admin -> Front: Clica em "Aprovar" na ficha do artista
+Front -> Back: Pede para atualizar a ficha
+Back -> DB: Marca como "Aprovado"
+DB --> Back: Confirma a mudança
+Back --> Front: Atualiza a tela
+Front --> Admin: O artista já aparece no mural público
 
-== Consulta Pública Atualizada ==
-Artista -> Front: Acesse o catálogo público /
-Front -> Back: GET /artistas/aprovados
-Back -> DB: SELECT * FROM artistas WHERE status = 'Aprovado'
-DB --> Back: Lista de artistas aprovados
-Back --> Front: HTTP 200 OK
-Front --> Artista: Exibe o artista no mural público
-
-== Fluxo de Feedback do Público ==
-Artista -> Front: Preenche e envia formulário de avaliação em /feedback
-Front -> Back: POST /feedbacks (nome/email opcionais, tipo, nota, mensagem)
-Back -> DB: INSERT INTO feedbacks
-DB --> Back: Confirmação e dados inseridos
-Back --> Front: HTTP 201 Created (Objeto Feedback)
-Front --> Artista: Exibe mensagem "Obrigado pelo seu feedback!"
-
-Admin -> Front: Acessa aba "Feedbacks" no painel /admin
-Front -> Back: GET /feedbacks
-Back -> DB: SELECT * FROM feedbacks ORDER BY created_at DESC
-DB --> Back: Lista de feedbacks
-Back --> Front: HTTP 200 OK
-Front --> Admin: Exibe feedbacks com tipo, nota e data
-
-Admin -> Front: Clica em "Excluir" em um feedback
-Front -> Back: DELETE /feedbacks/{id}
-Back -> DB: DELETE FROM feedbacks WHERE id = {id}
-DB --> Back: Registro removido
-Back --> Front: HTTP 200 OK
-Front --> Admin: Lista de feedbacks atualizada
+== 3. Consulta pública ==
+Artista -> Front: Abre o mural público
+Front -> Back: Pede os artistas aprovados
+Back -> DB: Busca somente as fichas "Aprovado"
+DB --> Back: Devolve os artistas aprovados
+Back --> Front: Mostra na tela
+Front --> Artista: Vê o artista no mural
 @enduml
 ```
 
 ---
 
-## 4. Diagrama de Implantação / Arquitetura
+## 4. Diagrama de Sequência: Avaliação do Público (Feedback)
+
+Do momento em que o cidadão dá sua opinião até a equipe ler:
+
+```plantuml
+@startuml Diagrama_de_Sequencia_Feedback
+autonumber
+skinparam shadowing false
+
+actor "Cidadão" as Cidadao
+participant "Site" as Front
+participant "Central do sistema" as Back
+database "Almoxarifado (banco de dados)" as DB
+actor "Equipe da Cultura" as Admin
+
+== 1. O cidadão avalia ==
+Cidadao -> Front: Preenche "Deixe seu feedback" (nota e mensagem)
+Front -> Back: Envia a avaliação
+Back -> DB: Guarda a avaliação
+DB --> Back: Confirma
+Back --> Front: Avisa o site
+Front --> Cidadao: Mostra "Obrigado pelo seu feedback!"
+
+== 2. A equipe lê ==
+Admin -> Front: Abre a área de feedbacks no painel
+Front -> Back: Pede as avaliações
+Back -> DB: Busca as avaliações
+DB --> Back: Devolve as avaliações
+Back --> Front: Mostra na tela
+Front --> Admin: Lê as opiniões da população
+@enduml
+```
+
+---
+
+## 5. Diagrama de Implantação (Onde o sistema mora)
+
+Uma visão simples de como as partes do sistema se conectam na internet:
 
 ```plantuml
 @startuml Diagrama_de_Implantacao
 skinparam nodeAttributeIconSize 0
 skinparam shadowing false
 
-node "Dispositivo do Usuário" {
-  artifact "Navegador Web (Chrome / Firefox / Edge)" {
-    component "React SPA App (Vercel)" as SPA
+node "Computador ou celular do usuário" {
+  artifact "Navegador de internet (Chrome / Firefox / Edge)" {
+    component "Site - parte que todo mundo vê" as SPA
   }
 }
 
-node "Nuvem Vercel (Hospedagem Frontend)" {
-  folder "Estáticos & Assets" {
-    [HTML5 / JS / CSS]
+node "Vitrine na internet (Vercel)" {
+  folder "Páginas do site" {
+    [Mural, Inscrição, Avaliação, Painel da equipe]
   }
 }
 
-node "Nuvem Render.com (Hospedagem Backend)" {
-  node "Container Node.js / NestJS" {
-    component "REST API Service (Porta 3001)" as API
+node "Central de atendimento (Render.com)" {
+  node "Servidor do sistema" {
+    component "Parte que processa os pedidos" as API
   }
 }
 
-node "Nuvem Supabase (BaaS)" {
-  database "PostgreSQL Database" as DB_Postgres {
-    storage "Tabela: artistas" as TabArtistas
-    storage "Tabela: feedbacks" as TabFeedbacks
+node "Almoxarifado + Portaria (Supabase)" {
+  database "Banco de dados" as DB_Postgres {
+    storage "Fichas dos artistas" as TabArtistas
+    storage "Avaliações do público" as TabFeedbacks
   }
-  component "Supabase Auth Service" as Auth
+  component "Portaria de segurança (login da equipe)" as Auth
 }
 
-SPA -- API : HTTP / REST (HTTPS)
-SPA -- Auth : Autenticação Admin (HTTPS)
-API -- DB_Postgres : Supabase Client (PostgREST API / HTTPS)
+SPA -- API : "faz pedidos"
+SPA -- Auth : "entrada da equipe"
+API -- DB_Postgres : "guarda e busca dados"
 @enduml
 ```
