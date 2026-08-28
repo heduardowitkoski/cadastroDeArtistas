@@ -114,6 +114,15 @@
 .actions-status { display: flex; gap: 6px; }
 .actions-crud { display: flex; gap: 6px; }
 
+/* Feedback rows */
+.feedback-avatar {
+  width: 64px; height: 64px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: rgba(99,102,241,0.12);
+}
+.feedback-avatar svg { color: var(--indigo); }
+.feedback-rating { display: inline-flex; gap: 1px; color: var(--amber); }
+.feedback-message { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
+
 /* Admin Modals */
 .modal-overlay {
   position: fixed;

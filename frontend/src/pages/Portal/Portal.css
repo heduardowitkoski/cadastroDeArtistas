@@ -337,6 +337,8 @@
 /* Footer */
 .portal-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
 .portal-footer p { font-size: 13px; color: var(--text-muted); }
+.footer-feedback-link { color: var(--purple-light); text-decoration: none; font-weight: 600; transition: var(--transition); }
+.footer-feedback-link:hover { color: var(--purple-primary); text-decoration: underline; }
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -37,8 +37,8 @@
 ### 2.3. Marco 3: Qualidade, Avaliação e Implantação
 
 - **Formulário de Avaliação e Feedback do Público**
-  - **Status:** Pendente.
-  - **Detalhamento:** Inclusão de módulo ou página para coleta de opiniões e sugestões dos cidadãos quanto à usabilidade da plataforma.
+  - **Status:** Concluído.
+  - **Detalhamento:** Página pública `/feedback` com formulário de avaliação da plataforma (nome/email opcionais, tipo do feedback — Elogio/Sugestão/Crítica/Outro —, nota de satisfação em estrelas de 1 a 5 e mensagem com validação de tamanho mínimo). Mensagens armazenadas na tabela `feedbacks` via `POST /feedbacks` e visualizadas no painel administrativo na aba "Feedbacks", com contador, exibição de nota e exclusão com confirmação de segurança.
 
 - **Documentação de Uso e Relatório da Equipe**
   - **Status:** Em andamento.
@@ -52,9 +52,8 @@
 
 ## 3. Resumo das Tarefas Pendentes para Conclusão do Projeto
 
-1. **Desenvolver Módulo de Feedback do Público:**
-   - Criar formulário de avaliação da plataforma para coleta de sugestões de melhoria por parte da população.
-
-2. **Homologação e Treinamento:**
+1. **Homologação e Treinamento:**
    - Realizar sessão de apresentação e capacitação com a equipe do Conselho Municipal de Políticas Culturais de Bagé.
    - Finalizar manuais operacionais do sistema.
+
+> **Nota técnica:** para ativar o módulo de feedback no banco, executar o script `backend/supabase.sql` no SQL Editor do Supabase (cria as tabelas `artistas` e `feedbacks` com dados de exemplo).

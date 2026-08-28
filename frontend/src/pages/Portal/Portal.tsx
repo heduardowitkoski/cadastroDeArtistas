@@ -287,7 +287,12 @@ export default function Portal() {
       {/* ─── Footer ─── */}
       <footer className="portal-footer">
         <div className="container">
-          <p>© 2026 Cadastro Municipal de Artistas · Bagé, RS · Projeto de Extensão UNIPAMPA</p>
+          <p>
+            © 2026 Cadastro Municipal de Artistas · Bagé, RS · Projeto de Extensão UNIPAMPA ·{" "}
+            <Link to="/feedback" className="footer-feedback-link">
+              Deixe seu feedback
+            </Link>
+          </p>
         </div>
       </footer>
     </div>

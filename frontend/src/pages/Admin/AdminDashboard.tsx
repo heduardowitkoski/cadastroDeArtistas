@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
   Users, CheckCircle, Clock, XCircle, LogOut, Palette,
-  Check, X, User, Pencil, Trash2, Save, AlertTriangle
+  Check, X, User, Pencil, Trash2, Save, AlertTriangle, MessageSquareHeart, Star
 } from "lucide-react";
 import "./AdminDashboard.css";
 
@@ -22,6 +22,16 @@ interface Artista {
   created_at: string;
 }
 
+interface Feedback {
+  id: number;
+  nome?: string;
+  email?: string;
+  tipo: string;
+  nota?: number;
+  mensagem: string;
+  created_at: string;
+}
+
 const CATEGORIAS = ["Música", "Artes Visuais", "Fotografia", "Literatura", "Teatro", "Dança", "Artesanato", "Circo", "Cinema", "Outra"];
 
 const STATUS_BADGE: Record<string, string> = {
@@ -30,16 +40,25 @@ const STATUS_BADGE: Record<string, string> = {
   Rejeitado: "badge-rose",
 };
 
+const TIPO_BADGE: Record<string, string> = {
+  Elogio: "badge-teal",
+  Sugestão: "badge-indigo",
+  Crítica: "badge-amber",
+  Outro: "badge-purple",
+};
+
 export default function AdminDashboard() {
   const [artistas, setArtistas] = useState<Artista[]>([]);
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"Pendente" | "Aprovado" | "Rejeitado">("Pendente");
+  const [tab, setTab] = useState<"Pendente" | "Aprovado" | "Rejeitado" | "Feedbacks">("Pendente");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   
   // Modals state
   const [editingArtista, setEditingArtista] = useState<Artista | null>(null);
   const [editForm, setEditForm] = useState<Partial<Artista>>({});
   const [deletingArtista, setDeletingArtista] = useState<Artista | null>(null);
+  const [deletingFeedback, setDeletingFeedback] = useState<Feedback | null>(null);
   const [submittingModal, setSubmittingModal] = useState(false);
 
   const navigate = useNavigate();
@@ -64,7 +83,22 @@ export default function AdminDashboard() {
       });
   };
 
-  useEffect(() => { fetchArtistas(); }, []);
+  const fetchFeedbacks = () => {
+    fetch(`${API_URL}/feedbacks`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setFeedbacks(data);
+        } else {
+          setFeedbacks([]);
+        }
+      })
+      .catch(() => {
+        setFeedbacks([]);
+      });
+  };
+
+  useEffect(() => { fetchArtistas(); fetchFeedbacks(); }, []);
 
   const handleStatus = async (artista: Artista, status: string) => {
     setActionLoading(artista.id);
@@ -112,6 +146,30 @@ export default function AdminDashboard() {
     setDeletingArtista(artista);
   };
 
+  const handleOpenDeleteFeedback = (feedback: Feedback) => {
+    setDeletingFeedback(feedback);
+  };
+
+  const handleConfirmDeleteFeedback = async () => {
+    if (!deletingFeedback) return;
+    setSubmittingModal(true);
+    try {
+      const res = await fetch(`${API_URL}/feedbacks/${deletingFeedback.id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setDeletingFeedback(null);
+        fetchFeedbacks();
+      } else {
+        alert("Erro ao excluir feedback.");
+      }
+    } catch {
+      alert("Erro de conexão ao excluir feedback.");
+    } finally {
+      setSubmittingModal(false);
+    }
+  };
+
   const handleConfirmDelete = async () => {
     if (!deletingArtista) return;
     setSubmittingModal(true);
@@ -142,6 +200,7 @@ export default function AdminDashboard() {
     Pendente: artistas.filter((a) => a.status === "Pendente").length,
     Aprovado: artistas.filter((a) => a.status === "Aprovado").length,
     Rejeitado: artistas.filter((a) => a.status === "Rejeitado").length,
+    Feedbacks: feedbacks.length,
   };
 
   return (
@@ -172,6 +231,14 @@ export default function AdminDashboard() {
               </button>
             );
           })}
+          <button
+            onClick={() => setTab("Feedbacks")}
+            className={`sidebar-nav-item ${tab === "Feedbacks" ? "active" : ""}`}
+          >
+            <MessageSquareHeart size={18} />
+            <span>Feedbacks</span>
+            {counts.Feedbacks > 0 && <span className="nav-count">{counts.Feedbacks}</span>}
+          </button>
         </nav>
 
         <div className="sidebar-stats">
@@ -186,13 +253,67 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <main className="admin-main">
         <div className="admin-header">
-          <div>
-            <h1>Cadastros <span className={`badge ${STATUS_BADGE[tab]}`}>{tab}s</span></h1>
-            <p className="admin-header-sub">{filtered.length} cadastro(s) encontrado(s)</p>
-          </div>
+          {tab === "Feedbacks" ? (
+            <>
+              <h1>Mensagens de <span className="badge badge-indigo">Feedback</span></h1>
+              <p className="admin-header-sub">{feedbacks.length} feedback(s) recebido(s)</p>
+            </>
+          ) : (
+            <>
+              <h1>Cadastros <span className={`badge ${STATUS_BADGE[tab]}`}>{tab}s</span></h1>
+              <p className="admin-header-sub">{filtered.length} cadastro(s) encontrado(s)</p>
+            </>
+          )}
         </div>
 
-        {loading ? (
+        {tab === "Feedbacks" ? (
+          loading ? (
+            <div className="admin-loading"><div className="spinner" /></div>
+          ) : feedbacks.length === 0 ? (
+            <div className="admin-empty">
+              <MessageSquareHeart size={40} />
+              <h3>Nenhum feedback recebido ainda</h3>
+              <p>Quando o público enviar avaliações, elas aparecerão aqui.</p>
+            </div>
+          ) : (
+            <div className="artistas-list">
+              {feedbacks.map((fb) => (
+                <div key={fb.id} className="artista-row card">
+                  <div className="artista-row-placeholder feedback-avatar">
+                    <MessageSquareHeart size={24} />
+                  </div>
+                  <div className="artista-row-info">
+                    <div className="artista-row-top">
+                      <h3>{fb.nome || "Anônimo"}</h3>
+                      <span className={`badge ${TIPO_BADGE[fb.tipo] || "badge-purple"}`}>{fb.tipo}</span>
+                      {fb.nota ? (
+                        <span className="feedback-rating">
+                          {Array.from({ length: fb.nota }).map((_, i) => (
+                            <Star key={i} size={13} fill="currentColor" />
+                          ))}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="feedback-message">{fb.mensagem}</p>
+                    <div className="artista-contacts">
+                      {fb.email && <span>{fb.email}</span>}
+                      {fb.created_at && <span>• {new Date(fb.created_at).toLocaleDateString("pt-BR")}</span>}
+                    </div>
+                  </div>
+                  <div className="artista-row-actions">
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleOpenDeleteFeedback(fb)}
+                      title="Excluir feedback"
+                    >
+                      <Trash2 size={14} /> Excluir
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : loading ? (
           <div className="admin-loading"><div className="spinner" /></div>
         ) : filtered.length === 0 ? (
           <div className="admin-empty">
@@ -434,6 +555,37 @@ export default function AdminDashboard() {
               <button
                 className="btn btn-danger"
                 onClick={handleConfirmDelete}
+                disabled={submittingModal}
+              >
+                <Trash2 size={16} /> Sim, Excluir Definitivamente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmação de Exclusão de Feedback */}
+      {deletingFeedback && (
+        <div className="modal-overlay">
+          <div className="modal-content card delete-modal">
+            <div className="delete-modal-icon">
+              <MessageSquareHeart size={32} />
+            </div>
+            <h2>Confirmar Exclusão</h2>
+            <p>
+              Tem certeza que deseja excluir permanentemente este feedback? Esta ação não pode ser desfeita.
+            </p>
+            <div className="modal-actions" style={{ marginTop: 20 }}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setDeletingFeedback(null)}
+                disabled={submittingModal}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={handleConfirmDeleteFeedback}
                 disabled={submittingModal}
               >
                 <Trash2 size={16} /> Sim, Excluir Definitivamente
