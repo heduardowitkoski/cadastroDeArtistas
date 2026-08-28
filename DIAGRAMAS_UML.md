@@ -21,23 +21,29 @@ rectangle "Sistema Cadastro Municipal de Artistas" {
   usecase "Visualizar Catálogo / Mural Público" as UC2
   usecase "Buscar e Filtrar Artistas por Categoria" as UC3
   usecase "Visualizar Detalhes do Perfil Artístico" as UC4
+  usecase "Enviar Feedback / Avaliação da Plataforma" as UC10
   usecase "Autenticar-se no Painel Admin" as UC5
   usecase "Visualizar Cadastros (Pendentes, Aprovados, Rejeitados)" as UC6
   usecase "Aprovar Cadastro de Artista" as UC7
   usecase "Rejeitar Cadastro de Artista" as UC8
   usecase "Desaprovar Cadastro de Artista" as UC9
+  usecase "Visualizar Feedbacks do Público" as UC11
+  usecase "Excluir Feedback" as UC12
 }
 
 artista --> UC1
 visitante --> UC2
 visitante --> UC3
 visitante --> UC4
+visitante --> UC10
 
 admin --> UC5
 admin --> UC6
 admin --> UC7
 admin --> UC8
 admin --> UC9
+admin --> UC11
+admin --> UC12
 
 UC1 .> UC6 : <<include>>
 @enduml
@@ -89,6 +95,30 @@ class ArtistasService {
   +updateStatus(id: number, status: string): Promise<Artista>
 }
 
+class FeedbackController {
+  -feedbackService: FeedbackService
+  +findAll(): Promise<Feedback[]>
+  +create(body: Record<string, unknown>): Promise<Feedback>
+  +delete(id: string): Promise<object>
+}
+
+class FeedbackService {
+  -supabaseService: SupabaseService
+  +findAll(): Promise<Feedback[]>
+  +create(createDto: Record<string, unknown>): Promise<Feedback>
+  +delete(id: number): Promise<object>
+}
+
+class Feedback {
+  +id: number
+  +nome: string
+  +email: string
+  +tipo: string
+  +nota: number
+  +mensagem: string
+  +created_at: Date
+}
+
 class SupabaseService {
   -logger: Logger
   -supabase: SupabaseClient
@@ -99,6 +129,10 @@ ArtistasController --> ArtistasService : utiliza
 ArtistasService --> SupabaseService : utiliza
 ArtistasService ..> Artista : manipula
 Artista --> StatusArtista
+
+FeedbackController --> FeedbackService : utiliza
+FeedbackService --> SupabaseService : utiliza
+FeedbackService ..> Feedback : manipula
 @enduml
 ```
 
@@ -149,6 +183,28 @@ Back -> DB: SELECT * FROM artistas WHERE status = 'Aprovado'
 DB --> Back: Lista de artistas aprovados
 Back --> Front: HTTP 200 OK
 Front --> Artista: Exibe o artista no mural público
+
+== Fluxo de Feedback do Público ==
+Artista -> Front: Preenche e envia formulário de avaliação em /feedback
+Front -> Back: POST /feedbacks (nome/email opcionais, tipo, nota, mensagem)
+Back -> DB: INSERT INTO feedbacks
+DB --> Back: Confirmação e dados inseridos
+Back --> Front: HTTP 201 Created (Objeto Feedback)
+Front --> Artista: Exibe mensagem "Obrigado pelo seu feedback!"
+
+Admin -> Front: Acessa aba "Feedbacks" no painel /admin
+Front -> Back: GET /feedbacks
+Back -> DB: SELECT * FROM feedbacks ORDER BY created_at DESC
+DB --> Back: Lista de feedbacks
+Back --> Front: HTTP 200 OK
+Front --> Admin: Exibe feedbacks com tipo, nota e data
+
+Admin -> Front: Clica em "Excluir" em um feedback
+Front -> Back: DELETE /feedbacks/{id}
+Back -> DB: DELETE FROM feedbacks WHERE id = {id}
+DB --> Back: Registro removido
+Back --> Front: HTTP 200 OK
+Front --> Admin: Lista de feedbacks atualizada
 @enduml
 ```
 
@@ -182,6 +238,7 @@ node "Nuvem Render.com (Hospedagem Backend)" {
 node "Nuvem Supabase (BaaS)" {
   database "PostgreSQL Database" as DB_Postgres {
     storage "Tabela: artistas" as TabArtistas
+    storage "Tabela: feedbacks" as TabFeedbacks
   }
   component "Supabase Auth Service" as Auth
 }
