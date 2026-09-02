@@ -40,10 +40,10 @@ ALTER TABLE artistas DISABLE ROW LEVEL SECURITY;
 ALTER TABLE feedbacks DISABLE ROW LEVEL SECURITY;
 
 -- Dados de exemplo para teste
-INSERT INTO artistas (nome, nome_artistico, email, contato, cidade, area_atuacao, bio, tags, disponibilidade, instagram, status) VALUES
-('Maria dos Santos', 'Maria Voz', 'maria@email.com', '(53) 99999-0001', 'Bagé', 'Música', 'Cantora e compositora gaúcha com mais de 10 anos de carreira. Especialista em música popular brasileira e folclore do Pampa.', ARRAY['MPB','Voz e Violão','Gaúcha'], ARRAY['Fins de semana','Eventos noturnos'], '@mariadossantos', 'Aprovado'),
-('Carlos Pintura', 'Tinta Viva', 'carlos@email.com', '(53) 99999-0002', 'Bagé', 'Artes Visuais', 'Artista plástico com obras expostas em galerias de Porto Alegre, Pelotas e Bagé. Trabalha com acrílica, óleo e aquarela.', ARRAY['Aquarela','Acrílica'], ARRAY['Dias úteis'], '@carlospintura', 'Aprovado'),
-('Ana Fotografias', 'Ana Lente', 'ana@email.com', '(53) 99999-0003', 'Bagé', 'Fotografia', 'Fotógrafa especializada em fotografia documental e retratos. Registra a cultura e o cotidiano da fronteira.', ARRAY['Retratos','Documental'], ARRAY['Fins de semana','Feriados'], '@anafotografias', 'Pendente');
+INSERT INTO artistas (nome, nome_artistico, email, contato, cidade, area_atuacao, bio, tags, disponibilidade, foto_url, instagram, status) VALUES
+('Maria dos Santos', 'Maria Voz', 'maria@email.com', '(53) 99999-0001', 'Bagé', 'Música', 'Cantora e compositora gaúcha com mais de 10 anos de carreira. Especialista em música popular brasileira e folclore do Pampa.', ARRAY['MPB','Voz e Violão','Gaúcha'], ARRAY['Fins de semana','Eventos noturnos'], '/artistas/maria-dos-santos.png', '@mariadossantos', 'Aprovado'),
+('Carlos Pintura', 'Tinta Viva', 'carlos@email.com', '(53) 99999-0002', 'Bagé', 'Artes Visuais', 'Artista plástico com obras expostas em galerias de Porto Alegre, Pelotas e Bagé. Trabalha com acrílica, óleo e aquarela.', ARRAY['Aquarela','Acrílica'], ARRAY['Dias úteis'], '/artistas/carlos-pintura.png', '@carlospintura', 'Aprovado'),
+('Ana Fotografias', 'Ana Lente', 'ana@email.com', '(53) 99999-0003', 'Bagé', 'Fotografia', 'Fotógrafa especializada em fotografia documental e retratos. Registra a cultura e o cotidiano da fronteira.', ARRAY['Retratos','Documental'], ARRAY['Fins de semana','Feriados'], '/artistas/ana-fotografias.png', '@anafotografias', 'Aprovado');
 
 -- Feedbacks de exemplo para teste
 INSERT INTO feedbacks (nome, email, tipo, nota, mensagem) VALUES
