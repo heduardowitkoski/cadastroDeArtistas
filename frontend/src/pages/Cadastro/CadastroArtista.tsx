@@ -146,7 +146,7 @@ export default function CadastroArtista() {
         <div className="cadastro-success">
           <div className="success-icon"><Check size={36} /></div>
           <h2>Cadastro enviado para análise!</h2>
-          <p>Seu cadastro foi recebido pela Secretaria de Cultura e aparecerá no catálogo assim que for aprovado.</p>
+          <p>Seu cadastro foi recebido pelos Gestores de Cultura e aparecerá no catálogo assim que for aprovado.</p>
           {precisaConfirmarEmail && (
             <p style={{ background: "var(--purple-glow)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 12, padding: "12px 16px", fontSize: 13 }}>
               📧 Verifique seu e-mail e confirme o cadastro no link enviado para <strong>{form.email}</strong>. Assim você poderá entrar na Área do Artista para editar seus dados depois.
