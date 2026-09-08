@@ -237,7 +237,7 @@ export default function AdminDashboard() {
         <div className="sidebar-brand">
           <div className="brand-icon"><Palette size={18} /></div>
           <div>
-            <span className="brand-title">Secretaria de Cultura</span>
+            <span className="brand-title">Gestores do Conselho Municipal de Políticas Culturais</span>
             <span className="brand-sub">painel administrativo</span>
           </div>
         </div>

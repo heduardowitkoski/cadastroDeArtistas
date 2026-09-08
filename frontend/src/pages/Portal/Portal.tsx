@@ -115,7 +115,7 @@ export default function Portal() {
       {/* ─── Hero ─── */}
       <section className="portal-hero">
         <div className="hero-badge">
-          <Award size={12} /> Plataforma oficial da Prefeitura de Bagé
+          <Award size={12} /> Plataforma oficial dos Gestores do Conselho Municipal de Políticas Culturais
         </div>
         <h1 className="hero-title">
           Descubra talentos<br />

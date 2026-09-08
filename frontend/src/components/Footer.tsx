@@ -16,7 +16,7 @@ export function Footer() {
               <span style={{ fontWeight: 700, fontSize: 16, color: "#EDE9FE" }}>Cadastro de Artistas</span>
             </div>
             <p style={{ fontSize: 13, color: "#A78BFA", lineHeight: 1.6, margin: 0 }}>
-              Plataforma oficial da Prefeitura Municipal de Bagé para mapeamento, valorização e contratação da cultura local.
+              Plataforma oficial dos Gestores do Conselho Municipal de Políticas Culturais para mapeamento, valorização e contratação da cultura local.
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Coluna 3: Para Cidadãos & Secretaria */}
+          {/* Coluna 3: Para Cidadãos & Conselho */}
           <div>
             <h4 style={{ color: "white", fontSize: 14, fontWeight: 700, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               Navegação Geral
@@ -62,7 +62,7 @@ export function Footer() {
               </li>
               <li>
                 <Link to="/admin/login" style={{ color: "#C4B5FD", textDecoration: "none", fontSize: 13, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Building2 size={13} /> Painel Administrativo (Secretaria)
+                  <Building2 size={13} /> Painel Administrativo (Conselho)
                 </Link>
               </li>
             </ul>
@@ -71,7 +71,7 @@ export function Footer() {
 
         <div style={{ borderTop: "1px solid rgba(196,181,253,0.15)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <p style={{ fontSize: 12, color: "#A78BFA", margin: 0 }}>
-            © 2026 Prefeitura de Bagé · Secretaria Municipal de Cultura
+            © 2026 Gestores do Conselho Municipal de Políticas Culturais
           </p>
           <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
             <Link to="/" style={{ color: "#C4B5FD", textDecoration: "none" }}>Início</Link>

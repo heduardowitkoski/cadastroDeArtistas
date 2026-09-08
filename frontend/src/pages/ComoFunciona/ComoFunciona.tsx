@@ -8,7 +8,7 @@ import "./ComoFunciona.css";
 
 const PASSOS = [
   { icon: <UserPlus size={22} />, titulo: "1. Você se cadastra", texto: "Na Área do Artista você cria seu cadastro com uma senha, conta sua história, escolhe sua categoria e diz quando tem disponibilidade." },
-  { icon: <FileCheck size={22} />, titulo: "2. A Secretaria analisa", texto: "Um analista da Secretaria de Cultura de Bagé confere as informações e aprova o cadastro." },
+  { icon: <FileCheck size={22} />, titulo: "2. O Conselho analisa", texto: "Um analista dos Gestores do Conselho Municipal de Políticas Culturais confere as informações e aprova o cadastro." },
   { icon: <Sparkles size={22} />, titulo: "3. Você aparece no catálogo", texto: "Depois de aprovado, seu perfil entra no catálogo público, que qualquer pessoa pode visitar." },
   { icon: <PencilLine size={22} />, titulo: "4. Você mantém tudo atualizado", texto: "Entrando com seu e-mail e senha você pode editar seus dados quando quiser. As mudanças passam por nova análise." },
 ];
@@ -16,7 +16,7 @@ const PASSOS = [
 const AUDIENCIAS = [
   { icon: <Users size={26} />, titulo: "Para o artista", texto: "Ganhe visibilidade e seja encontrado por quem organiza eventos, festivais e ações culturais na região.", cor: "purple" },
   { icon: <Search size={26} />, titulo: "Para o público e contratantes", texto: "Descubra talentos por categoria, cidade e disponibilidade para contratar e apoiar a cultura local.", cor: "amber" },
-  { icon: <Building2 size={26} />, titulo: "Para a Secretaria de Cultura", texto: "Um painel organizado para conhecer os artistas da cidade e apoiar políticas culturais de verdade.", cor: "teal" },
+  { icon: <Building2 size={26} />, titulo: "Para os Gestores do Conselho Municipal de Políticas Culturais", texto: "Um painel organizado para conhecer os artistas da cidade e apoiar políticas culturais de verdade.", cor: "teal" },
 ];
 
 export default function ComoFunciona() {
@@ -66,13 +66,13 @@ export default function ComoFunciona() {
             <div>
               <h2>Qual é a ideia?</h2>
               <p>
-                O <strong>Cadastro Municipal de Artistas</strong> é um catálogo público da Prefeitura de
+                O <strong>Cadastro Municipal de Artistas</strong> é um catálogo público dos Gestores do Conselho Municipal de Políticas Culturais
                 Bagé. Ele reúne em um só lugar os artistas da cidade — músicos, pintores, atores,
                 fotógrafos, escritores, artesãos e muito mais — para que qualquer pessoa ou empresa
                 consiga encontrar um profissional para shows, eventos, exposições e projetos culturais.
               </p>
               <p>
-                O artista cria o próprio perfil, a Secretaria de Cultura faz uma análise rápida e, uma
+                O artista cria o próprio perfil, os Gestores do Conselho Municipal de Políticas Culturais fazem uma análise rápida e, uma
                 vez aprovado, o perfil fica visível para todo mundo. Simples assim.
               </p>
             </div>
@@ -139,7 +139,7 @@ export default function ComoFunciona() {
             <div className="brand-icon brand-icon-sm"><Star size={13} /></div>
             <span>Cadastro Municipal de Artistas</span>
           </div>
-          <p>© 2025 Prefeitura de Bagé · Secretaria de Cultura</p>
+          <p>© 2025 Gestores do Conselho Municipal de Políticas Culturais</p>
           <div className="footer-links">
             <button>Termos de uso</button>
             <button>Privacidade</button>

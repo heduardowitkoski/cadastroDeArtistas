@@ -77,11 +77,11 @@ export function Navbar({ activePage }: NavbarProps) {
             <Sparkles size={14} /> Sou artista
           </Link>
 
-          {/* Botão de Acesso Administrativo da Secretaria */}
+          {/* Botão de Acesso Administrativo do Conselho */}
           <Link
             to="/admin/login"
             className="btn btn-secondary btn-sm"
-            title="Acesso da Secretaria de Cultura"
+            title="Acesso dos Gestores do Conselho Municipal de Políticas Culturais"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, opacity: 0.9 }}
           >
             <Building2 size={14} /> Admin
@@ -126,7 +126,7 @@ export function Navbar({ activePage }: NavbarProps) {
             <Sparkles size={16} /> Fazer novo cadastro
           </Link>
           <Link to="/admin/login" onClick={() => setMobileMenuOpen(false)} style={{ color: "var(--text-muted)", fontSize: 13 }}>
-            <Building2 size={15} /> Acesso Administrativo (Secretaria)
+            <Building2 size={15} /> Acesso Administrativo (Conselho)
           </Link>
         </div>
       )}

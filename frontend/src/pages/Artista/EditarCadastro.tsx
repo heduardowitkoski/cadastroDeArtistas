@@ -290,7 +290,7 @@ export default function EditarCadastro() {
       <div className="container artista-container">
         <div className="artista-title-wrap">
           <h1>Editar meu cadastro</h1>
-          <p>Mantenha seus dados atualizados. Ao salvar, o cadastro volta para análise da Secretaria.</p>
+          <p>Mantenha seus dados atualizados. Ao salvar, o cadastro volta para análise dos Gestores do Conselho Municipal de Políticas Culturais.</p>
         </div>
 
         {loading ? (
