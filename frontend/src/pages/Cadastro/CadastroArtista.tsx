@@ -29,6 +29,7 @@ const CATEGORIAS_SEDAC: CategoriaSedac[] = [
   { nome: "Culturas Populares", sub: "Expressões comunitárias urbanas e rurais", icon: "🪗" },
   { nome: "Carnaval", sub: "Escolas de samba, blocos e cadeia produtiva do samba", icon: "🥁" },
   { nome: "Diversidade Linguística", sub: "Línguas minoritárias, dialetos e línguas indígenas", icon: "🗣️" },
+  { nome: "Técnicos e Bastidores", sub: "Iluminação, sonorização, figurinos, cenografia e produção técnica", icon: "🛠️" },
 ];
 
 const TAGS_PREDEFINIDAS = [
@@ -446,7 +447,7 @@ export default function CadastroArtista() {
                 <div>
                   <h2 className="artista-card-title">Atuação artística</h2>
                   <div className="artista-section">
-                    <label className="artista-label">Categorias artísticas * (Selecione uma ou mais conforme a Sedac/RS)</label>
+                    <label className="artista-label">Categorias artísticas * (selecione uma ou mais categorias que você se enquadra)</label>
                     <div className="categoria-grid">
                       {CATEGORIAS_SEDAC.map((c) => {
                         const active = form.categorias.includes(c.nome);
