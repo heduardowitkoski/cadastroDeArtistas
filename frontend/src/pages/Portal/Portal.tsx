@@ -9,23 +9,38 @@ import "./Portal.css";
 
 const CATEGORIAS = [
   { label: "Todas", value: "all", icon: Star },
-  { label: "Música", value: "Música", icon: Music },
-  { label: "Artes Visuais", value: "Artes Visuais", icon: Paintbrush },
-  { label: "Fotografia", value: "Fotografia", icon: Camera },
-  { label: "Literatura", value: "Literatura", icon: BookOpen },
   { label: "Teatro", value: "Teatro", icon: Theater },
   { label: "Dança", value: "Dança", icon: Mic },
+  { label: "Circo", value: "Circo", icon: Star },
+  { label: "Artes Visuais", value: "Artes Visuais", icon: Paintbrush },
   { label: "Artesanato", value: "Artesanato", icon: Palette },
+  { label: "Audiovisual", value: "Audiovisual", icon: Camera },
+  { label: "Música", value: "Música", icon: Music },
+  { label: "Literatura", value: "Literatura", icon: BookOpen },
+  { label: "Memória & Patrimônio", value: "Memória", icon: Star },
+  { label: "Museus", value: "Museus", icon: Star },
+  { label: "Folclore & Tradição", value: "Folclore", icon: Sparkles },
+  { label: "Culturas Populares", value: "Culturas Populares", icon: Users },
+  { label: "Carnaval", value: "Carnaval", icon: Sparkles },
+  { label: "Diversidade Linguística", value: "Linguística", icon: Globe },
 ];
 
 const CATEGORIA_ICON: Record<string, React.ReactNode> = {
-  "Música": <Music size={14} />,
-  "Artes Visuais": <Paintbrush size={14} />,
-  "Fotografia": <Camera size={14} />,
-  "Literatura": <BookOpen size={14} />,
   "Teatro": <Theater size={14} />,
   "Dança": <Mic size={14} />,
+  "Circo": <Star size={14} />,
+  "Artes Visuais": <Paintbrush size={14} />,
   "Artesanato": <Palette size={14} />,
+  "Audiovisual": <Camera size={14} />,
+  "Música": <Music size={14} />,
+  "Leitura, Livro e Literatura": <BookOpen size={14} />,
+  "Literatura": <BookOpen size={14} />,
+  "Memória e Patrimônio": <Star size={14} />,
+  "Museus": <Star size={14} />,
+  "Folclore e Tradição Gaúcha": <Sparkles size={14} />,
+  "Culturas Populares": <Users size={14} />,
+  "Carnaval": <Sparkles size={14} />,
+  "Diversidade Linguística": <Globe size={14} />,
 };
 
 interface Artista {
@@ -72,11 +87,12 @@ export default function Portal() {
   }, [API_URL]);
 
   const filtered = artistas.filter((a) => {
+    const areaStr = (a.area_atuacao || "").toLowerCase();
     const nomeBusca = a.nome.toLowerCase().includes(busca.toLowerCase());
-    const categoriaBusca = a.area_atuacao.toLowerCase().includes(busca.toLowerCase());
+    const categoriaBusca = areaStr.includes(busca.toLowerCase());
     const tagsBusca = (a.tags || []).some((t) => t.toLowerCase().includes(busca.toLowerCase()));
     const matchBusca = !busca || nomeBusca || categoriaBusca || tagsBusca;
-    const matchCategoria = categoriaFiltro === "all" || a.area_atuacao === categoriaFiltro;
+    const matchCategoria = categoriaFiltro === "all" || areaStr.includes(categoriaFiltro.toLowerCase());
     return matchBusca && matchCategoria;
   });
 

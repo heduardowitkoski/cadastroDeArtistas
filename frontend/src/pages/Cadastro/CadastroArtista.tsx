@@ -3,29 +3,45 @@ import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
   ChevronRight, Star, Clock, CheckCircle, AlertCircle,
-  Image, Video, Headphones, Link as LinkIcon, Upload, MapPin, Check,
-  Loader, ArrowLeft, User, Sparkles
+  Image, Video, Headphones, Upload, MapPin, Check,
+  Loader, ArrowLeft, User, Sparkles, FileText
 } from "lucide-react";
 import "./Cadastro.css";
 
-const CATEGORIAS = [
-  "Música", "Teatro", "Dança", "Artes Visuais", "Literatura", "Circo",
-  "Fotografia", "Artesanato", "Cinema", "Outra",
+interface CategoriaSedac {
+  nome: string;
+  sub: string;
+  icon: string;
+}
+
+const CATEGORIAS_SEDAC: CategoriaSedac[] = [
+  { nome: "Teatro", sub: "Atores, diretores, dramaturgos e técnicos de palco", icon: "🎭" },
+  { nome: "Dança", sub: "Bailarinos, coreógrafos e companhias de dança", icon: "💃" },
+  { nome: "Circo", sub: "Artistas circenses, palhaços, malabaristas e trupes", icon: "🤹" },
+  { nome: "Artes Visuais", sub: "Pintores, escultores, fotógrafos, desenhistas e designers", icon: "🎨" },
+  { nome: "Artesanato", sub: "Artesãos e criadores de arte popular manual", icon: "🧶" },
+  { nome: "Audiovisual", sub: "Cineastas, roteiristas, produtores, editores e técnicos", icon: "🎬" },
+  { nome: "Música", sub: "Cantores, instrumentistas, compositores, maestros e bandas", icon: "🎵" },
+  { nome: "Leitura, Livro e Literatura", sub: "Escritores, poetas, editores, livreiros e mediadores", icon: "📚" },
+  { nome: "Memória e Patrimônio", sub: "Preservação histórica, restauro e patrimônio", icon: "🏛️" },
+  { nome: "Museus", sub: "Museólogos, curadores e trabalhadores de acervos", icon: "🏛️" },
+  { nome: "Folclore e Tradição Gaúcha", sub: "Tradicionalistas, CTGs, peões e prendas", icon: "🌾" },
+  { nome: "Culturas Populares", sub: "Expressões comunitárias urbanas e rurais", icon: "🪗" },
+  { nome: "Carnaval", sub: "Escolas de samba, blocos e cadeia produtiva do samba", icon: "🥁" },
+  { nome: "Diversidade Linguística", sub: "Línguas minoritárias, dialetos e línguas indígenas", icon: "🗣️" },
 ];
 
-const CATEGORIA_ICON: Record<string, React.ReactNode> = {
-  "Música": <span>🎵</span>,
-  "Teatro": <span>🎭</span>,
-  "Dança": <span>💃</span>,
-  "Artes Visuais": <span>🎨</span>,
-  "Literatura": <span>📚</span>,
-  "Circo": <span>🤹</span>,
-  "Fotografia": <span>📷</span>,
-  "Artesanato": <span>🧶</span>,
-};
+const TAGS_PREDEFINIDAS = [
+  "Show ao Vivo", "Exposição", "Oficina / Workshop", "Teatro de Rua",
+  "Música Autoral", "Cover / Tributo", "Produção Audiovisual", "Ilustração Digital",
+  "Pintura em Tela", "Escultura", "Poesia / Slams", "Dança Contemporânea",
+  "Dança de Salão", "Circo / Malabares", "Fotografia Eventos", "Fotografia Retrato",
+  "Artesanato em Couro", "Artesanato em Madeira", "Tradição Gaúcha", "Carnaval / Samba",
+  "Patrimônio Histórico", "Literatura Infantil"
+];
 
 const DISPONIBILIDADES = ["Fins de semana", "Dias úteis", "Feriados", "Eventos noturnos", "Eventos diurnos"];
-const STEPS = ["Dados básicos", "Atuação", "Portfólio", "Revisão"];
+const STEPS = ["Dados básicos", "Atuação", "Materiais e Mídias", "Revisão"];
 
 interface FormData {
   nome: string;
@@ -34,11 +50,16 @@ interface FormData {
   email: string;
   contato: string;
   cidade: string;
-  area_atuacao: string;
+  categorias: string[];
   bio: string;
-  tags: string;
+  tags: string[];
   disponibilidade: string[];
   foto_url: string;
+  foto_nome?: string;
+  galeria_nome?: string;
+  video_nome?: string;
+  audio_nome?: string;
+  portfolio_doc_nome?: string;
   instagram: string;
   site: string;
 }
@@ -47,8 +68,9 @@ export default function CadastroArtista() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>({
     nome: "", nome_artistico: "", cpf_cnpj: "", email: "", contato: "",
-    cidade: "Bagé", area_atuacao: "", bio: "", tags: "", disponibilidade: [],
-    foto_url: "", instagram: "", site: "",
+    cidade: "Bagé", categorias: [], bio: "", tags: [], disponibilidade: [],
+    foto_url: "", foto_nome: "", galeria_nome: "", video_nome: "", audio_nome: "", portfolio_doc_nome: "",
+    instagram: "", site: "",
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -57,8 +79,26 @@ export default function CadastroArtista() {
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [precisaConfirmarEmail, setPrecisaConfirmarEmail] = useState(false);
 
-  const update = (field: keyof FormData, value: string) =>
+  const update = (field: keyof FormData, value: unknown) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const toggleCategoria = (nomeCat: string) => {
+    setForm((prev) => ({
+      ...prev,
+      categorias: prev.categorias.includes(nomeCat)
+        ? prev.categorias.filter((c) => c !== nomeCat)
+        : [...prev.categorias, nomeCat],
+    }));
+  };
+
+  const toggleTag = (tag: string) => {
+    setForm((prev) => ({
+      ...prev,
+      tags: prev.tags.includes(tag)
+        ? prev.tags.filter((t) => t !== tag)
+        : [...prev.tags, tag],
+    }));
+  };
 
   const toggleDisponibilidade = (v: string) =>
     setForm((prev) => ({
@@ -68,9 +108,32 @@ export default function CadastroArtista() {
         : [...prev.disponibilidade, v],
     }));
 
+  const handleFotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setForm((prev) => ({
+        ...prev,
+        foto_url: event.target?.result as string,
+        foto_nome: file.name,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleGenericFileUpload = (fieldName: keyof FormData, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setForm((prev) => ({
+      ...prev,
+      [fieldName]: file.name,
+    }));
+  };
+
   const isStepValid = () => {
-    if (step === 0) return form.nome.trim() && form.email.trim() && form.contato.trim() && senha.length >= 6 && senha === confirmarSenha;
-    if (step === 1) return form.area_atuacao && form.bio.trim().length >= 20;
+    if (step === 0) return Boolean(form.nome.trim() && form.email.trim() && form.contato.trim() && senha.length >= 6 && senha === confirmarSenha);
+    if (step === 1) return form.categorias.length > 0;
     return true;
   };
 
@@ -78,8 +141,8 @@ export default function CadastroArtista() {
     100,
     Math.round(
       ([
-        form.nome, form.email, form.contato, form.area_atuacao,
-        form.bio.length >= 20, form.foto_url, form.instagram, form.site,
+        form.nome, form.email, form.contato, form.categorias.length > 0,
+        form.bio, form.foto_url, form.instagram, form.site,
       ].filter(Boolean).length / 8) * 100
     )
   );
@@ -93,9 +156,9 @@ export default function CadastroArtista() {
     email: form.email,
     contato: form.contato,
     cidade: form.cidade || "Bagé",
-    area_atuacao: form.area_atuacao,
+    area_atuacao: form.categorias.join(", "),
     bio: form.bio,
-    tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+    tags: form.tags,
     disponibilidade: form.disponibilidade,
     foto_url: form.foto_url || null,
     instagram: form.instagram || null,
@@ -169,13 +232,22 @@ export default function CadastroArtista() {
     },
     {
       section: "Atuação",
-      items: [`Categoria: ${form.area_atuacao || "—"}`, `Disponibilidade: ${form.disponibilidade.length ? form.disponibilidade.join(", ") : "—"}`],
-      ok: Boolean(form.area_atuacao && form.bio.length >= 20),
+      items: [
+        `Categorias (${form.categorias.length}): ${form.categorias.length ? form.categorias.join(", ") : "—"}`,
+        `Tags (${form.tags.length}): ${form.tags.length ? form.tags.join(", ") : "—"}`,
+        `Disponibilidade: ${form.disponibilidade.length ? form.disponibilidade.join(", ") : "—"}`
+      ],
+      ok: Boolean(form.categorias.length > 0),
     },
     {
-      section: "Portfólio",
-      items: [`Foto: ${form.foto_url ? "adicionada" : "sem foto"}`, `Instagram: ${form.instagram || "—"}`],
-      ok: Boolean(form.foto_url || form.instagram || form.site),
+      section: "Materiais e Mídias",
+      items: [
+        `Foto de perfil: ${form.foto_nome || (form.foto_url ? "adicionada" : "sem foto")}`,
+        `Portfólio doc: ${form.portfolio_doc_nome || "—"}`,
+        `Instagram: ${form.instagram || "—"}`,
+        `Site: ${form.site || "—"}`
+      ],
+      ok: Boolean(form.foto_url || form.portfolio_doc_nome || form.instagram || form.site),
     },
   ];
 
@@ -294,41 +366,65 @@ export default function CadastroArtista() {
                 <div>
                   <h2 className="artista-card-title">Atuação artística</h2>
                   <div className="artista-section">
-                    <label className="artista-label">Categoria artística *</label>
+                    <label className="artista-label">Categorias artísticas * (Selecione uma ou mais conforme a Sedac/RS)</label>
                     <div className="categoria-grid">
-                      {CATEGORIAS.map((c) => (
-                        <button
-                          key={c}
-                          onClick={() => update("area_atuacao", c)}
-                          className={`categoria-btn ${form.area_atuacao === c ? "active" : ""}`}
-                        >
-                          {CATEGORIA_ICON[c]}{c}
-                        </button>
-                      ))}
+                      {CATEGORIAS_SEDAC.map((c) => {
+                        const active = form.categorias.includes(c.nome);
+                        return (
+                          <button
+                            key={c.nome}
+                            type="button"
+                            onClick={() => toggleCategoria(c.nome)}
+                            className={`categoria-btn ${active ? "active" : ""}`}
+                          >
+                            <div className="categoria-header-row">
+                              <span>{c.icon} {c.nome}</span>
+                              {active && <Check size={16} color="var(--purple-primary)" />}
+                            </div>
+                            <span className="categoria-subtext">{c.sub}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="artista-section">
-                    <label className="artista-label">Descrição do trabalho *</label>
+
+                  <div className="artista-section" style={{ marginTop: 28 }}>
+                    <label className="artista-label">Descrição do trabalho</label>
                     <textarea
                       rows={4}
                       value={form.bio}
                       onChange={(e) => update("bio", e.target.value)}
-                      placeholder="Descreva sua arte, experiência e tipo de apresentação que você oferece... (mínimo 20 caracteres)"
+                      placeholder="Descreva sua arte, trajetória profissional, projetos anteriores e estilo de apresentação..."
                     />
-                    <span style={{ fontSize: 12, color: form.bio.length >= 20 ? "var(--teal)" : "var(--text-muted)" }}>
-                      {form.bio.length} caracteres {form.bio.length < 20 && `(faltam ${20 - form.bio.length})`}
-                    </span>
                   </div>
-                  <div className="artista-section">
-                    <label className="artista-label">Tags / palavras-chave</label>
-                    <input value={form.tags} onChange={(e) => update("tags", e.target.value)} placeholder="Ex: MPB, Acústico, Shows ao vivo (separadas por vírgula)" />
+
+                  <div className="artista-section" style={{ marginTop: 28 }}>
+                    <label className="artista-label">Tags / Palavras-chave (Selecione as que se aplicam)</label>
+                    <div className="tag-grid">
+                      {TAGS_PREDEFINIDAS.map((tag) => {
+                        const active = form.tags.includes(tag);
+                        return (
+                          <button
+                            key={tag}
+                            type="button"
+                            onClick={() => toggleTag(tag)}
+                            className={`tag-chip ${active ? "active" : ""}`}
+                          >
+                            {active && <Check size={12} />}
+                            {tag}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="artista-section">
+
+                  <div className="artista-section" style={{ marginTop: 28 }}>
                     <label className="artista-label">Disponibilidade para apresentações</label>
                     <div className="avail-grid">
                       {DISPONIBILIDADES.map((v) => (
                         <button
                           key={v}
+                          type="button"
                           onClick={() => toggleDisponibilidade(v)}
                           className={`avail-btn ${form.disponibilidade.includes(v) ? "active" : ""}`}
                         >
@@ -343,47 +439,106 @@ export default function CadastroArtista() {
 
               {step === 2 && (
                 <div>
-                  <h2 className="artista-card-title">Portfólio</h2>
-                  <div className="portfolio-grid">
-                    <div className="portfolio-card">
-                      <div className="portfolio-icon"><Image size={20} /></div>
-                      <div>
-                        <p className="portfolio-label">Fotos</p>
-                        <p className="portfolio-desc">URL da foto <span className="portfolio-soon">em breve upload</span></p>
+                  <h2 className="artista-card-title">Materiais e Mídias</h2>
+                  <p className="artista-card-subtitle">
+                    Adicione fotos, áudios, vídeos e seu documento de portfólio para enriquecer seu perfil.
+                  </p>
+
+                  <div className="upload-grid">
+                    {/* Foto de perfil */}
+                    <div className="upload-card">
+                      <div className="upload-card-head">
+                        <div className="upload-icon"><User size={22} /></div>
+                        <div>
+                          <p className="upload-title">Foto de Perfil</p>
+                          <p className="upload-subtitle">Imagem principal do card de artista</p>
+                        </div>
                       </div>
+                      <label className="upload-btn">
+                        <Upload size={14} /> Selecionar imagem
+                        <input type="file" accept="image/*" onChange={handleFotoUpload} style={{ display: "none" }} />
+                      </label>
+                      {form.foto_nome && (
+                        <span className="upload-file-name"><Check size={12} /> {form.foto_nome}</span>
+                      )}
                     </div>
-                    <div className="portfolio-card">
-                      <div className="portfolio-icon"><Video size={20} /></div>
-                      <div>
-                        <p className="portfolio-label">Vídeos</p>
-                        <p className="portfolio-desc">Em breve</p>
+
+                    {/* Fotos de apresentação */}
+                    <div className="upload-card">
+                      <div className="upload-card-head">
+                        <div className="upload-icon"><Image size={22} /></div>
+                        <div>
+                          <p className="upload-title">Fotos da Galeria</p>
+                          <p className="upload-subtitle">Fotos de trabalhos e apresentações</p>
+                        </div>
                       </div>
+                      <label className="upload-btn">
+                        <Upload size={14} /> Carregar fotos
+                        <input type="file" accept="image/*" multiple onChange={(e) => handleGenericFileUpload("galeria_nome", e)} style={{ display: "none" }} />
+                      </label>
+                      {form.galeria_nome && (
+                        <span className="upload-file-name"><Check size={12} /> {form.galeria_nome}</span>
+                      )}
                     </div>
-                    <div className="portfolio-card">
-                      <div className="portfolio-icon"><Headphones size={20} /></div>
-                      <div>
-                        <p className="portfolio-label">Áudios</p>
-                        <p className="portfolio-desc">Em breve</p>
+
+                    {/* Portfólio documento */}
+                    <div className="upload-card">
+                      <div className="upload-card-head">
+                        <div className="upload-icon"><FileText size={22} /></div>
+                        <div>
+                          <p className="upload-title">Portfólio (Documento)</p>
+                          <p className="upload-subtitle">Arquivo PDF ou DOC completo</p>
+                        </div>
                       </div>
+                      <label className="upload-btn">
+                        <Upload size={14} /> Enviar documento PDF
+                        <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)} style={{ display: "none" }} />
+                      </label>
+                      {form.portfolio_doc_nome && (
+                        <span className="upload-file-name"><Check size={12} /> {form.portfolio_doc_nome}</span>
+                      )}
                     </div>
-                    <div className="portfolio-card">
-                      <div className="portfolio-icon"><LinkIcon size={20} /></div>
-                      <div>
-                        <p className="portfolio-label">Links externos</p>
-                        <p className="portfolio-desc">Instagram, site...</p>
+
+                    {/* Vídeos */}
+                    <div className="upload-card">
+                      <div className="upload-card-head">
+                        <div className="upload-icon"><Video size={22} /></div>
+                        <div>
+                          <p className="upload-title">Vídeos de Apresentação</p>
+                          <p className="upload-subtitle">Vídeo demonstrativo (MP4)</p>
+                        </div>
                       </div>
+                      <label className="upload-btn">
+                        <Upload size={14} /> Selecionar vídeo
+                        <input type="file" accept="video/*" onChange={(e) => handleGenericFileUpload("video_nome", e)} style={{ display: "none" }} />
+                      </label>
+                      {form.video_nome && (
+                        <span className="upload-file-name"><Check size={12} /> {form.video_nome}</span>
+                      )}
+                    </div>
+
+                    {/* Áudios */}
+                    <div className="upload-card">
+                      <div className="upload-card-head">
+                        <div className="upload-icon"><Headphones size={22} /></div>
+                        <div>
+                          <p className="upload-title">Áudios / Músicas</p>
+                          <p className="upload-subtitle">Faixa de áudio ou amostra (MP3/WAV)</p>
+                        </div>
+                      </div>
+                      <label className="upload-btn">
+                        <Upload size={14} /> Selecionar áudio
+                        <input type="file" accept="audio/*" onChange={(e) => handleGenericFileUpload("audio_nome", e)} style={{ display: "none" }} />
+                      </label>
+                      {form.audio_nome && (
+                        <span className="upload-file-name"><Check size={12} /> {form.audio_nome}</span>
+                      )}
                     </div>
                   </div>
 
-                  <div className="portfolio-drop">
-                    <Upload size={36} />
-                    <p className="portfolio-drop-title">Atualmente o cadastro aceita links</p>
-                    <p className="portfolio-drop-sub">Upload de arquivos será liberado em breve</p>
-                  </div>
-
-                  <div className="form-grid-2">
+                  <div className="form-grid-2" style={{ marginTop: 24 }}>
                     <div className="input-group col-span-2">
-                      <label>URL da foto de perfil</label>
+                      <label>Ou informe a URL da foto de perfil (caso prefira link externo)</label>
                       <input value={form.foto_url} onChange={(e) => update("foto_url", e.target.value)} placeholder="https://link-para-sua-foto.jpg" />
                     </div>
                     <div className="input-group">
@@ -391,7 +546,7 @@ export default function CadastroArtista() {
                       <input value={form.instagram} onChange={(e) => update("instagram", e.target.value)} placeholder="@seu.perfil" />
                     </div>
                     <div className="input-group">
-                      <label>Site / Portfólio</label>
+                      <label>Site</label>
                       <input value={form.site} onChange={(e) => update("site", e.target.value)} placeholder="https://meusite.com.br" />
                     </div>
                   </div>
@@ -428,6 +583,7 @@ export default function CadastroArtista() {
             {/* Navigation */}
             <div className="artista-nav">
               <button
+                type="button"
                 className="btn btn-secondary"
                 onClick={() => setStep((s) => Math.max(0, s - 1))}
                 disabled={step === 0}
@@ -435,15 +591,15 @@ export default function CadastroArtista() {
                 <ArrowLeft size={16} /> Voltar
               </button>
               <div className="artista-nav-actions">
-                <button className="btn btn-secondary" onClick={handleSubmit} disabled={loading}>
+                <button type="button" className="btn btn-secondary" onClick={handleSubmit} disabled={loading}>
                   Salvar rascunho
                 </button>
                 {step < STEPS.length - 1 ? (
-                  <button className="btn btn-primary" onClick={() => setStep((s) => s + 1)} disabled={!isStepValid()}>
+                  <button type="button" className="btn btn-primary" onClick={() => setStep((s) => s + 1)} disabled={!isStepValid()}>
                     Próxima etapa <ChevronRight size={16} />
                   </button>
                 ) : (
-                  <button className="btn btn-primary" onClick={handleSubmit} disabled={loading || !isStepValid()}>
+                  <button type="button" className="btn btn-primary" onClick={handleSubmit} disabled={loading || !isStepValid()}>
                     {loading ? <><Loader size={16} className="spin" /> Enviando...</> : <><CheckCircle size={16} /> Enviar para análise</>}
                   </button>
                 )}
@@ -461,8 +617,8 @@ export default function CadastroArtista() {
                 ) : (
                   <div className="preview-photo-placeholder"><User size={30} /></div>
                 )}
-                {form.area_atuacao && (
-                  <span className="preview-cat">{form.area_atuacao}</span>
+                {form.categorias.length > 0 && (
+                  <span className="preview-cat">{form.categorias[0]} {form.categorias.length > 1 ? `+${form.categorias.length - 1}` : ""}</span>
                 )}
               </div>
               <div className="preview-body">
