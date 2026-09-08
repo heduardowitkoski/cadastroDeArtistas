@@ -63,7 +63,7 @@
 
 /* ─── Hero ─── */
 .portal-hero {
-  background: linear-gradient(135deg, #1A1035 0%, #2D1B69 100%);
+  background: linear-gradient(135deg, rgba(26, 16, 53, 0.85) 0%, rgba(45, 27, 105, 0.85) 100%), url('/bage-bg.jpg') center/cover no-repeat;
   color: white;
   text-align: center;
   padding: 64px 32px 56px;
