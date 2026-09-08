@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import {
   Search, Heart, MapPin, Music, Paintbrush, Camera, BookOpen, Theater,
   Mic, Palette, Star, Award, Users, Tag, Filter, Eye, ChevronRight,
-  Globe, Phone, ExternalLink, Sparkles
+  Globe, Phone, ExternalLink, Sparkles, User
 } from "lucide-react";
+import { Navbar } from "../../components/Navbar";
+import { Footer } from "../../components/Footer";
 import "./Portal.css";
 
 const CATEGORIAS = [
@@ -108,26 +110,7 @@ export default function Portal() {
   return (
     <div className="portal-page">
       {/* ─── Header ─── */}
-      <header className="portal-header">
-        <div className="container header-content">
-          <div className="header-brand">
-            <div className="brand-icon"><Star size={16} /></div>
-            <div className="brand-text">
-              <span className="brand-title">Cadastro Municipal</span>
-              <span className="brand-subtitle">de Artistas</span>
-            </div>
-          </div>
-
-          <nav className="header-nav-links">
-            <Link to="/como-funciona" className="header-nav-item">Como funciona</Link>
-          </nav>
-
-          <div className="header-nav">
-            <Link to="/cadastrar" className="btn btn-outline btn-sm">Sou artista</Link>
-            <Link to="/admin/login" className="btn btn-primary btn-sm">Área administrativa</Link>
-          </div>
-        </div>
-      </header>
+      <Navbar activePage="catalogo" />
 
       {/* ─── Hero ─── */}
       <section className="portal-hero">
@@ -142,7 +125,7 @@ export default function Portal() {
           Encontre artistas locais por categoria, cidade e disponibilidade para o seu próximo evento.
         </p>
 
-        <div className="hero-search">
+        <div className="hero-search" style={{ marginBottom: 24 }}>
           <Search className="search-icon" size={20} />
           <input
             type="text"
@@ -152,6 +135,15 @@ export default function Portal() {
             className="search-input"
           />
           <button className="search-btn">Buscar</button>
+        </div>
+        
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+          <Link to="/cadastrar" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Sparkles size={16} /> Fazer Cadastro
+          </Link>
+          <Link to="/artista/login" className="btn btn-outline" style={{ display: "inline-flex", alignItems: "center", gap: 8, borderColor: "rgba(196,181,253,0.4)", color: "#DDD6FE", background: "rgba(255,255,255,0.05)" }}>
+            <User size={16} /> Já sou cadastrado (Entrar)
+          </Link>
         </div>
       </section>
 
@@ -301,9 +293,14 @@ export default function Portal() {
                 <Mic size={24} />
                 <h4>É artista?</h4>
                 <p>Cadastre-se e apareça para contratantes e eventos na sua cidade.</p>
-                <Link to="/cadastrar" className="cta-card-btn">
-                  <Sparkles size={14} /> Fazer cadastro
-                </Link>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", marginTop: 8 }}>
+                  <Link to="/cadastrar" className="cta-card-btn" style={{ width: "100%", justifyContent: "center" }}>
+                    <Sparkles size={14} /> Fazer cadastro
+                  </Link>
+                  <Link to="/artista/login" className="btn btn-outline btn-sm" style={{ width: "100%", justifyContent: "center" }}>
+                    <User size={14} /> Já sou cadastrado (Entrar)
+                  </Link>
+                </div>
               </div>
             </aside>
           </div>
@@ -366,20 +363,7 @@ export default function Portal() {
       )}
 
       {/* ─── Footer ─── */}
-      <footer className="portal-footer">
-        <div className="container footer-content">
-          <div className="footer-brand">
-            <div className="brand-icon brand-icon-sm"><Star size={13} /></div>
-            <span>Cadastro Municipal de Artistas</span>
-          </div>
-          <p>© 2025 Prefeitura de Bagé · Secretaria de Cultura</p>
-          <div className="footer-links">
-            <button>Termos de uso</button>
-            <button>Privacidade</button>
-            <Link to="/feedback">Dar feedback</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

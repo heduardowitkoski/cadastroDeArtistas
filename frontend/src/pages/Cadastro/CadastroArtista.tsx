@@ -109,7 +109,7 @@ export default function CadastroArtista() {
         : [...prev.disponibilidade, v],
     }));
 
-  const compressImageFile = (file: File, maxWidth = 1000, quality = 0.8): Promise<string> => {
+  const compressImageFile = (file: File, maxWidth = 800, quality = 0.6): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
