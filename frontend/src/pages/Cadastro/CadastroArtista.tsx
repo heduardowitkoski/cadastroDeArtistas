@@ -46,7 +46,8 @@ const STEPS = ["Dados básicos", "Atuação", "Materiais e Mídias", "Revisão"]
 interface FormData {
   nome: string;
   nome_artistico: string;
-  cpf_cnpj: string;
+  cpf: string;
+  cnpj: string;
   email: string;
   contato: string;
   cidade: string;
@@ -67,7 +68,7 @@ interface FormData {
 export default function CadastroArtista() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>({
-    nome: "", nome_artistico: "", cpf_cnpj: "", email: "", contato: "",
+    nome: "", nome_artistico: "", cpf: "", cnpj: "", email: "", contato: "",
     cidade: "Bagé", categorias: [], bio: "", tags: [], disponibilidade: [],
     foto_url: "", foto_nome: "", galeria_nome: "", video_nome: "", audio_nome: "", portfolio_doc_nome: "",
     instagram: "", site: "",
@@ -131,8 +132,14 @@ export default function CadastroArtista() {
     }));
   };
 
+  const temCpfOuCnpj = Boolean(form.cpf.trim() || form.cnpj.trim());
+
   const isStepValid = () => {
-    if (step === 0) return Boolean(form.nome.trim() && form.email.trim() && form.contato.trim() && senha.length >= 6 && senha === confirmarSenha);
+    if (step === 0) {
+      const temBasicos = Boolean(form.nome.trim() && form.email.trim() && form.contato.trim());
+      const senhaValida = senha.length >= 6 && senha === confirmarSenha;
+      return temBasicos && temCpfOuCnpj && senhaValida;
+    }
     if (step === 1) return form.categorias.length > 0;
     return true;
   };
@@ -141,9 +148,9 @@ export default function CadastroArtista() {
     100,
     Math.round(
       ([
-        form.nome, form.email, form.contato, form.categorias.length > 0,
+        form.nome, form.email, form.contato, temCpfOuCnpj, form.categorias.length > 0,
         form.bio, form.foto_url, form.instagram, form.site,
-      ].filter(Boolean).length / 8) * 100
+      ].filter(Boolean).length / 9) * 100
     )
   );
 
@@ -152,7 +159,7 @@ export default function CadastroArtista() {
   const buildPayload = () => ({
     nome: form.nome,
     nome_artistico: form.nome_artistico || null,
-    cpf_cnpj: form.cpf_cnpj || null,
+    cpf_cnpj: [form.cpf.trim(), form.cnpj.trim()].filter(Boolean).join(" / ") || null,
     email: form.email,
     contato: form.contato,
     cidade: form.cidade || "Bagé",
@@ -169,34 +176,46 @@ export default function CadastroArtista() {
     setLoading(true);
     setError("");
     try {
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: form.email,
-        password: senha,
-      });
-      if (signUpError) throw new Error(signUpError.message);
-      setPrecisaConfirmarEmail(!signUpData.session);
+      if (senha) {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: form.email,
+          password: senha,
+        });
+        if (signUpError) {
+          const msgLower = signUpError.message.toLowerCase();
+          const isRegistered = msgLower.includes("already registered") ||
+                               msgLower.includes("já registrado") ||
+                               msgLower.includes("user_already_exists");
+          if (isRegistered) {
+            throw new Error("Este e-mail já possui conta cadastrada. Entre na Área do Artista para editar seus dados, ou use outro e-mail.");
+          }
+          console.warn("Aviso de Auth Supabase:", signUpError.message);
+        } else if (signUpData?.user) {
+          setPrecisaConfirmarEmail(!signUpData.session);
+        }
+      }
 
       const res = await fetch(`${API_URL}/artistas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(buildPayload()),
       });
+
       if (!res.ok) {
         const errData = await res.json().catch(() => null);
         const detail = errData?.message ? (Array.isArray(errData.message) ? errData.message.join(", ") : errData.message) : `Erro ${res.status}`;
         throw new Error(detail);
       }
-      await supabase.auth.signOut();
+
+      await supabase.auth.signOut().catch(() => null);
       setSuccess(true);
     } catch (err: unknown) {
       console.error("Erro ao enviar cadastro:", err);
       const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
       if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("http://localhost")) {
-        setError("Não foi possível conectar ao servidor. Verifique se o servidor de API (Render) está ativo.");
-      } else if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("já registrado") || msg.toLowerCase().includes("email")) {
-        setError("Este e-mail já possui cadastro. Entre na Área do Artista para editar seus dados, ou use outro e-mail.");
+        setError("Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente em instantes.");
       } else {
-        setError(`Erro ao enviar: ${msg}`);
+        setError(msg);
       }
     } finally {
       setLoading(false);
@@ -209,7 +228,7 @@ export default function CadastroArtista() {
         <div className="cadastro-success">
           <div className="success-icon"><Check size={36} /></div>
           <h2>Cadastro enviado para análise!</h2>
-          <p>Seu cadastro foi recebido pelos Gestores de Cultura e aparecerá no catálogo assim que for aprovado.</p>
+          <p>Seu cadastro foi recebido pela Secretaria de Cultura e aparecerá no catálogo assim que for aprovado.</p>
           {precisaConfirmarEmail && (
             <p style={{ background: "var(--purple-glow)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 12, padding: "12px 16px", fontSize: 13 }}>
               📧 Verifique seu e-mail e confirme o cadastro no link enviado para <strong>{form.email}</strong>. Assim você poderá entrar na Área do Artista para editar seus dados depois.
@@ -227,8 +246,14 @@ export default function CadastroArtista() {
   const reviewItems = [
     {
       section: "Dados básicos",
-      items: [`Nome: ${form.nome}`, `E-mail: ${form.email}`, `Cidade: ${form.cidade}`],
-      ok: Boolean(form.nome && form.email && form.contato),
+      items: [
+        `Nome: ${form.nome}`,
+        `E-mail: ${form.email}`,
+        `CPF: ${form.cpf || "—"}`,
+        `CNPJ: ${form.cnpj || "—"}`,
+        `Cidade: ${form.cidade}`
+      ],
+      ok: Boolean(form.nome && form.email && form.contato && temCpfOuCnpj),
     },
     {
       section: "Atuação",
@@ -313,14 +338,28 @@ export default function CadastroArtista() {
                       <label>Nome completo *</label>
                       <input value={form.nome} onChange={(e) => update("nome", e.target.value)} placeholder="Seu nome completo" />
                     </div>
-                    <div className="input-group">
+                    <div className="input-group col-span-2">
                       <label>Nome artístico</label>
                       <input value={form.nome_artistico} onChange={(e) => update("nome_artistico", e.target.value)} placeholder="Como você é conhecido(a)" />
                     </div>
+
+                    {/* Campos de CPF e CNPJ separados */}
                     <div className="input-group">
-                      <label>CPF / CNPJ</label>
-                      <input value={form.cpf_cnpj} onChange={(e) => update("cpf_cnpj", e.target.value)} placeholder="000.000.000-00" />
+                      <label>CPF</label>
+                      <input value={form.cpf} onChange={(e) => update("cpf", e.target.value)} placeholder="000.000.000-00" />
                     </div>
+                    <div className="input-group">
+                      <label>CNPJ</label>
+                      <input value={form.cnpj} onChange={(e) => update("cnpj", e.target.value)} placeholder="00.000.000/0001-00" />
+                    </div>
+                    <div className="col-span-2" style={{ marginTop: -8 }}>
+                      {!temCpfOuCnpj ? (
+                        <span className="cpf-cnpj-hint" style={{ color: "var(--rose)" }}>* Preencha ao menos o CPF ou o CNPJ para prosseguir.</span>
+                      ) : (
+                        <span className="cpf-cnpj-hint" style={{ color: "var(--teal)" }}><Check size={12} style={{ display: "inline" }} /> Documento informado com sucesso.</span>
+                      )}
+                    </div>
+
                     <div className="input-group">
                       <label>E-mail *</label>
                       <input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="seu@email.com" />
@@ -329,7 +368,7 @@ export default function CadastroArtista() {
                       <label>Telefone / WhatsApp *</label>
                       <input value={form.contato} onChange={(e) => update("contato", e.target.value)} placeholder="(53) 99999-0000" />
                     </div>
-                    <div className="input-group">
+                    <div className="input-group col-span-2">
                       <label>Cidade</label>
                       <input value={form.cidade} onChange={(e) => update("cidade", e.target.value)} placeholder="Bagé/RS" />
                     </div>

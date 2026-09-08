@@ -46,6 +46,7 @@ interface Artista {
   id: number;
   nome: string;
   nome_artistico?: string;
+  cpf_cnpj?: string;
   email: string;
   contato: string;
   cidade: string;
@@ -61,7 +62,7 @@ interface Artista {
 
 export default function EditarCadastro() {
   const [form, setForm] = useState({
-    nome: "", nome_artistico: "", email: "", contato: "", cidade: "Bagé",
+    nome: "", nome_artistico: "", cpf: "", cnpj: "", email: "", contato: "", cidade: "Bagé",
     categorias: [] as string[], bio: "", tags: [] as string[], disponibilidade: [] as string[],
     foto_url: "", foto_nome: "", galeria_nome: "", video_nome: "", audio_nome: "", portfolio_doc_nome: "",
     instagram: "", site: "",
@@ -89,8 +90,18 @@ export default function EditarCadastro() {
         if (me) {
           setArtistaId(me.id);
           const initialCats = me.area_atuacao ? me.area_atuacao.split(",").map((c: string) => c.trim()).filter(Boolean) : [];
+          
+          let cpfVal = "";
+          let cnpjVal = "";
+          if (me.cpf_cnpj) {
+            const parts = me.cpf_cnpj.split("/").map((s: string) => s.trim());
+            if (parts[0]) cpfVal = parts[0];
+            if (parts[1]) cnpjVal = parts[1];
+          }
+
           setForm({
             nome: me.nome || "", nome_artistico: me.nome_artistico || "",
+            cpf: cpfVal, cnpj: cnpjVal,
             email: me.email || "", contato: me.contato || "", cidade: me.cidade || "Bagé",
             categorias: initialCats, bio: me.bio || "",
             tags: Array.isArray(me.tags) ? me.tags : [],
@@ -164,8 +175,14 @@ export default function EditarCadastro() {
     navigate("/artista/login");
   };
 
+  const temCpfOuCnpj = Boolean(form.cpf.trim() || form.cnpj.trim());
+
   const handleSave = async () => {
     if (!artistaId) return;
+    if (!temCpfOuCnpj) {
+      setError("Por favor, preencha ao menos o CPF ou o CNPJ antes de salvar.");
+      return;
+    }
     setSaving(true);
     setError("");
     setSuccess(false);
@@ -176,6 +193,7 @@ export default function EditarCadastro() {
         body: JSON.stringify({
           nome: form.nome,
           nome_artistico: form.nome_artistico || null,
+          cpf_cnpj: [form.cpf.trim(), form.cnpj.trim()].filter(Boolean).join(" / ") || null,
           email: form.email,
           contato: form.contato,
           cidade: form.cidade || "Bagé",
@@ -264,9 +282,17 @@ export default function EditarCadastro() {
                   <label>Nome completo</label>
                   <input value={form.nome} onChange={(e) => update("nome", e.target.value)} />
                 </div>
-                <div className="input-group">
+                <div className="input-group col-span-2">
                   <label>Nome artístico</label>
                   <input value={form.nome_artistico} onChange={(e) => update("nome_artistico", e.target.value)} />
+                </div>
+                <div className="input-group">
+                  <label>CPF</label>
+                  <input value={form.cpf} onChange={(e) => update("cpf", e.target.value)} placeholder="000.000.000-00" />
+                </div>
+                <div className="input-group">
+                  <label>CNPJ</label>
+                  <input value={form.cnpj} onChange={(e) => update("cnpj", e.target.value)} placeholder="00.000.000/0001-00" />
                 </div>
                 <div className="input-group">
                   <label>E-mail (login)</label>
@@ -276,7 +302,7 @@ export default function EditarCadastro() {
                   <label>Telefone / WhatsApp</label>
                   <input value={form.contato} onChange={(e) => update("contato", e.target.value)} />
                 </div>
-                <div className="input-group">
+                <div className="input-group col-span-2">
                   <label>Cidade</label>
                   <input value={form.cidade} onChange={(e) => update("cidade", e.target.value)} />
                 </div>

@@ -192,9 +192,6 @@
   box-shadow: 0 4px 12px var(--purple-glow);
 }
 .categoria-header-row { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; width: 100%; justify-content: space-between; }
-.categoria-subtext { font-size: 11px; color: var(--text-muted); font-weight: 400; line-height: 1.4; margin-top: 2px; }
-.categoria-btn.active .categoria-subtext { color: rgba(124, 58, 237, 0.85); }
-
 /* Tags pré-definidas em Chips */
 .tag-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .tag-chip {
@@ -218,6 +215,62 @@
   border-color: var(--purple-primary);
   color: white;
   box-shadow: 0 3px 10px var(--purple-glow);
+}
+
+/* Textarea Modernizado */
+.artista-section textarea {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  outline: none;
+  resize: vertical;
+  min-height: 120px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  line-height: 1.6;
+}
+.artista-section textarea:focus {
+  border-color: var(--purple-primary);
+  box-shadow: 0 0 0 3px var(--purple-glow);
+  background: var(--bg-card);
+}
+
+/* Disponibilidade para Apresentações */
+.avail-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.avail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+.avail-btn:hover { border-color: var(--purple-primary); color: var(--text-primary); transform: translateY(-1px); }
+.avail-btn.active {
+  background: var(--purple-primary);
+  border-color: var(--purple-primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--purple-glow);
+}
+
+.cpf-cnpj-hint {
+  font-size: 12px;
+  color: var(--purple-primary);
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
 }
 
 /* Uploads de mídia interativos */
