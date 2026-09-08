@@ -210,6 +210,7 @@ export default function CadastroArtista() {
     foto_url: form.foto_url || null,
     instagram: form.instagram || null,
     site: form.site || null,
+    senha: senha,
   });
 
   const handleSubmit = async () => {

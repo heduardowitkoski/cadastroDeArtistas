@@ -29,10 +29,33 @@ export class ArtistasService {
   }
 
   async create(createDto: Record<string, unknown>) {
+    const payload = { ...createDto };
+    const senha = payload.senha as string | undefined;
+    delete payload.senha;
+
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL;
+
+    if (serviceRoleKey && supabaseUrl && payload.email && senha) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+          auth: { autoRefreshToken: false, persistSession: false },
+        });
+        await adminClient.auth.admin.createUser({
+          email: String(payload.email),
+          password: senha,
+          email_confirm: true,
+        });
+      } catch (err) {
+        console.warn('Nota: Não foi possível auto-confirmar via Service Role:', err);
+      }
+    }
+
     const { data, error } = await this.supabaseService
       .getClient()
       .from('artistas')
-      .insert([{ ...createDto, status: 'Pendente' }])
+      .insert([{ ...payload, status: 'Pendente' }])
       .select()
       .single();
 

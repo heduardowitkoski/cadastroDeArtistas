@@ -15,9 +15,16 @@ export default function ArtistaLogin() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-    if (error) {
-      setError("E-mail ou senha incorretos.");
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password: senha });
+    if (loginError) {
+      const msgLower = loginError.message.toLowerCase();
+      if (msgLower.includes("email not confirmed") || msgLower.includes("não confirmado")) {
+        setError("Sua conta foi criada no Supabase, mas a confirmação de e-mail está pendente. Para permitir login sem e-mail de confirmação, vá no painel do Supabase -> Authentication -> Providers -> Email e desmarque 'Confirm email'.");
+      } else if (msgLower.includes("invalid login credentials") || msgLower.includes("credenciais inválidas")) {
+        setError("E-mail ou senha incorretos.");
+      } else {
+        setError(`Falha no login: ${loginError.message}`);
+      }
       setLoading(false);
     } else {
       navigate("/artista/editar");
