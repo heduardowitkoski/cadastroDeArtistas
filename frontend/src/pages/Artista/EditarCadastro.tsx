@@ -272,7 +272,7 @@ export default function EditarCadastro() {
       <header className="artista-header">
         <div className="container header-content">
           <div className="header-brand">
-            <div className="brand-icon"><Star size={16} /></div>
+            <div className="brand-icon" aria-hidden="true"><Star size={16} aria-hidden="true" /></div>
             <div>
               <span className="brand-title block">Cadastro Municipal de Artistas</span>
               <span className="artista-header-sub">Área do Artista</span>
@@ -280,10 +280,10 @@ export default function EditarCadastro() {
           </div>
           <div className="artista-header-actions">
             <Link to="/" className="artista-sair">Ver catálogo</Link>
-            <button onClick={handleLogout} className="btn btn-secondary btn-sm" title="Sair">
-              <LogOut size={14} /> Sair
+            <button onClick={handleLogout} className="btn btn-secondary btn-sm" aria-label="Sair da Área do Artista">
+              <LogOut size={14} aria-hidden="true" /> Sair
             </button>
-            <div className="artista-avatar"><User size={16} /></div>
+            <div className="artista-avatar" aria-hidden="true"><User size={16} aria-hidden="true" /></div>
           </div>
         </div>
       </header>
@@ -295,12 +295,12 @@ export default function EditarCadastro() {
         </div>
 
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
-            <div className="spinner" />
+          <div style={{ display: "flex", justifyContent: "center", padding: 60 }} role="status" aria-label="Carregando dados do cadastro">
+            <div className="spinner" aria-hidden="true" />
           </div>
         ) : !artistaId ? (
           <div className="artista-card" style={{ textAlign: "center", padding: 48 }}>
-            <AlertCircle size={40} color="var(--amber)" style={{ margin: "0 auto 12px", display: "block" }} />
+            <AlertCircle size={40} color="var(--amber)" style={{ margin: "0 auto 12px", display: "block" }} aria-hidden="true" />
             <h2>Nenhum cadastro encontrado</h2>
             <p style={{ color: "var(--text-secondary)", margin: "12px 0 20px", fontSize: 14 }}>
               Não há nenhum perfil de artista vinculado a este e-mail. Faça um novo cadastro para entrar no catálogo.
@@ -311,195 +311,246 @@ export default function EditarCadastro() {
           <>
             <div className="artista-card">
               {success && (
-                <div className="editar-banner ok" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 12, padding: 14, marginBottom: 20, color: "var(--teal)", display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
-                  <CheckCircle size={18} /> Cadastro atualizado! Ele voltou para análise e aparecerá no catálogo após a aprovação.
+                <div
+                  className="editar-banner ok"
+                  role="alert"
+                  aria-live="polite"
+                  style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 12, padding: 14, marginBottom: 20, color: "var(--teal)", display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}
+                >
+                  <CheckCircle size={18} aria-hidden="true" /> Cadastro atualizado! Ele voltou para análise e aparecerá no catálogo após a aprovação.
                 </div>
               )}
-              {error && <div className="form-error">{error}</div>}
+              {error && (
+                <div className="form-error" role="alert" aria-live="assertive">{error}</div>
+              )}
 
               <h2 className="artista-card-title">Dados básicos</h2>
               <div className="form-grid-2">
                 <div className="input-group col-span-2">
-                  <label>Nome completo</label>
-                  <input value={form.nome} onChange={(e) => update("nome", e.target.value)} />
+                  <label htmlFor="edit-nome">Nome completo</label>
+                  <input id="edit-nome" value={form.nome} onChange={(e) => update("nome", e.target.value)} autoComplete="name" />
                 </div>
                 <div className="input-group col-span-2">
-                  <label>Nome artístico</label>
-                  <input value={form.nome_artistico} onChange={(e) => update("nome_artistico", e.target.value)} />
+                  <label htmlFor="edit-nome-artistico">Nome artístico</label>
+                  <input id="edit-nome-artistico" value={form.nome_artistico} onChange={(e) => update("nome_artistico", e.target.value)} autoComplete="nickname" />
                 </div>
                 <div className="input-group">
-                  <label>CPF</label>
-                  <input value={form.cpf} onChange={(e) => update("cpf", e.target.value)} placeholder="000.000.000-00" />
+                  <label htmlFor="edit-cpf">CPF</label>
+                  <input id="edit-cpf" value={form.cpf} onChange={(e) => update("cpf", e.target.value)} placeholder="000.000.000-00" autoComplete="off" />
                 </div>
                 <div className="input-group">
-                  <label>CNPJ</label>
-                  <input value={form.cnpj} onChange={(e) => update("cnpj", e.target.value)} placeholder="00.000.000/0001-00" />
+                  <label htmlFor="edit-cnpj">CNPJ</label>
+                  <input id="edit-cnpj" value={form.cnpj} onChange={(e) => update("cnpj", e.target.value)} placeholder="00.000.000/0001-00" autoComplete="off" />
                 </div>
                 <div className="input-group">
-                  <label>E-mail (login)</label>
-                  <input type="email" value={form.email} readOnly />
+                  <label htmlFor="edit-email">E-mail (login)</label>
+                  <input
+                    id="edit-email"
+                    type="email"
+                    value={form.email}
+                    readOnly
+                    aria-readonly="true"
+                    aria-label="E-mail de login (não editável)"
+                    autoComplete="email"
+                    style={{ opacity: 0.7, cursor: "not-allowed" }}
+                  />
                 </div>
                 <div className="input-group">
-                  <label>Telefone / WhatsApp</label>
-                  <input value={form.contato} onChange={(e) => update("contato", e.target.value)} />
+                  <label htmlFor="edit-contato">Telefone / WhatsApp</label>
+                  <input id="edit-contato" value={form.contato} onChange={(e) => update("contato", e.target.value)} autoComplete="tel" type="tel" />
                 </div>
                 <div className="input-group col-span-2">
-                  <label>Cidade</label>
-                  <input value={form.cidade} onChange={(e) => update("cidade", e.target.value)} />
+                  <label htmlFor="edit-cidade">Cidade</label>
+                  <input id="edit-cidade" value={form.cidade} onChange={(e) => update("cidade", e.target.value)} autoComplete="address-level2" />
                 </div>
               </div>
 
               <h2 className="artista-card-title" style={{ marginTop: 32 }}>Atuação artística</h2>
               <div className="artista-section">
-                <label className="artista-label">Categorias artísticas (selecione uma ou mais categorias que você se enquadra)</label>
-                <div className="categoria-grid">
-                  {CATEGORIAS_SEDAC.map((c) => {
-                    const active = form.categorias.includes(c.nome);
-                    return (
+                <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+                  <legend className="artista-label">Categorias artísticas (selecione uma ou mais categorias que você se enquadra)</legend>
+                  <div className="categoria-grid">
+                    {CATEGORIAS_SEDAC.map((c) => {
+                      const active = form.categorias.includes(c.nome);
+                      return (
+                        <button
+                          key={c.nome}
+                          type="button"
+                          onClick={() => toggleCategoria(c.nome)}
+                          className={`categoria-btn ${active ? "active" : ""}`}
+                          aria-pressed={active}
+                          aria-label={`${c.nome}: ${c.sub}${active ? " (selecionado)" : ""}`}
+                        >
+                          <div className="categoria-header-row">
+                            <span><span aria-hidden="true">{c.icon}</span> {c.nome}</span>
+                            {active && <Check size={16} color="var(--purple-primary)" aria-hidden="true" />}
+                          </div>
+                          <span className="categoria-subtext">{c.sub}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </div>
+
+              <div className="artista-section" style={{ marginTop: 24 }}>
+                <label className="artista-label" htmlFor="edit-bio">Descrição do trabalho</label>
+                <textarea id="edit-bio" rows={4} value={form.bio} onChange={(e) => update("bio", e.target.value)} />
+              </div>
+
+              <div className="artista-section" style={{ marginTop: 24 }}>
+                <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+                  <legend className="artista-label">Tags / Palavras-chave</legend>
+                  <div className="tag-grid">
+                    {TAGS_PREDEFINIDAS.map((tag) => {
+                      const active = form.tags.includes(tag);
+                      return (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => toggleTag(tag)}
+                          className={`tag-chip ${active ? "active" : ""}`}
+                          aria-pressed={active}
+                        >
+                          {active && <Check size={12} aria-hidden="true" />}
+                          {tag}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </div>
+
+              <div className="artista-section" style={{ marginTop: 24 }}>
+                <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+                  <legend className="artista-label">Disponibilidade</legend>
+                  <div className="avail-grid">
+                    {DISPONIBILIDADES.map((v) => (
                       <button
-                        key={c.nome}
+                        key={v}
                         type="button"
-                        onClick={() => toggleCategoria(c.nome)}
-                        className={`categoria-btn ${active ? "active" : ""}`}
+                        onClick={() => toggleDisponibilidade(v)}
+                        className={`avail-btn ${form.disponibilidade.includes(v) ? "active" : ""}`}
+                        aria-pressed={form.disponibilidade.includes(v)}
                       >
-                        <div className="categoria-header-row">
-                          <span>{c.icon} {c.nome}</span>
-                          {active && <Check size={16} color="var(--purple-primary)" />}
-                        </div>
-                        <span className="categoria-subtext">{c.sub}</span>
+                        {form.disponibilidade.includes(v) && <Check size={13} aria-hidden="true" />}
+                        {v}
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="artista-section" style={{ marginTop: 24 }}>
-                <label className="artista-label">Descrição do trabalho</label>
-                <textarea rows={4} value={form.bio} onChange={(e) => update("bio", e.target.value)} />
-              </div>
-
-              <div className="artista-section" style={{ marginTop: 24 }}>
-                <label className="artista-label">Tags / Palavras-chave</label>
-                <div className="tag-grid">
-                  {TAGS_PREDEFINIDAS.map((tag) => {
-                    const active = form.tags.includes(tag);
-                    return (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => toggleTag(tag)}
-                        className={`tag-chip ${active ? "active" : ""}`}
-                      >
-                        {active && <Check size={12} />}
-                        {tag}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="artista-section" style={{ marginTop: 24 }}>
-                <label className="artista-label">Disponibilidade</label>
-                <div className="avail-grid">
-                  {DISPONIBILIDADES.map((v) => (
-                    <button key={v} type="button" onClick={() => toggleDisponibilidade(v)} className={`avail-btn ${form.disponibilidade.includes(v) ? "active" : ""}`}>
-                      {form.disponibilidade.includes(v) && <Check size={13} />}
-                      {v}
-                    </button>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                </fieldset>
               </div>
 
               <h2 className="artista-card-title" style={{ marginTop: 32 }}>Materiais e Mídias</h2>
               <div className="upload-grid" style={{ marginTop: 16 }}>
                 <div className="upload-card">
                   <div className="upload-card-head">
-                    <div className="upload-icon"><User size={22} /></div>
+                    <div className="upload-icon" aria-hidden="true"><User size={22} aria-hidden="true" /></div>
                     <div>
                       <p className="upload-title">Foto de Perfil</p>
                       <p className="upload-subtitle">Atualizar imagem do perfil</p>
                     </div>
                   </div>
-                  <label className="upload-btn">
-                    <Upload size={14} /> Selecionar imagem
-                    <input type="file" accept="image/*" onChange={handleFotoUpload} style={{ display: "none" }} />
+                  <label htmlFor="edit-upload-foto" className="upload-btn">
+                    <Upload size={14} aria-hidden="true" /> Selecionar imagem
+                    <input id="edit-upload-foto" type="file" accept="image/*" onChange={handleFotoUpload} style={{ display: "none" }} aria-label="Selecionar nova foto de perfil" />
                   </label>
-                  {form.foto_nome && <span className="upload-file-name"><Check size={12} /> {form.foto_nome}</span>}
+                  {form.foto_nome && (
+                    <span className="upload-file-name" aria-live="polite">
+                      <Check size={12} aria-hidden="true" /> {form.foto_nome}
+                    </span>
+                  )}
                 </div>
 
                 <div className="upload-card">
                   <div className="upload-card-head">
-                    <div className="upload-icon"><Image size={22} /></div>
+                    <div className="upload-icon" aria-hidden="true"><Image size={22} aria-hidden="true" /></div>
                     <div>
                       <p className="upload-title">Fotos da Galeria</p>
                       <p className="upload-subtitle">Fotos de trabalhos</p>
                     </div>
                   </div>
-                  <label className="upload-btn">
-                    <Upload size={14} /> Carregar fotos
-                    <input type="file" accept="image/*" multiple onChange={(e) => handleGenericFileUpload("galeria_nome", e)} style={{ display: "none" }} />
+                  <label htmlFor="edit-upload-galeria" className="upload-btn">
+                    <Upload size={14} aria-hidden="true" /> Carregar fotos
+                    <input id="edit-upload-galeria" type="file" accept="image/*" multiple onChange={(e) => handleGenericFileUpload("galeria_nome", e)} style={{ display: "none" }} aria-label="Selecionar fotos da galeria" />
                   </label>
-                  {form.galeria_nome && <span className="upload-file-name"><Check size={12} /> {form.galeria_nome}</span>}
+                  {form.galeria_nome && (
+                    <span className="upload-file-name" aria-live="polite">
+                      <Check size={12} aria-hidden="true" /> {form.galeria_nome}
+                    </span>
+                  )}
                 </div>
 
                 <div className="upload-card">
                   <div className="upload-card-head">
-                    <div className="upload-icon"><FileText size={22} /></div>
+                    <div className="upload-icon" aria-hidden="true"><FileText size={22} aria-hidden="true" /></div>
                     <div>
                       <p className="upload-title">Portfólio (Documento)</p>
                       <p className="upload-subtitle">PDF ou DOC</p>
                     </div>
                   </div>
-                  <label className="upload-btn">
-                    <Upload size={14} /> Enviar PDF
-                    <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)} style={{ display: "none" }} />
+                  <label htmlFor="edit-upload-portfolio" className="upload-btn">
+                    <Upload size={14} aria-hidden="true" /> Enviar PDF
+                    <input id="edit-upload-portfolio" type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)} style={{ display: "none" }} aria-label="Selecionar documento de portfólio" />
                   </label>
-                  {form.portfolio_doc_nome && <span className="upload-file-name"><Check size={12} /> {form.portfolio_doc_nome}</span>}
+                  {form.portfolio_doc_nome && (
+                    <span className="upload-file-name" aria-live="polite">
+                      <Check size={12} aria-hidden="true" /> {form.portfolio_doc_nome}
+                    </span>
+                  )}
                 </div>
 
                 <div className="upload-card">
                   <div className="upload-card-head">
-                    <div className="upload-icon"><Video size={22} /></div>
+                    <div className="upload-icon" aria-hidden="true"><Video size={22} aria-hidden="true" /></div>
                     <div>
                       <p className="upload-title">Vídeos</p>
                       <p className="upload-subtitle">Vídeo MP4</p>
                     </div>
                   </div>
-                  <label className="upload-btn">
-                    <Upload size={14} /> Selecionar vídeo
-                    <input type="file" accept="video/*" onChange={(e) => handleGenericFileUpload("video_nome", e)} style={{ display: "none" }} />
+                  <label htmlFor="edit-upload-video" className="upload-btn">
+                    <Upload size={14} aria-hidden="true" /> Selecionar vídeo
+                    <input id="edit-upload-video" type="file" accept="video/*" onChange={(e) => handleGenericFileUpload("video_nome", e)} style={{ display: "none" }} aria-label="Selecionar vídeo de apresentação" />
                   </label>
-                  {form.video_nome && <span className="upload-file-name"><Check size={12} /> {form.video_nome}</span>}
+                  {form.video_nome && (
+                    <span className="upload-file-name" aria-live="polite">
+                      <Check size={12} aria-hidden="true" /> {form.video_nome}
+                    </span>
+                  )}
                 </div>
 
                 <div className="upload-card">
                   <div className="upload-card-head">
-                    <div className="upload-icon"><Headphones size={22} /></div>
+                    <div className="upload-icon" aria-hidden="true"><Headphones size={22} aria-hidden="true" /></div>
                     <div>
                       <p className="upload-title">Áudios</p>
                       <p className="upload-subtitle">Faixa de áudio MP3</p>
                     </div>
                   </div>
-                  <label className="upload-btn">
-                    <Upload size={14} /> Selecionar áudio
-                    <input type="file" accept="audio/*" onChange={(e) => handleGenericFileUpload("audio_nome", e)} style={{ display: "none" }} />
+                  <label htmlFor="edit-upload-audio" className="upload-btn">
+                    <Upload size={14} aria-hidden="true" /> Selecionar áudio
+                    <input id="edit-upload-audio" type="file" accept="audio/*" onChange={(e) => handleGenericFileUpload("audio_nome", e)} style={{ display: "none" }} aria-label="Selecionar faixa de áudio" />
                   </label>
-                  {form.audio_nome && <span className="upload-file-name"><Check size={12} /> {form.audio_nome}</span>}
+                  {form.audio_nome && (
+                    <span className="upload-file-name" aria-live="polite">
+                      <Check size={12} aria-hidden="true" /> {form.audio_nome}
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="form-grid-2" style={{ marginTop: 24 }}>
                 <div className="input-group col-span-2">
-                  <label>URL da foto de perfil</label>
-                  <input value={form.foto_url} onChange={(e) => update("foto_url", e.target.value)} placeholder="https://..." />
+                  <label htmlFor="edit-foto-url">URL da foto de perfil</label>
+                  <input id="edit-foto-url" value={form.foto_url} onChange={(e) => update("foto_url", e.target.value)} placeholder="https://..." autoComplete="off" />
                 </div>
                 <div className="input-group">
-                  <label>Instagram</label>
-                  <input value={form.instagram} onChange={(e) => update("instagram", e.target.value)} placeholder="@seu.perfil" />
+                  <label htmlFor="edit-instagram">Instagram</label>
+                  <input id="edit-instagram" value={form.instagram} onChange={(e) => update("instagram", e.target.value)} placeholder="@seu.perfil" autoComplete="off" />
                 </div>
                 <div className="input-group">
-                  <label>Site</label>
-                  <input value={form.site} onChange={(e) => update("site", e.target.value)} placeholder="https://meusite.com.br" />
+                  <label htmlFor="edit-site">Site</label>
+                  <input id="edit-site" value={form.site} onChange={(e) => update("site", e.target.value)} placeholder="https://meusite.com.br" autoComplete="url" type="url" />
                 </div>
               </div>
             </div>
@@ -509,8 +560,17 @@ export default function EditarCadastro() {
                 Cancelar
               </Link>
               <div className="artista-nav-actions">
-                <button type="button" className="btn btn-primary" onClick={handleSave} disabled={saving}>
-                  {saving ? <><Loader size={16} className="spin" /> Salvando...</> : <><Save size={16} /> Salvar alterações</>}
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSave}
+                  disabled={saving}
+                  aria-label="Salvar alterações do cadastro"
+                >
+                  {saving
+                    ? <><Loader size={16} className="spin" aria-hidden="true" /> <span>Salvando...</span></>
+                    : <><Save size={16} aria-hidden="true" /> <span>Salvar alterações</span></>
+                  }
                 </button>
               </div>
             </div>

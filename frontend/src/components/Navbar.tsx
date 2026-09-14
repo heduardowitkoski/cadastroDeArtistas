@@ -24,9 +24,9 @@ export function Navbar({ activePage }: NavbarProps) {
     <header className="portal-header">
       <div className="container header-content">
         {/* Marca / Logo */}
-        <Link to="/" className="header-brand" style={{ textDecoration: "none" }}>
-          <div className="brand-icon">
-            <Star size={16} />
+        <Link to="/" className="header-brand" style={{ textDecoration: "none" }} aria-label="Cadastro Municipal de Artistas — Página inicial">
+          <div className="brand-icon" aria-hidden="true">
+            <Star size={16} aria-hidden="true" />
           </div>
           <div className="brand-text">
             <span className="brand-title">Cadastro Municipal</span>
@@ -35,24 +35,27 @@ export function Navbar({ activePage }: NavbarProps) {
         </Link>
 
         {/* Links Principais de Navegação */}
-        <nav className="header-nav-links">
+        <nav className="header-nav-links" aria-label="Navegação principal">
           <Link
             to="/"
             className={`header-nav-item ${isNavActive("/", "catalogo") ? "active" : ""}`}
+            aria-current={isNavActive("/", "catalogo") ? "page" : undefined}
           >
-            <Grid size={14} style={{ marginRight: 6 }} /> Catálogo
+            <Grid size={14} style={{ marginRight: 6 }} aria-hidden="true" /> Catálogo
           </Link>
           <Link
             to="/como-funciona"
             className={`header-nav-item ${isNavActive("/como-funciona", "como-funciona") ? "active" : ""}`}
+            aria-current={isNavActive("/como-funciona", "como-funciona") ? "page" : undefined}
           >
-            <HelpCircle size={14} style={{ marginRight: 6 }} /> Como funciona
+            <HelpCircle size={14} style={{ marginRight: 6 }} aria-hidden="true" /> Como funciona
           </Link>
           <Link
             to="/feedback"
             className={`header-nav-item ${isNavActive("/feedback", "feedback") ? "active" : ""}`}
+            aria-current={isNavActive("/feedback", "feedback") ? "page" : undefined}
           >
-            <MessageSquareHeart size={14} style={{ marginRight: 6 }} /> Feedback
+            <MessageSquareHeart size={14} style={{ marginRight: 6 }} aria-hidden="true" /> Feedback
           </Link>
         </nav>
 
@@ -62,10 +65,10 @@ export function Navbar({ activePage }: NavbarProps) {
           <Link
             to="/artista/login"
             className={`btn btn-outline btn-sm ${isNavActive("/artista/login", "login-artista") ? "active-nav-btn" : ""}`}
-            title="Entrar na Área do Artista"
+            aria-current={isNavActive("/artista/login", "login-artista") ? "page" : undefined}
             style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
           >
-            <User size={14} /> Entrar (Artista)
+            <User size={14} aria-hidden="true" /> Entrar (Artista)
           </Link>
 
           {/* Botão de Novo Cadastro de Artista */}
@@ -74,24 +77,27 @@ export function Navbar({ activePage }: NavbarProps) {
             className="btn btn-primary btn-sm"
             style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
           >
-            <Sparkles size={14} /> Sou artista
+            <Sparkles size={14} aria-hidden="true" /> Sou artista
           </Link>
 
           {/* Botão de Acesso Administrativo do Conselho */}
           <Link
             to="/admin/login"
             className="btn btn-secondary btn-sm"
-            title="Acesso dos Gestores do Conselho Municipal de Políticas Culturais"
+            aria-label="Acesso administrativo — Gestores do Conselho Municipal de Políticas Culturais"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, opacity: 0.9 }}
           >
-            <Building2 size={14} /> Admin
+            <Building2 size={14} aria-hidden="true" /> Admin
           </Link>
 
           {/* Botão Menu Mobile */}
           <button
+            id="mobile-menu-btn"
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Abrir menu"
+            aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu-drawer"
             style={{
               display: "none",
               background: "none",
@@ -101,32 +107,32 @@ export function Navbar({ activePage }: NavbarProps) {
               padding: 4
             }}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
       </div>
 
       {/* Drawer do Menu Mobile */}
       {mobileMenuOpen && (
-        <div className="mobile-menu-drawer">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)}>
-            <Grid size={16} /> Catálogo de Artistas
+        <div id="mobile-menu-drawer" className="mobile-menu-drawer" role="navigation" aria-label="Menu mobile">
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} aria-current={isNavActive("/", "catalogo") ? "page" : undefined}>
+            <Grid size={16} aria-hidden="true" /> Catálogo de Artistas
           </Link>
-          <Link to="/como-funciona" onClick={() => setMobileMenuOpen(false)}>
-            <HelpCircle size={16} /> Como Funciona
+          <Link to="/como-funciona" onClick={() => setMobileMenuOpen(false)} aria-current={isNavActive("/como-funciona", "como-funciona") ? "page" : undefined}>
+            <HelpCircle size={16} aria-hidden="true" /> Como Funciona
           </Link>
-          <Link to="/feedback" onClick={() => setMobileMenuOpen(false)}>
-            <MessageSquareHeart size={16} /> Dar Feedback
+          <Link to="/feedback" onClick={() => setMobileMenuOpen(false)} aria-current={isNavActive("/feedback", "feedback") ? "page" : undefined}>
+            <MessageSquareHeart size={16} aria-hidden="true" /> Dar Feedback
           </Link>
-          <div className="mobile-menu-divider" />
+          <div className="mobile-menu-divider" role="separator" />
           <Link to="/artista/login" onClick={() => setMobileMenuOpen(false)} className="mobile-menu-highlight">
-            <User size={16} /> Já sou cadastrado (Entrar)
+            <User size={16} aria-hidden="true" /> Já sou cadastrado (Entrar)
           </Link>
           <Link to="/cadastrar" onClick={() => setMobileMenuOpen(false)} className="mobile-menu-btn-primary">
-            <Sparkles size={16} /> Fazer novo cadastro
+            <Sparkles size={16} aria-hidden="true" /> Fazer novo cadastro
           </Link>
           <Link to="/admin/login" onClick={() => setMobileMenuOpen(false)} style={{ color: "var(--text-muted)", fontSize: 13 }}>
-            <Building2 size={15} /> Acesso Administrativo (Conselho)
+            <Building2 size={15} aria-hidden="true" /> Acesso Administrativo (Conselho)
           </Link>
         </div>
       )}

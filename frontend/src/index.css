@@ -24,8 +24,8 @@
   --indigo: #6366F1;
 
   --text-primary: #1A1035;
-  --text-secondary: #6B7280;
-  --text-muted: #9CA3AF;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -153,6 +153,18 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; line-heig
   border-color: var(--purple-primary);
   box-shadow: 0 0 0 3px var(--purple-glow);
   background: var(--bg-card);
+}
+
+/* ─── Foco visível global (WCAG 2.4.7) ─── */
+:focus-visible {
+  outline: 3px solid var(--purple-primary);
+  outline-offset: 2px;
+}
+/* Inputs e textareas já têm estilo de foco próprio via border+shadow */
+.input-group input:focus-visible,
+.input-group textarea:focus-visible,
+.input-group select:focus-visible {
+  outline: none;
 }
 .input-group textarea { resize: vertical; min-height: 100px; }
 .input-group select option { background: var(--bg-card); }

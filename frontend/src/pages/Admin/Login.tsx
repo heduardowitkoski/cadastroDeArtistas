@@ -28,41 +28,55 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card card">
         <div className="login-brand">
-          <div className="brand-icon"><Palette size={24} /></div>
+          <div className="brand-icon" aria-hidden="true"><Palette size={24} aria-hidden="true" /></div>
           <h1>Painel Administrativo</h1>
           <p>Gestão de Cadastros de Artistas</p>
         </div>
 
-        <form onSubmit={handleLogin} className="login-form">
+        <form onSubmit={handleLogin} className="login-form" aria-label="Formulário de acesso administrativo" noValidate>
           <div className="input-group">
-            <label>E-mail</label>
+            <label htmlFor="admin-email">E-mail</label>
             <input
+              id="admin-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@cultura.bage.rs.gov.br"
               required
+              aria-required="true"
+              autoComplete="email"
             />
           </div>
           <div className="input-group">
-            <label>Senha</label>
+            <label htmlFor="admin-senha">Senha</label>
             <input
+              id="admin-senha"
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="••••••••"
               required
+              aria-required="true"
+              autoComplete="current-password"
+              aria-describedby={error ? "admin-login-error" : undefined}
             />
           </div>
 
-          {error && <div className="login-error">{error}</div>}
+          {error && (
+            <div id="admin-login-error" className="login-error" role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <button type="submit" className="btn btn-primary login-btn" disabled={loading}>
-            {loading ? <><Loader size={16} className="spin" /> Entrando...</> : <><LogIn size={16} /> Entrar</>}
+            {loading
+              ? <><Loader size={16} className="spin" aria-hidden="true" /> <span>Entrando...</span></>
+              : <><LogIn size={16} aria-hidden="true" /> <span>Entrar</span></>
+            }
           </button>
         </form>
       </div>
-      <div className="login-glow" />
+      <div className="login-glow" aria-hidden="true" />
     </div>
   );
 }
