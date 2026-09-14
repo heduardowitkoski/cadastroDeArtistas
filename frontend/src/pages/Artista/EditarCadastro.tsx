@@ -394,7 +394,7 @@ export default function EditarCadastro() {
               </div>
 
               <div className="artista-section" style={{ marginTop: 24 }}>
-                <label className="artista-label" htmlFor="edit-bio">Descrição do trabalho</label>
+                <label className="artista-label" htmlFor="edit-bio">Mini-bio</label>
                 <textarea id="edit-bio" rows={4} value={form.bio} onChange={(e) => update("bio", e.target.value)} />
               </div>
 

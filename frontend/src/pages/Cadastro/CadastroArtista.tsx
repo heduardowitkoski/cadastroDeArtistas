@@ -568,7 +568,7 @@ export default function CadastroArtista() {
                   </div>
 
                   <div className="artista-section" style={{ marginTop: 28 }}>
-                    <label className="artista-label" htmlFor="cad-bio">Descrição do trabalho</label>
+                    <label className="artista-label" htmlFor="cad-bio">Mini-bio</label>
                     <textarea
                       id="cad-bio"
                       rows={4}
@@ -907,7 +907,7 @@ export default function CadastroArtista() {
               </div>
             </div>
             <div className="preview-dica">
-              <strong>Dica:</strong> perfis com foto, descrição e disponibilidade recebem mais contatos.
+              <strong>Dica:</strong> perfis com foto, mini-bio e disponibilidade recebem mais contatos.
             </div>
           </aside>
         </div>
