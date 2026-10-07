@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   firstInvalidStep,
@@ -87,6 +87,15 @@ export default function CadastroArtista() {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [showErrors, setShowErrors] = useState(false);
+
+  useEffect(() => {
+    if (!showErrors) return;
+    const frame = requestAnimationFrame(() => {
+      const firstInvalid = document.querySelector<HTMLElement>('.artista-card [aria-invalid="true"]');
+      (firstInvalid || document.querySelector<HTMLElement>('.artista-card-title'))?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [showErrors, step]);
 
   const update = (field: keyof FormData, value: unknown) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -378,7 +387,7 @@ export default function CadastroArtista() {
             <div className="artista-card">
               {step === 0 && (
                 <div>
-                  <h2 className="artista-card-title">Dados básicos</h2>
+                  <h2 className="artista-card-title" tabIndex={-1}>Dados básicos</h2>
                   <div className="form-grid-2">
                     <div className="input-group col-span-2">
                       <label htmlFor="cad-nome">Nome completo <span aria-hidden="true">*</span></label>
@@ -560,7 +569,7 @@ export default function CadastroArtista() {
 
               {step === 1 && (
                 <div>
-                  <h2 className="artista-card-title">Atuação artística</h2>
+                  <h2 className="artista-card-title" tabIndex={-1}>Atuação artística</h2>
                   <div className="artista-section">
                     <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
                       <legend className="artista-label">Categorias artísticas <span aria-hidden="true">*</span> (selecione uma ou mais categorias que você se enquadra)</legend>
@@ -650,7 +659,7 @@ export default function CadastroArtista() {
 
               {step === 2 && (
                 <div>
-                  <h2 className="artista-card-title">Materiais e Mídias</h2>
+                  <h2 className="artista-card-title" tabIndex={-1}>Materiais e Mídias</h2>
                   <p className="artista-card-subtitle">
                     Adicione fotos, áudios, vídeos e seu documento de portfólio para enriquecer seu perfil.
                   </p>
@@ -842,7 +851,7 @@ export default function CadastroArtista() {
 
               {step === 3 && (
                 <div>
-                  <h2 className="artista-card-title">Revisão do cadastro</h2>
+                  <h2 className="artista-card-title" tabIndex={-1}>Revisão do cadastro</h2>
                   <p className="artista-card-subtitle">Confira seus dados antes de enviar para análise.</p>
                   <div className="review-sections">
                     {reviewItems.map(({ section, items, ok }) => (

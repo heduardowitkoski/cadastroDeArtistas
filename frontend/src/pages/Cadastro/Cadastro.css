@@ -42,7 +42,7 @@
 }
 
 /* ─── Título ─── */
-.artista-container { padding-top: 36px; padding-bottom: 72px; }
+.artista-container { width: 100%; min-width: 0; padding-top: 36px; padding-bottom: 72px; }
 .artista-title-wrap h1 {
   font-size: 30px;
   font-weight: 800;
@@ -519,4 +519,6 @@
   .artista-step-line { flex-basis: 24px; }
   .artista-step-label { display: none; }
   .artista-card, .artista-card .artista-container { padding: 20px; }
+  .artista-nav-actions { width: 100%; flex-wrap: wrap; }
+  .artista-nav-actions .btn { flex: 1 1 100%; justify-content: center; }
 }

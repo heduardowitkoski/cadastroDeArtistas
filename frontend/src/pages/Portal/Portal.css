@@ -558,10 +558,14 @@
 }
 @media (max-width: 768px) {
   .header-nav-links { display: none; }
+  .header-nav > a { display: none !important; }
   .footer-content { flex-direction: column; text-align: center; }
   .header-nav { gap: 8px; }
   .catalog-sidebar { flex-direction: column; }
   .mobile-menu-btn { display: inline-flex !important; }
+  .header-content { min-width: 0; }
+  .header-brand { min-width: 0; }
+  .modal-card { max-height: calc(100dvh - 20px); overflow-y: auto; }
 }
 
 /* Mobile Menu Drawer */

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Palette, LogIn, Loader } from "lucide-react";
 import "./Login.css";
@@ -78,6 +78,7 @@ export default function Login() {
               : <><LogIn size={16} aria-hidden="true" /> <span>Entrar</span></>
             }
           </button>
+          <Link to="/" className="btn btn-secondary login-home-link">Voltar ao catálogo</Link>
         </form>
       </div>
       <div className="login-glow" aria-hidden="true" />

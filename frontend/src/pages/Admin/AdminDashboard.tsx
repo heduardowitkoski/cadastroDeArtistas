@@ -1,11 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { adminFetch } from "../../lib/adminApi";
+import { useDialogFocus } from "../../lib/useDialogFocus";
 import {
   CheckCircle, Clock, XCircle, LogOut, Star, Check, X, User,
   Pencil, Trash2, Save, AlertTriangle, MessageSquareHeart, Sparkles,
-  LayoutGrid, BarChart3, Search, CalendarDays, Palette
+  LayoutGrid, BarChart3, CalendarDays, Palette, Menu
 } from "lucide-react";
 import "./AdminDashboard.css";
 
@@ -58,9 +59,14 @@ type Tab = "Visão geral" | "Pendente" | "Aprovado" | "Rejeitado" | "Feedbacks";
 export default function AdminDashboard() {
   const [artistas, setArtistas] = useState<Artista[]>([]);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingArtistas, setLoadingArtistas] = useState(true);
+  const [loadingFeedbacks, setLoadingFeedbacks] = useState(true);
+  const [artistasError, setArtistasError] = useState("");
+  const [feedbacksError, setFeedbacksError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [tab, setTab] = useState<Tab>("Visão geral");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [adminName, setAdminName] = useState("");
 
   const [editingArtista, setEditingArtista] = useState<Artista | null>(null);
@@ -69,27 +75,42 @@ export default function AdminDashboard() {
   const [deletingArtista, setDeletingArtista] = useState<Artista | null>(null);
   const [deletingFeedback, setDeletingFeedback] = useState<Feedback | null>(null);
   const [submittingModal, setSubmittingModal] = useState(false);
+  const editDialogRef = useRef<HTMLDivElement>(null);
+  const deleteArtistaRef = useRef<HTMLDivElement>(null);
+  const deleteFeedbackRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const navigate = useNavigate();
-  const fetchArtistas = () => {
-    setLoading(true);
-    adminFetch('/artistas')
-      .then((r) => r.json())
-      .then((data) => {
-        setArtistas(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setArtistas([]);
-        setLoading(false);
-      });
+  const fetchArtistas = async () => {
+    setLoadingArtistas(true);
+    setArtistasError("");
+    try {
+      const response = await adminFetch('/artistas');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error("Resposta inválida");
+      setArtistas(data);
+    } catch {
+      setArtistasError("Não foi possível carregar os cadastros. Tente novamente.");
+    } finally {
+      setLoadingArtistas(false);
+    }
   };
 
-  const fetchFeedbacks = () => {
-    adminFetch('/feedbacks')
-      .then((r) => r.json())
-      .then((data) => setFeedbacks(Array.isArray(data) ? data : []))
-      .catch(() => setFeedbacks([]));
+  const fetchFeedbacks = async () => {
+    setLoadingFeedbacks(true);
+    setFeedbacksError("");
+    try {
+      const response = await adminFetch('/feedbacks');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error("Resposta inválida");
+      setFeedbacks(data);
+    } catch {
+      setFeedbacksError("Não foi possível carregar os feedbacks. Tente novamente.");
+    } finally {
+      setLoadingFeedbacks(false);
+    }
   };
 
   useEffect(() => {
@@ -98,24 +119,48 @@ export default function AdminDashboard() {
     supabase.auth.getUser().then(({ data }) => {
       const email = data.user?.email || "";
       setAdminName(email.split("@")[0]);
-    });
+    }).catch(() => setAdminName(""));
   }, []);
 
+  useDialogFocus(Boolean(editingArtista), editDialogRef, () => { if (!submittingModal) setEditingArtista(null); });
+  useDialogFocus(Boolean(deletingArtista), deleteArtistaRef, () => { if (!submittingModal) setDeletingArtista(null); });
+  useDialogFocus(Boolean(deletingFeedback), deleteFeedbackRef, () => { if (!submittingModal) setDeletingFeedback(null); });
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const menuButton = menuButtonRef.current;
+    document.querySelector<HTMLElement>('.admin-sidebar .sidebar-nav-item')?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      menuButton?.focus();
+    };
+  }, [sidebarOpen]);
+
   const handleStatus = async (artista: Artista, status: string) => {
+    if (actionLoading !== null) return;
     setActionLoading(artista.id);
+    setActionError("");
     try {
-      await adminFetch(`/artistas/${artista.id}/status`, {
+      const response = await adminFetch(`/artistas/${artista.id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       });
-      fetchArtistas();
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      await fetchArtistas();
+    } catch {
+      setActionError(`Não foi possível alterar o status de ${artista.nome}. Tente novamente.`);
     } finally {
       setActionLoading(null);
     }
   };
 
   const handleOpenEdit = (artista: Artista) => {
+    setActionError("");
     setEditingArtista(artista);
     setEditForm({ ...artista });
     setEditTagsText((artista.tags || []).join(", "));
@@ -123,7 +168,8 @@ export default function AdminDashboard() {
 
   const handleSaveEdit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingArtista) return;
+    if (!editingArtista || submittingModal) return;
+    setActionError("");
     setSubmittingModal(true);
     try {
       const res = await adminFetch(`/artistas/${editingArtista.id}`, {
@@ -148,12 +194,12 @@ export default function AdminDashboard() {
       });
       if (res.ok) {
         setEditingArtista(null);
-        fetchArtistas();
+        await fetchArtistas();
       } else {
-        alert("Erro ao salvar alterações do artista.");
+        setActionError("Erro ao salvar alterações do artista. Tente novamente.");
       }
     } catch {
-      alert("Erro de conexão ao atualizar artista.");
+      setActionError("Erro de conexão ao atualizar artista. Tente novamente.");
     } finally {
       setSubmittingModal(false);
     }
@@ -168,40 +214,42 @@ export default function AdminDashboard() {
       };
     });
 
-  const handleOpenDelete = (artista: Artista) => setDeletingArtista(artista);
-  const handleOpenDeleteFeedback = (feedback: Feedback) => setDeletingFeedback(feedback);
+  const handleOpenDelete = (artista: Artista) => { setActionError(""); setDeletingArtista(artista); };
+  const handleOpenDeleteFeedback = (feedback: Feedback) => { setActionError(""); setDeletingFeedback(feedback); };
 
   const handleConfirmDeleteFeedback = async () => {
-    if (!deletingFeedback) return;
+    if (!deletingFeedback || submittingModal) return;
+    setActionError("");
     setSubmittingModal(true);
     try {
       const res = await adminFetch(`/feedbacks/${deletingFeedback.id}`, { method: "DELETE" });
       if (res.ok) {
         setDeletingFeedback(null);
-        fetchFeedbacks();
+        await fetchFeedbacks();
       } else {
-        alert("Erro ao excluir feedback.");
+        setActionError("Erro ao excluir feedback. Tente novamente.");
       }
     } catch {
-      alert("Erro de conexão ao excluir feedback.");
+      setActionError("Erro de conexão ao excluir feedback. Tente novamente.");
     } finally {
       setSubmittingModal(false);
     }
   };
 
   const handleConfirmDelete = async () => {
-    if (!deletingArtista) return;
+    if (!deletingArtista || submittingModal) return;
+    setActionError("");
     setSubmittingModal(true);
     try {
       const res = await adminFetch(`/artistas/${deletingArtista.id}`, { method: "DELETE" });
       if (res.ok) {
         setDeletingArtista(null);
-        fetchArtistas();
+        await fetchArtistas();
       } else {
-        alert("Erro ao excluir artista.");
+        setActionError("Erro ao excluir artista. Tente novamente.");
       }
     } catch {
-      alert("Erro de conexão ao excluir artista.");
+      setActionError("Erro de conexão ao excluir artista. Tente novamente.");
     } finally {
       setSubmittingModal(false);
     }
@@ -242,8 +290,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-page">
+      <div className="admin-mobile-bar">
+        <button ref={menuButtonRef} className="btn btn-secondary" type="button" aria-label={sidebarOpen ? "Fechar menu do painel" : "Abrir menu do painel"} aria-expanded={sidebarOpen} aria-controls="admin-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={18} /> Menu</button>
+        <Link to="/" className="btn btn-secondary btn-sm">Ver catálogo</Link>
+      </div>
+      {sidebarOpen && <button className="admin-sidebar-scrim" aria-label="Fechar menu do painel" onClick={() => setSidebarOpen(false)} />}
       {/* ─── Sidebar ─── */}
-      <aside className="admin-sidebar">
+      <aside id="admin-sidebar" className={`admin-sidebar ${sidebarOpen ? "is-open" : ""}`}>
         <div className="sidebar-brand">
           <div className="brand-icon"><Palette size={18} /></div>
           <div>
@@ -254,7 +307,7 @@ export default function AdminDashboard() {
 
         <nav className="sidebar-nav">
           {sidebarNav.map(({ key, icon, label }) => (
-            <button key={key} onClick={() => setTab(key)} className={`sidebar-nav-item ${tab === key ? "active" : ""}`}>
+            <button key={key} onClick={() => { setTab(key); setSidebarOpen(false); setActionError(""); }} aria-current={tab === key ? "page" : undefined} className={`sidebar-nav-item ${tab === key ? "active" : ""}`}>
               {icon}
               <span>{label}</span>
               {counts[key as keyof typeof counts] !== undefined && counts[key as keyof typeof counts] > 0 && (
@@ -267,12 +320,12 @@ export default function AdminDashboard() {
         <div className="sidebar-progress">
           <div className="sidebar-progress-head">
             <span>Cadastros aprovados</span>
-            <strong>{artistas.length ? Math.round((counts.Aprovado / artistas.length) * 100) : 0}%</strong>
+            <strong>{loadingArtistas || artistasError ? "—" : `${artistas.length ? Math.round((counts.Aprovado / artistas.length) * 100) : 0}%`}</strong>
           </div>
           <div className="sidebar-progress-bar">
             <div className="sidebar-progress-fill" style={{ width: `${artistas.length ? (counts.Aprovado / artistas.length) * 100 : 0}%` }} />
           </div>
-          <p className="sidebar-progress-sub">{counts.Aprovado} de {artistas.length} artistas no catálogo</p>
+          <p className="sidebar-progress-sub">{loadingArtistas || artistasError ? "Dados indisponíveis" : `${counts.Aprovado} de ${artistas.length} artistas no catálogo`}</p>
         </div>
 
         <div className="sidebar-user">
@@ -281,7 +334,7 @@ export default function AdminDashboard() {
             <span className="sidebar-user-name">{adminName || "admin"}</span>
             <span className="sidebar-user-role">Administrador</span>
           </div>
-          <button onClick={handleLogout} className="sidebar-logout" title="Sair">
+          <button onClick={handleLogout} className="sidebar-logout" title="Sair" aria-label="Sair do painel">
             <LogOut size={16} />
           </button>
         </div>
@@ -289,6 +342,7 @@ export default function AdminDashboard() {
 
       {/* ─── Main ─── */}
       <main className="admin-main">
+        {actionError && !editingArtista && !deletingArtista && !deletingFeedback && <div className="admin-error" role="alert">{actionError}</div>}
         {tab === "Visão geral" ? (
           <>
             <div className="admin-dash-header">
@@ -296,31 +350,33 @@ export default function AdminDashboard() {
                 <h2>Olá, {adminName || "admin"}! <span className="dash-wave">👋</span></h2>
                 <p className="dash-date"><CalendarDays size={13} /> {hoje}</p>
               </div>
-              <div className="dash-search">
-                <Search size={15} />
-                <input placeholder="Buscar cadastro, categoria..." />
-              </div>
+              <Link to="/" className="btn btn-secondary admin-home-link">Ver catálogo público</Link>
             </div>
+
+            {loadingArtistas && <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando cadastros...</div>}
+            {artistasError && <div className="admin-error" role="alert">{artistasError} <button className="btn btn-secondary btn-sm" onClick={fetchArtistas}>Tentar novamente</button></div>}
+            {loadingFeedbacks && <p className="dash-muted" role="status">Carregando feedbacks...</p>}
+            {feedbacksError && <div className="admin-error" role="alert">{feedbacksError} <button className="btn btn-secondary btn-sm" onClick={fetchFeedbacks}>Tentar novamente</button></div>}
 
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="stat-icon amber"><Clock size={20} /></div>
-                <div className="stat-value">{counts.Pendente}</div>
+                <div className="stat-value">{loadingArtistas || artistasError ? "—" : counts.Pendente}</div>
                 <div className="stat-label">Cadastros pendentes</div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon teal"><CheckCircle size={20} /></div>
-                <div className="stat-value">{counts.Aprovado}</div>
+                <div className="stat-value">{loadingArtistas || artistasError ? "—" : counts.Aprovado}</div>
                 <div className="stat-label">Aprovados no catálogo</div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon rose"><XCircle size={20} /></div>
-                <div className="stat-value">{counts.Rejeitado}</div>
+                <div className="stat-value">{loadingArtistas || artistasError ? "—" : counts.Rejeitado}</div>
                 <div className="stat-label">Rejeitados</div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon indigo"><MessageSquareHeart size={20} /></div>
-                <div className="stat-value">{counts.Feedbacks}</div>
+                <div className="stat-value">{loadingFeedbacks || feedbacksError ? "—" : counts.Feedbacks}</div>
                 <div className="stat-label">Feedbacks do público</div>
               </div>
             </div>
@@ -330,7 +386,9 @@ export default function AdminDashboard() {
                 <div className="dash-section-title">
                   <BarChart3 size={16} /> Artistas por categoria
                 </div>
-                {chartData.length === 0 ? (
+                {loadingArtistas || artistasError ? (
+                  <p className="dash-muted">{loadingArtistas ? "Carregando..." : "Dados indisponíveis."}</p>
+                ) : chartData.length === 0 ? (
                   <p className="dash-muted">Ainda não há artistas cadastrados.</p>
                 ) : (
                   <div className="chart-bars">
@@ -351,7 +409,9 @@ export default function AdminDashboard() {
                 <div className="dash-section-title">
                   <Sparkles size={16} /> Análises pendentes
                 </div>
-                {pendentesRecentes.length === 0 ? (
+                {loadingArtistas || artistasError ? (
+                  <p className="dash-muted">{loadingArtistas ? "Carregando..." : "Dados indisponíveis."}</p>
+                ) : pendentesRecentes.length === 0 ? (
                   <p className="dash-muted">Tudo em dia! Nenhum cadastro aguardando análise. 🎉</p>
                 ) : (
                   <div className="pending-list">
@@ -364,10 +424,10 @@ export default function AdminDashboard() {
                           <span className="pending-name">{a.nome_artistico || a.nome}</span>
                           <span className="pending-area">{a.area_atuacao}</span>
                         </div>
-                        <button className="pending-approve" onClick={() => handleStatus(a, "Aprovado")} disabled={actionLoading === a.id}>
+                        <button className="pending-approve" aria-label={`Aprovar ${a.nome}`} onClick={() => handleStatus(a, "Aprovado")} disabled={actionLoading !== null}>
                           <Check size={14} />
                         </button>
-                        <button className="pending-reject" onClick={() => handleStatus(a, "Rejeitado")} disabled={actionLoading === a.id}>
+                        <button className="pending-reject" aria-label={`Rejeitar ${a.nome}`} onClick={() => handleStatus(a, "Rejeitado")} disabled={actionLoading !== null}>
                           <X size={14} />
                         </button>
                       </div>
@@ -382,10 +442,12 @@ export default function AdminDashboard() {
           <>
             <div className="admin-header">
               <h1>Mensagens de <span className="badge badge-indigo">Feedback</span></h1>
-              <p className="admin-header-sub">{feedbacks.length} feedback(s) recebido(s)</p>
+              <p className="admin-header-sub">{loadingFeedbacks || feedbacksError ? "" : `${feedbacks.length} feedback(s) recebido(s)`}</p>
             </div>
-            {loading ? (
-              <div className="admin-loading"><div className="spinner" /></div>
+            {loadingFeedbacks ? (
+              <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando feedbacks...</div>
+            ) : feedbacksError ? (
+              <div className="admin-error" role="alert">{feedbacksError} <button className="btn btn-secondary btn-sm" onClick={fetchFeedbacks}>Tentar novamente</button></div>
             ) : feedbacks.length === 0 ? (
               <div className="admin-empty">
                 <MessageSquareHeart size={40} />
@@ -431,10 +493,12 @@ export default function AdminDashboard() {
           <>
             <div className="admin-header">
               <h1>Cadastros <span className={`badge ${STATUS_BADGE[tab]}`}>{tab}s</span></h1>
-              <p className="admin-header-sub">{filtered.length} cadastro(s) encontrado(s)</p>
+              <p className="admin-header-sub">{loadingArtistas || artistasError ? "" : `${filtered.length} cadastro(s) encontrado(s)`}</p>
             </div>
-            {loading ? (
-              <div className="admin-loading"><div className="spinner" /></div>
+            {loadingArtistas ? (
+              <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando cadastros...</div>
+            ) : artistasError ? (
+              <div className="admin-error" role="alert">{artistasError} <button className="btn btn-secondary btn-sm" onClick={fetchArtistas}>Tentar novamente</button></div>
             ) : filtered.length === 0 ? (
               <div className="admin-empty">
                 <Clock size={40} />
@@ -471,21 +535,21 @@ export default function AdminDashboard() {
                       <div className="actions-status">
                         {artista.status === "Pendente" && (
                           <>
-                            <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading === artista.id}>
+                            <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading !== null}>
                               <Check size={14} /> Aprovar
                             </button>
-                            <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading === artista.id}>
+                            <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading !== null}>
                               <X size={14} /> Rejeitar
                             </button>
                           </>
                         )}
                         {artista.status === "Aprovado" && (
-                          <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading === artista.id}>
+                          <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading !== null}>
                             <X size={14} /> Desaprovar
                           </button>
                         )}
                         {artista.status === "Rejeitado" && (
-                          <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading === artista.id}>
+                          <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading !== null}>
                             <Check size={14} /> Aprovar
                           </button>
                         )}
@@ -510,65 +574,65 @@ export default function AdminDashboard() {
       {/* Modal de Edição */}
       {editingArtista && (
         <div className="modal-overlay">
-          <div className="modal-content card admin-modal">
+          <div ref={editDialogRef} className="modal-content card admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-edit-title" tabIndex={-1}>
             <div className="modal-header">
-              <h2>Editar Cadastro de Artista</h2>
-              <button className="modal-close" onClick={() => setEditingArtista(null)}><X size={18} /></button>
+              <h2 id="admin-edit-title">Editar Cadastro de Artista</h2>
+              <button className="modal-close" aria-label="Fechar edição" onClick={() => setEditingArtista(null)} disabled={submittingModal}><X size={18} /></button>
             </div>
             <form onSubmit={handleSaveEdit} className="modal-form">
               <div className="form-grid">
                 <div className="input-group">
-                  <label>Nome do Artista *</label>
-                  <input value={editForm.nome || ""} onChange={(e) => setEditForm({ ...editForm, nome: e.target.value })} required />
+                  <label htmlFor="edit-nome">Nome do Artista *</label>
+                  <input id="edit-nome" value={editForm.nome || ""} onChange={(e) => setEditForm({ ...editForm, nome: e.target.value })} required />
                 </div>
                 <div className="input-group">
-                  <label>Nome artístico</label>
-                  <input value={editForm.nome_artistico || ""} onChange={(e) => setEditForm({ ...editForm, nome_artistico: e.target.value })} />
+                  <label htmlFor="edit-nome-artistico">Nome artístico</label>
+                  <input id="edit-nome-artistico" value={editForm.nome_artistico || ""} onChange={(e) => setEditForm({ ...editForm, nome_artistico: e.target.value })} />
                 </div>
                 <div className="input-group">
-                  <label>E-mail *</label>
-                  <input type="email" value={editForm.email || ""} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} required />
+                  <label htmlFor="edit-email">E-mail *</label>
+                  <input id="edit-email" type="email" value={editForm.email || ""} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} required />
                 </div>
                 <div className="input-group">
-                  <label>Telefone / Contato</label>
-                  <input value={editForm.contato || ""} onChange={(e) => setEditForm({ ...editForm, contato: e.target.value })} />
+                  <label htmlFor="edit-contato">Telefone / Contato</label>
+                  <input id="edit-contato" value={editForm.contato || ""} onChange={(e) => setEditForm({ ...editForm, contato: e.target.value })} />
                 </div>
                 <div className="input-group">
-                  <label>Cidade</label>
-                  <input value={editForm.cidade || ""} onChange={(e) => setEditForm({ ...editForm, cidade: e.target.value })} />
+                  <label htmlFor="edit-cidade">Cidade</label>
+                  <input id="edit-cidade" value={editForm.cidade || ""} onChange={(e) => setEditForm({ ...editForm, cidade: e.target.value })} />
                 </div>
                 <div className="input-group">
-                  <label>Área de Atuação *</label>
-                  <select value={editForm.area_atuacao || ""} onChange={(e) => setEditForm({ ...editForm, area_atuacao: e.target.value })} className="select-input" required>
+                  <label htmlFor="edit-area">Área de Atuação *</label>
+                  <select id="edit-area" value={editForm.area_atuacao || ""} onChange={(e) => setEditForm({ ...editForm, area_atuacao: e.target.value })} className="select-input" required>
                     {CATEGORIAS.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Status</label>
-                  <select value={editForm.status || "Pendente"} onChange={(e) => setEditForm({ ...editForm, status: e.target.value })} className="select-input">
+                  <label htmlFor="edit-status">Status</label>
+                  <select id="edit-status" value={editForm.status || "Pendente"} onChange={(e) => setEditForm({ ...editForm, status: e.target.value })} className="select-input">
                     <option value="Pendente">Pendente</option>
                     <option value="Aprovado">Aprovado</option>
                     <option value="Rejeitado">Rejeitado</option>
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Tags (separadas por vírgula)</label>
-                  <input value={editTagsText} onChange={(e) => setEditTagsText(e.target.value)} placeholder="MPB, Acústico, Shows ao vivo" />
+                  <label htmlFor="edit-tags">Tags (separadas por vírgula)</label>
+                  <input id="edit-tags" value={editTagsText} onChange={(e) => setEditTagsText(e.target.value)} placeholder="MPB, Acústico, Shows ao vivo" />
                 </div>
               </div>
 
               <div className="input-group" style={{ marginTop: 16 }}>
-                <label>Mini-Bio / História</label>
-                <textarea rows={3} value={editForm.bio || ""} onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })} />
+                <label htmlFor="edit-bio">Mini-Bio / História</label>
+                <textarea id="edit-bio" rows={3} value={editForm.bio || ""} onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })} />
               </div>
 
               <div className="input-group" style={{ marginTop: 16 }}>
-                <label>Disponibilidade</label>
-                <div className="avail-grid">
+                <span id="edit-disponibilidade-label">Disponibilidade</span>
+                <div className="avail-grid" role="group" aria-labelledby="edit-disponibilidade-label">
                   {DISPONIBILIDADES.map((v) => {
                     const cur = (editForm.disponibilidade || []) as string[];
                     return (
-                      <button key={v} type="button" onClick={() => toggleEditDisponibilidade(v)} className={`avail-btn ${cur.includes(v) ? "active" : ""}`}>
+                      <button key={v} type="button" onClick={() => toggleEditDisponibilidade(v)} aria-pressed={cur.includes(v)} className={`avail-btn ${cur.includes(v) ? "active" : ""}`}>
                         {cur.includes(v) && <Check size={13} />}
                         {v}
                       </button>
@@ -579,19 +643,20 @@ export default function AdminDashboard() {
 
               <div className="form-grid" style={{ marginTop: 16 }}>
                 <div className="input-group">
-                  <label>URL da Foto</label>
-                  <input value={editForm.foto_url || ""} onChange={(e) => setEditForm({ ...editForm, foto_url: e.target.value })} />
+                  <label htmlFor="edit-foto">URL da Foto</label>
+                  <input id="edit-foto" value={editForm.foto_url || ""} onChange={(e) => setEditForm({ ...editForm, foto_url: e.target.value })} />
                 </div>
                 <div className="input-group">
-                  <label>Instagram</label>
-                  <input value={editForm.instagram || ""} onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })} />
+                  <label htmlFor="edit-instagram">Instagram</label>
+                  <input id="edit-instagram" value={editForm.instagram || ""} onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })} />
                 </div>
                 <div className="input-group" style={{ gridColumn: "span 2" }}>
-                  <label>Site / Portfólio</label>
-                  <input value={editForm.site || ""} onChange={(e) => setEditForm({ ...editForm, site: e.target.value })} />
+                  <label htmlFor="edit-site">Site / Portfólio</label>
+                  <input id="edit-site" value={editForm.site || ""} onChange={(e) => setEditForm({ ...editForm, site: e.target.value })} />
                 </div>
               </div>
 
+              {actionError && <div className="admin-error" role="alert">{actionError}</div>}
               <div className="modal-actions" style={{ marginTop: 24 }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setEditingArtista(null)} disabled={submittingModal}>Cancelar</button>
                 <button type="submit" className="btn btn-primary" disabled={submittingModal}><Save size={16} /> Salvar Alterações</button>
@@ -604,10 +669,11 @@ export default function AdminDashboard() {
       {/* Modal de Confirmação de Exclusão */}
       {deletingArtista && (
         <div className="modal-overlay">
-          <div className="modal-content card delete-modal">
+          <div ref={deleteArtistaRef} className="modal-content card delete-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-artista-title" aria-describedby="delete-artista-description" tabIndex={-1}>
             <div className="delete-modal-icon"><AlertTriangle size={32} /></div>
-            <h2>Confirmar Exclusão</h2>
-            <p>Tem certeza que deseja excluir permanentemente o cadastro do artista <strong>"{deletingArtista.nome}"</strong>? Esta ação não pode ser desfeita.</p>
+            <h2 id="delete-artista-title">Confirmar Exclusão</h2>
+            <p id="delete-artista-description">Tem certeza que deseja excluir permanentemente o cadastro do artista <strong>"{deletingArtista.nome}"</strong>? Esta ação não pode ser desfeita.</p>
+            {actionError && <div className="admin-error" role="alert">{actionError}</div>}
             <div className="modal-actions" style={{ marginTop: 20 }}>
               <button className="btn btn-secondary" onClick={() => setDeletingArtista(null)} disabled={submittingModal}>Cancelar</button>
               <button className="btn btn-danger" onClick={handleConfirmDelete} disabled={submittingModal}><Trash2 size={16} /> Sim, Excluir Definitivamente</button>
@@ -619,10 +685,11 @@ export default function AdminDashboard() {
       {/* Modal de Confirmação de Exclusão de Feedback */}
       {deletingFeedback && (
         <div className="modal-overlay">
-          <div className="modal-content card delete-modal">
+          <div ref={deleteFeedbackRef} className="modal-content card delete-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-feedback-title" aria-describedby="delete-feedback-description" tabIndex={-1}>
             <div className="delete-modal-icon"><MessageSquareHeart size={32} /></div>
-            <h2>Confirmar Exclusão</h2>
-            <p>Tem certeza que deseja excluir permanentemente este feedback? Esta ação não pode ser desfeita.</p>
+            <h2 id="delete-feedback-title">Confirmar Exclusão</h2>
+            <p id="delete-feedback-description">Tem certeza que deseja excluir permanentemente este feedback? Esta ação não pode ser desfeita.</p>
+            {actionError && <div className="admin-error" role="alert">{actionError}</div>}
             <div className="modal-actions" style={{ marginTop: 20 }}>
               <button className="btn btn-secondary" onClick={() => setDeletingFeedback(null)} disabled={submittingModal}>Cancelar</button>
               <button className="btn btn-danger" onClick={handleConfirmDeleteFeedback} disabled={submittingModal}><Trash2 size={16} /> Sim, Excluir Definitivamente</button>

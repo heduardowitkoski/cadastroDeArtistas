@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
+import { useDialogFocus } from "../../lib/useDialogFocus";
 import "./Portal.css";
 
 const CATEGORIAS = [
@@ -67,68 +68,32 @@ export default function Portal() {
   const [categoriaFiltro, setCategoriaFiltro] = useState("all");
   const [favoritos, setFavoritos] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedArtista, setSelectedArtista] = useState<Artista | null>(null);
-  const modalCloseRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const modalHeadingId = "modal-artista-titulo";
 
   const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   useEffect(() => {
+    setLoading(true);
+    setLoadError(false);
     fetch(`${API_URL}/artistas/aprovados`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
-        if (Array.isArray(data)) {
-          setArtistas(data);
-        } else {
-          setArtistas([]);
-        }
+        if (!Array.isArray(data)) throw new Error("Resposta inválida do catálogo");
+        setArtistas(data);
         setLoading(false);
       })
       .catch(() => {
-        setArtistas([]);
+        setLoadError(true);
         setLoading(false);
       });
   }, [API_URL]);
-
-  // Foco automático no botão de fechar ao abrir o modal
-  useEffect(() => {
-    if (selectedArtista && modalCloseRef.current) {
-      modalCloseRef.current.focus();
-    }
-  }, [selectedArtista]);
-
-  // Fechar modal com Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && selectedArtista) {
-        setSelectedArtista(null);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [selectedArtista]);
-
-  // Armadilha de foco no modal (focus trap)
-  useEffect(() => {
-    if (!selectedArtista) return;
-    const modal = document.getElementById("modal-artista-card");
-    if (!modal) return;
-    const focusable = modal.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const trap = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener("keydown", trap);
-    return () => document.removeEventListener("keydown", trap);
-  }, [selectedArtista]);
+  useDialogFocus(Boolean(selectedArtista), modalRef, () => setSelectedArtista(null));
 
   const filtered = artistas.filter((a) => {
     const areaStr = (a.area_atuacao || "").toLowerCase();
@@ -233,7 +198,7 @@ export default function Portal() {
             <div className="catalog-main">
               <div className="catalog-topbar">
                 <p className="catalog-count" aria-live="polite" aria-atomic="true">
-                  <span className="catalog-count-number">{filtered.length}</span> artistas encontrados
+                  {loading ? "Carregando artistas..." : loadError ? "Catálogo indisponível" : <><span className="catalog-count-number">{filtered.length}</span> artistas encontrados</>}
                 </p>
                 <button className="catalog-sort" aria-label="Ordenar resultados">Relevância <ChevronRight size={14} aria-hidden="true" /></button>
               </div>
@@ -242,6 +207,12 @@ export default function Portal() {
                 <div className="catalog-loading" role="status" aria-live="polite" aria-label="Carregando artistas">
                   <div className="spinner" aria-hidden="true" />
                   <p>Carregando artistas...</p>
+                </div>
+              ) : loadError ? (
+                <div className="catalog-empty" role="alert">
+                  <h2>Não foi possível carregar o catálogo</h2>
+                  <p>Tente atualizar a página em alguns instantes.</p>
+                  <button className="btn btn-secondary" onClick={() => window.location.reload()}>Tentar novamente</button>
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="catalog-empty" role="status">
@@ -347,15 +318,15 @@ export default function Portal() {
                 <dl>
                   <div className="stat-row">
                     <dt className="stat-row-label"><Users size={16} aria-hidden="true" /> Artistas cadastrados</dt>
-                    <dd className="stat-row-value">{artistas.length}</dd>
+                    <dd className="stat-row-value">{loading || loadError ? "—" : artistas.length}</dd>
                   </div>
                   <div className="stat-row">
                     <dt className="stat-row-label"><Tag size={16} aria-hidden="true" /> Categorias</dt>
-                    <dd className="stat-row-value">{totalCategorias}</dd>
+                    <dd className="stat-row-value">{loading || loadError ? "—" : totalCategorias}</dd>
                   </div>
                   <div className="stat-row">
                     <dt className="stat-row-label"><MapPin size={16} aria-hidden="true" /> Cidades representadas</dt>
-                    <dd className="stat-row-value">{totalCidades}</dd>
+                    <dd className="stat-row-value">{loading || loadError ? "—" : totalCidades}</dd>
                   </div>
                 </dl>
               </div>
@@ -388,14 +359,15 @@ export default function Portal() {
         >
           <div
             id="modal-artista-card"
+            ref={modalRef}
             className="modal-card"
             role="dialog"
             aria-modal="true"
             aria-labelledby={modalHeadingId}
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              ref={modalCloseRef}
               className="modal-close"
               onClick={() => setSelectedArtista(null)}
               aria-label="Fechar perfil do artista"

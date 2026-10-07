@@ -62,4 +62,6 @@
   color: var(--rose);
 }
 .login-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+.login-home-link { width: 100%; justify-content: center; }
 .spin { animation: spin 1s linear infinite; }
+@media (max-width: 480px) { .login-card { padding: 24px; } }

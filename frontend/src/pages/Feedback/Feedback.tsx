@@ -71,7 +71,7 @@ export default function Feedback() {
       <div className="feedback-page">
         <div className="feedback-success">
           <div className="success-icon"><Check size={36} /></div>
-          <h2>Obrigado pelo seu feedback!</h2>
+          <h1>Obrigado pelo seu feedback!</h1>
           <p>Sua opinião é muito importante para que possamos melhorar cada vez mais a plataforma para a comunidade cultural de Bagé.</p>
           <Link to="/" className="btn btn-primary">Voltar ao catálogo</Link>
         </div>
@@ -93,7 +93,7 @@ export default function Feedback() {
           <div className="feedback-card-header">
             <div className="feedback-icon"><MessageSquareHeart size={22} /></div>
             <div>
-              <h2>Avalie a Plataforma</h2>
+              <h1>Avalie a Plataforma</h1>
               <p>Conte-nos sua opinião e sugestões para melhorarmos o Cadastro Municipal de Artistas.</p>
             </div>
           </div>
