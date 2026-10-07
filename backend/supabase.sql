@@ -1,5 +1,7 @@
 -- Cadastro Municipal de Artistas - Banco de Dados
--- Execute este script no SQL Editor do Supabase
+-- ATENÇÃO: bootstrap DESTRUTIVO. Apaga tabelas e desativa RLS.
+-- NÃO execute sobre banco existente, de homologação ou de produção.
+-- A migração segura será definida em etapa separada após auditoria do banco.
 
 DROP TABLE IF EXISTS artistas CASCADE;
 

@@ -15,9 +15,13 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
     if (error) {
       setError("E-mail ou senha incorretos.");
+      setLoading(false);
+    } else if (data.user.app_metadata?.role !== "admin") {
+      await supabase.auth.signOut();
+      setError("Esta conta não possui acesso administrativo.");
       setLoading(false);
     } else {
       navigate("/admin");

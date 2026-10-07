@@ -1,28 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
+
+type DbResult<T> = {
+  data: T;
+  error: { message: string } | null;
+};
 
 @Injectable()
 export class FeedbackService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async findAll() {
-    const { data, error } = await this.supabaseService
-      .getClient()
+    const { data, error } = (await this.supabaseService
+      .getDatabaseClient()
       .from('feedbacks')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })) as DbResult<
+      Record<string, unknown>[] | null
+    >;
 
     if (error) throw new Error(error.message);
     return data;
   }
 
-  async create(createDto: Record<string, unknown>) {
-    const { data, error } = await this.supabaseService
-      .getClient()
+  async create(createDto: CreateFeedbackDto) {
+    const { data, error } = (await this.supabaseService
+      .getDatabaseClient()
       .from('feedbacks')
       .insert([createDto])
       .select()
-      .single();
+      .single()) as DbResult<Record<string, unknown> | null>;
 
     if (error) throw new Error(error.message);
     return data;
@@ -30,7 +38,7 @@ export class FeedbackService {
 
   async delete(id: number) {
     const { error } = await this.supabaseService
-      .getClient()
+      .getDatabaseClient()
       .from('feedbacks')
       .delete()
       .eq('id', id);

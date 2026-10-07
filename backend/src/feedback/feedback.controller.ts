@@ -1,22 +1,34 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
+import { AdminOnly } from '../auth/admin-only.decorator';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 @Controller('feedbacks')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
   @Get()
+  @AdminOnly()
   findAll() {
     return this.feedbackService.findAll();
   }
 
   @Post()
-  create(@Body() body: Record<string, unknown>) {
+  create(@Body() body: CreateFeedbackDto) {
     return this.feedbackService.create(body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.feedbackService.delete(Number(id));
+  @AdminOnly()
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.feedbackService.delete(id);
   }
 }

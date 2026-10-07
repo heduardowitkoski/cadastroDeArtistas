@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../../lib/supabase";
+import {
+  firstInvalidStep,
+  hasStepErrors,
+  maskCnpj,
+  maskCpf,
+  maskPhone,
+  validateCadastro,
+} from "../../lib/cadastroValidation";
 import {
   ChevronRight, Star, Clock, CheckCircle, AlertCircle,
   Image, Video, Headphones, Upload, MapPin, Check,
@@ -79,7 +86,7 @@ export default function CadastroArtista() {
   const [error, setError] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [precisaConfirmarEmail, setPrecisaConfirmarEmail] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   const update = (field: keyof FormData, value: unknown) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -175,14 +182,15 @@ export default function CadastroArtista() {
 
   const temCpfOuCnpj = Boolean(form.cpf.trim() || form.cnpj.trim());
 
-  const isStepValid = () => {
-    if (step === 0) {
-      const temBasicos = Boolean(form.nome.trim() && form.email.trim() && form.contato.trim());
-      const senhaValida = senha.length >= 6 && senha === confirmarSenha;
-      return temBasicos && temCpfOuCnpj && senhaValida;
+  const fieldErrors = validateCadastro(form, senha, confirmarSenha);
+
+  const advanceStep = () => {
+    if (hasStepErrors(fieldErrors, step)) {
+      setShowErrors(true);
+      return;
     }
-    if (step === 1) return form.categorias.length > 0;
-    return true;
+    setShowErrors(false);
+    setStep((current) => current + 1);
   };
 
   const progress = Math.min(
@@ -201,7 +209,7 @@ export default function CadastroArtista() {
     nome: form.nome,
     nome_artistico: form.nome_artistico || null,
     cpf_cnpj: [form.cpf.trim(), form.cnpj.trim()].filter(Boolean).join(" / ") || null,
-    email: form.email,
+    email: form.email.trim().toLowerCase(),
     contato: form.contato,
     cidade: form.cidade || "Bagé",
     area_atuacao: form.categorias.join(", "),
@@ -215,28 +223,16 @@ export default function CadastroArtista() {
   });
 
   const handleSubmit = async () => {
+    const invalidStep = firstInvalidStep(fieldErrors);
+    if (invalidStep >= 0) {
+      setStep(invalidStep);
+      setShowErrors(true);
+      setError("Revise os campos destacados antes de enviar o cadastro.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
-      if (senha) {
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: form.email,
-          password: senha,
-        });
-        if (signUpError) {
-          const msgLower = signUpError.message.toLowerCase();
-          const isRegistered = msgLower.includes("already registered") ||
-                               msgLower.includes("já registrado") ||
-                               msgLower.includes("user_already_exists");
-          if (isRegistered) {
-            throw new Error("Este e-mail já possui conta cadastrada. Entre na Área do Artista para editar seus dados, ou use outro e-mail.");
-          }
-          console.warn("Aviso de Auth Supabase:", signUpError.message);
-        } else if (signUpData?.user) {
-          setPrecisaConfirmarEmail(!signUpData.session);
-        }
-      }
-
       const res = await fetch(`${API_URL}/artistas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -249,10 +245,8 @@ export default function CadastroArtista() {
         throw new Error(detail);
       }
 
-      await supabase.auth.signOut().catch(() => null);
       setSuccess(true);
     } catch (err: unknown) {
-      console.error("Erro ao enviar cadastro:", err);
       const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
       if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("http://localhost")) {
         setError("Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente em instantes.");
@@ -271,14 +265,8 @@ export default function CadastroArtista() {
           <div className="success-icon" aria-hidden="true"><Check size={36} /></div>
           <h1>Cadastro enviado para análise!</h1>
           <p>Seu cadastro foi recebido pelos Gestores do Conselho Municipal de Políticas Culturais e aparecerá no catálogo assim que for aprovado.</p>
-          {precisaConfirmarEmail && (
-            <p style={{ background: "var(--purple-glow)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 12, padding: "12px 16px", fontSize: 13 }}>
-              <span aria-hidden="true">📧</span>{" "}Verifique seu e-mail e confirme o cadastro no link enviado para <strong>{form.email}</strong>. Assim você poderá entrar na Área do Artista para editar seus dados depois.
-            </p>
-          )}
           <div className="cadastro-success-actions" style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
             <Link to="/" className="btn btn-primary">Ver catálogo de artistas</Link>
-            <Link to="/artista/login" className="btn btn-outline">Entrar na Área do Artista</Link>
           </div>
         </div>
       </div>
@@ -398,11 +386,15 @@ export default function CadastroArtista() {
                         id="cad-nome"
                         value={form.nome}
                         onChange={(e) => update("nome", e.target.value)}
+                        maxLength={120}
+                        aria-invalid={showErrors && Boolean(fieldErrors.nome)}
+                        aria-describedby={showErrors && fieldErrors.nome ? "cad-nome-error" : undefined}
                         placeholder="Seu nome completo"
                         required
                         aria-required="true"
                         autoComplete="name"
                       />
+                      {showErrors && fieldErrors.nome && <span id="cad-nome-error" className="field-error" role="alert">{fieldErrors.nome}</span>}
                     </div>
                     <div className="input-group col-span-2">
                       <label htmlFor="cad-nome-artistico">Nome artístico</label>
@@ -410,6 +402,7 @@ export default function CadastroArtista() {
                         id="cad-nome-artistico"
                         value={form.nome_artistico}
                         onChange={(e) => update("nome_artistico", e.target.value)}
+                        maxLength={120}
                         placeholder="Como você é conhecido(a)"
                         autoComplete="nickname"
                       />
@@ -421,33 +414,46 @@ export default function CadastroArtista() {
                       <input
                         id="cad-cpf"
                         value={form.cpf}
-                        onChange={(e) => update("cpf", e.target.value)}
+                        onChange={(e) => update("cpf", maskCpf(e.target.value))}
                         placeholder="000.000.000-00"
+                        inputMode="numeric"
+                        maxLength={14}
                         autoComplete="off"
-                        aria-describedby="cad-doc-hint"
+                        aria-invalid={showErrors && Boolean(fieldErrors.cpf)}
+                        aria-describedby={showErrors && fieldErrors.cpf ? "cad-doc-hint cad-cpf-error" : "cad-doc-hint"}
                       />
+                      {showErrors && fieldErrors.cpf && <span id="cad-cpf-error" className="field-error" role="alert">{fieldErrors.cpf}</span>}
                     </div>
                     <div className="input-group">
                       <label htmlFor="cad-cnpj">CNPJ</label>
                       <input
                         id="cad-cnpj"
                         value={form.cnpj}
-                        onChange={(e) => update("cnpj", e.target.value)}
-                        placeholder="00.000.000/0001-00"
+                        onChange={(e) => update("cnpj", maskCnpj(e.target.value))}
+                        placeholder="00.000.000/0001-00 ou 12.ABC.345/01DE-35"
+                        inputMode="text"
+                        maxLength={18}
                         autoComplete="off"
-                        aria-describedby="cad-doc-hint"
+                        aria-invalid={showErrors && Boolean(fieldErrors.cnpj)}
+                        aria-describedby={showErrors && fieldErrors.cnpj ? "cad-doc-hint cad-cnpj-error" : "cad-doc-hint"}
                       />
+                      {showErrors && fieldErrors.cnpj && <span id="cad-cnpj-error" className="field-error" role="alert">{fieldErrors.cnpj}</span>}
                     </div>
                     <div className="col-span-2" style={{ marginTop: -8 }}>
                       {!temCpfOuCnpj ? (
                         <span id="cad-doc-hint" className="cpf-cnpj-hint" style={{ color: "var(--rose)" }} aria-live="polite">
                           <span aria-hidden="true">*</span> Preencha ao menos o CPF ou o CNPJ para prosseguir.
                         </span>
+                      ) : fieldErrors.cpf || fieldErrors.cnpj ? (
+                        <span id="cad-doc-hint" className="cpf-cnpj-hint" style={{ color: "var(--rose)" }} aria-live="polite">
+                          Verifique os dígitos do CPF ou CNPJ informado.
+                        </span>
                       ) : (
                         <span id="cad-doc-hint" className="cpf-cnpj-hint" style={{ color: "var(--teal)" }} aria-live="polite">
                           <Check size={12} style={{ display: "inline" }} aria-hidden="true" /> Documento informado com sucesso.
                         </span>
                       )}
+                      {showErrors && fieldErrors.documento && <span className="field-error" role="alert">{fieldErrors.documento}</span>}
                     </div>
 
                     <div className="input-group">
@@ -457,24 +463,32 @@ export default function CadastroArtista() {
                         type="email"
                         value={form.email}
                         onChange={(e) => update("email", e.target.value)}
+                        maxLength={254}
+                        aria-invalid={showErrors && Boolean(fieldErrors.email)}
+                        aria-describedby={showErrors && fieldErrors.email ? "cad-email-error" : undefined}
                         placeholder="seu@email.com"
                         required
                         aria-required="true"
                         autoComplete="email"
                       />
+                      {showErrors && fieldErrors.email && <span id="cad-email-error" className="field-error" role="alert">{fieldErrors.email}</span>}
                     </div>
                     <div className="input-group">
                       <label htmlFor="cad-contato">Telefone / WhatsApp <span aria-hidden="true">*</span></label>
                       <input
                         id="cad-contato"
                         value={form.contato}
-                        onChange={(e) => update("contato", e.target.value)}
+                        onChange={(e) => update("contato", maskPhone(e.target.value))}
                         placeholder="(53) 99999-0000"
+                        maxLength={15}
+                        aria-invalid={showErrors && Boolean(fieldErrors.contato)}
+                        aria-describedby={showErrors && fieldErrors.contato ? "cad-contato-error" : undefined}
                         required
                         aria-required="true"
                         autoComplete="tel"
                         type="tel"
                       />
+                      {showErrors && fieldErrors.contato && <span id="cad-contato-error" className="field-error" role="alert">{fieldErrors.contato}</span>}
                     </div>
                     <div className="input-group col-span-2">
                       <label htmlFor="cad-cidade">Cidade</label>
@@ -482,6 +496,7 @@ export default function CadastroArtista() {
                         id="cad-cidade"
                         value={form.cidade}
                         onChange={(e) => update("cidade", e.target.value)}
+                        maxLength={120}
                         placeholder="Bagé/RS"
                         autoComplete="address-level2"
                       />
@@ -489,7 +504,7 @@ export default function CadastroArtista() {
                     <div className="input-group col-span-2" style={{ marginTop: 8 }}>
                       <div className="form-senha-titulo" aria-hidden="true">
                         <Sparkles size={14} aria-hidden="true" />
-                        <span>Crie uma senha para editar o cadastro depois</span>
+                        <span>Crie a senha da sua conta de acesso</span>
                       </div>
                       <div className="form-grid-2" style={{ gap: 14 }}>
                         <div className="input-group">
@@ -499,6 +514,8 @@ export default function CadastroArtista() {
                             type="password"
                             value={senha}
                             onChange={(e) => setSenha(e.target.value)}
+                            maxLength={128}
+                            aria-invalid={showErrors && Boolean(fieldErrors.senha)}
                             placeholder="Mínimo 6 caracteres"
                             required
                             aria-required="true"
@@ -513,6 +530,8 @@ export default function CadastroArtista() {
                             type="password"
                             value={confirmarSenha}
                             onChange={(e) => setConfirmarSenha(e.target.value)}
+                            maxLength={128}
+                            aria-invalid={showErrors && Boolean(fieldErrors.confirmarSenha)}
                             placeholder="Repita a senha"
                             required
                             aria-required="true"
@@ -522,17 +541,19 @@ export default function CadastroArtista() {
                         </div>
                       </div>
                       <div id="senha-hint" aria-live="polite">
-                        {senha.length > 0 && senha.length < 6 && (
+                        {showErrors && fieldErrors.senha && <span className="senha-hint" role="alert">{fieldErrors.senha}</span>}
+                        {showErrors && fieldErrors.confirmarSenha && <span className="senha-hint" role="alert">{fieldErrors.confirmarSenha}</span>}
+                        {!showErrors && senha.length > 0 && senha.length < 6 && (
                           <span className="senha-hint" role="alert">A senha precisa ter pelo menos 6 caracteres.</span>
                         )}
-                        {senha.length >= 6 && confirmarSenha && senha !== confirmarSenha && (
+                        {!showErrors && senha.length >= 6 && confirmarSenha && senha !== confirmarSenha && (
                           <span className="senha-hint" role="alert">As senhas não coincidem.</span>
                         )}
                       </div>
                     </div>
                   </div>
                   <p className="cadastro-login-aviso">
-                    Com esse e-mail e senha você poderá entrar na <Link to="/artista/login">Área do Artista</Link> para editar seu cadastro quando quiser.
+                    A conta será criada junto com o cadastro. A edição pelo artista permanece indisponível nesta etapa.
                   </p>
                 </div>
               )}
@@ -564,6 +585,7 @@ export default function CadastroArtista() {
                           );
                         })}
                       </div>
+                      {showErrors && fieldErrors.categorias && <span className="field-error" role="alert">{fieldErrors.categorias}</span>}
                     </fieldset>
                   </div>
 
@@ -574,6 +596,7 @@ export default function CadastroArtista() {
                       rows={4}
                       value={form.bio}
                       onChange={(e) => update("bio", e.target.value)}
+                      maxLength={2000}
                       placeholder="Descreva sua arte, trajetória profissional, projetos anteriores e estilo de apresentação..."
                     />
                   </div>
@@ -598,6 +621,7 @@ export default function CadastroArtista() {
                           );
                         })}
                       </div>
+                      {showErrors && fieldErrors.tags && <span className="field-error" role="alert">{fieldErrors.tags}</span>}
                     </fieldset>
                   </div>
 
@@ -618,6 +642,7 @@ export default function CadastroArtista() {
                           </button>
                         ))}
                       </div>
+                      {showErrors && fieldErrors.disponibilidade && <span className="field-error" role="alert">{fieldErrors.disponibilidade}</span>}
                     </fieldset>
                   </div>
                 </div>
@@ -775,9 +800,12 @@ export default function CadastroArtista() {
                         id="cad-foto-url"
                         value={form.foto_url}
                         onChange={(e) => update("foto_url", e.target.value)}
+                        aria-invalid={showErrors && Boolean(fieldErrors.foto_url)}
+                        aria-describedby={showErrors && fieldErrors.foto_url ? "cad-foto-url-error" : undefined}
                         placeholder="https://link-para-sua-foto.jpg"
                         autoComplete="off"
                       />
+                      {showErrors && fieldErrors.foto_url && <span id="cad-foto-url-error" className="field-error" role="alert">{fieldErrors.foto_url}</span>}
                     </div>
                     <div className="input-group">
                       <label htmlFor="cad-instagram">Instagram</label>
@@ -785,9 +813,13 @@ export default function CadastroArtista() {
                         id="cad-instagram"
                         value={form.instagram}
                         onChange={(e) => update("instagram", e.target.value)}
+                        maxLength={100}
+                        aria-invalid={showErrors && Boolean(fieldErrors.instagram)}
+                        aria-describedby={showErrors && fieldErrors.instagram ? "cad-instagram-error" : undefined}
                         placeholder="@seu.perfil"
                         autoComplete="off"
                       />
+                      {showErrors && fieldErrors.instagram && <span id="cad-instagram-error" className="field-error" role="alert">{fieldErrors.instagram}</span>}
                     </div>
                     <div className="input-group">
                       <label htmlFor="cad-site">Site</label>
@@ -795,10 +827,14 @@ export default function CadastroArtista() {
                         id="cad-site"
                         value={form.site}
                         onChange={(e) => update("site", e.target.value)}
+                        maxLength={2048}
+                        aria-invalid={showErrors && Boolean(fieldErrors.site)}
+                        aria-describedby={showErrors && fieldErrors.site ? "cad-site-error" : undefined}
                         placeholder="https://meusite.com.br"
                         autoComplete="url"
                         type="url"
                       />
+                      {showErrors && fieldErrors.site && <span id="cad-site-error" className="field-error" role="alert">{fieldErrors.site}</span>}
                     </div>
                   </div>
                 </div>
@@ -855,8 +891,8 @@ export default function CadastroArtista() {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => setStep((s) => s + 1)}
-                    disabled={!isStepValid()}
+                    onClick={advanceStep}
+                    disabled={loading}
                     aria-label={`Avançar para: ${STEPS[step + 1]}`}
                   >
                     Próxima etapa <ChevronRight size={16} aria-hidden="true" />
@@ -866,7 +902,7 @@ export default function CadastroArtista() {
                     type="button"
                     className="btn btn-primary"
                     onClick={handleSubmit}
-                    disabled={loading || !isStepValid()}
+                    disabled={loading}
                     aria-label="Enviar cadastro para análise"
                   >
                     {loading ? <><Loader size={16} className="spin" aria-hidden="true" /> Enviando...</> : <><CheckCircle size={16} aria-hidden="true" /> Enviar para análise</>}

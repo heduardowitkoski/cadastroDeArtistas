@@ -6,7 +6,7 @@ import ComoFunciona from './pages/ComoFunciona/ComoFunciona'
 import Login from './pages/Admin/Login'
 import AdminDashboard from './pages/Admin/AdminDashboard'
 import ArtistaLogin from './pages/Artista/ArtistaLogin'
-import EditarCadastro from './pages/Artista/EditarCadastro'
+import EdicaoIndisponivel from './pages/Artista/EdicaoIndisponivel'
 import { PrivateRoute } from './components/PrivateRoute'
 
 function App() {
@@ -20,12 +20,12 @@ function App() {
         <Route path="/artista/login" element={<ArtistaLogin />} />
         <Route path="/artista/editar" element={
           <PrivateRoute loginPath="/artista/login">
-            <EditarCadastro />
+            <EdicaoIndisponivel />
           </PrivateRoute>
         } />
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={
-          <PrivateRoute>
+          <PrivateRoute requiredRole="admin">
             <AdminDashboard />
           </PrivateRoute>
         } />

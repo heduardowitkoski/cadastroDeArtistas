@@ -39,6 +39,7 @@
 .form-grid { display: flex; flex-direction: column; gap: 20px; }
 
 .rating-stars { display: flex; gap: 6px; }
+.feedback-field-hint { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
 .star-btn {
   background: none;
   border: none;

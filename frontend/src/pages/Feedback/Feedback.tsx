@@ -21,19 +21,31 @@ export default function Feedback() {
   const update = (field: string, value: string | number) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const isValid = form.mensagem.trim().length >= 10;
+  const isValid = form.nota >= 1 && form.nota <= 5 &&
+    form.mensagem.trim().length >= 10 && form.mensagem.trim().length <= 2000 &&
+    (!form.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) &&
+    (!form.nome.trim() || form.nome.trim().length >= 2);
 
   const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) {
+      setError("Revise a nota, a mensagem e os dados de contato antes de enviar.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
       const res = await fetch(`${API_URL}/feedbacks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          nome: form.nome.trim() || null,
+          email: form.email.trim().toLowerCase() || null,
+          mensagem: form.mensagem.trim(),
+        }),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => null);
@@ -89,25 +101,33 @@ export default function Feedback() {
           <form onSubmit={handleSubmit} className="feedback-form">
             <div className="form-grid">
               <div className="input-group">
-                <label>Nome (opcional)</label>
+                <label htmlFor="feedback-nome">Nome (opcional)</label>
                 <input
+                  id="feedback-nome"
                   value={form.nome}
                   onChange={(e) => update("nome", e.target.value)}
+                  maxLength={120}
                   placeholder="Como podemos te chamar?"
                 />
               </div>
               <div className="input-group">
-                <label>E-mail (opcional)</label>
+                <label htmlFor="feedback-email">E-mail (opcional)</label>
                 <input
+                  id="feedback-email"
                   type="email"
                   value={form.email}
                   onChange={(e) => update("email", e.target.value)}
+                  maxLength={254}
                   placeholder="seu@email.com"
                 />
+                {form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()) && (
+                  <span className="feedback-field-hint" role="alert">Informe um e-mail válido ou deixe o campo vazio.</span>
+                )}
               </div>
               <div className="input-group">
-                <label>Tipo de feedback</label>
+                <label htmlFor="feedback-tipo">Tipo de feedback</label>
                 <select
+                  id="feedback-tipo"
                   value={form.tipo}
                   onChange={(e) => update("tipo", e.target.value)}
                   className="select-input"
@@ -120,8 +140,8 @@ export default function Feedback() {
             </div>
 
             <div className="input-group" style={{ marginTop: 20 }}>
-              <label>Sua nota de satisfação</label>
-              <div className="rating-stars">
+              <span id="feedback-nota-label">Sua nota de satisfação (1 a 5)</span>
+              <div className="rating-stars" role="group" aria-labelledby="feedback-nota-label">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
@@ -131,18 +151,24 @@ export default function Feedback() {
                     onMouseLeave={() => setHoverNota(0)}
                     className={`star-btn ${n <= (hoverNota || form.nota) ? "star-active" : ""}`}
                     aria-label={`${n} estrelas`}
+                    aria-pressed={form.nota === n}
                   >
                     <Star size={26} fill={n <= (hoverNota || form.nota) ? "currentColor" : "none"} />
                   </button>
                 ))}
               </div>
+              {form.nota === 0 && <span className="feedback-field-hint">Selecione de 1 a 5 estrelas para enviar.</span>}
             </div>
 
             <div className="input-group" style={{ marginTop: 20 }}>
-              <label>Sua mensagem *</label>
+              <label htmlFor="feedback-mensagem">Sua mensagem *</label>
               <textarea
+                id="feedback-mensagem"
                 value={form.mensagem}
                 onChange={(e) => update("mensagem", e.target.value)}
+                minLength={10}
+                maxLength={2000}
+                required
                 placeholder="Conte sua experiência, elogios, sugestões ou críticas... (mínimo 10 caracteres)"
                 rows={4}
               />
@@ -151,7 +177,7 @@ export default function Feedback() {
               </span>
             </div>
 
-            {error && <div className="form-error">{error}</div>}
+            {error && <div className="form-error" role="alert">{error}</div>}
 
             <div className="feedback-actions">
               <button type="submit" className="btn btn-primary" disabled={loading || !isValid}>

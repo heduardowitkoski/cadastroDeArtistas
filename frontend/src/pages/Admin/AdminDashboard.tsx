@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { adminFetch } from "../../lib/adminApi";
 import {
   CheckCircle, Clock, XCircle, LogOut, Star, Check, X, User,
   Pencil, Trash2, Save, AlertTriangle, MessageSquareHeart, Sparkles,
@@ -70,11 +71,9 @@ export default function AdminDashboard() {
   const [submittingModal, setSubmittingModal] = useState(false);
 
   const navigate = useNavigate();
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
-
   const fetchArtistas = () => {
     setLoading(true);
-    fetch(`${API_URL}/artistas`)
+    adminFetch('/artistas')
       .then((r) => r.json())
       .then((data) => {
         setArtistas(Array.isArray(data) ? data : []);
@@ -87,7 +86,7 @@ export default function AdminDashboard() {
   };
 
   const fetchFeedbacks = () => {
-    fetch(`${API_URL}/feedbacks`)
+    adminFetch('/feedbacks')
       .then((r) => r.json())
       .then((data) => setFeedbacks(Array.isArray(data) ? data : []))
       .catch(() => setFeedbacks([]));
@@ -105,7 +104,7 @@ export default function AdminDashboard() {
   const handleStatus = async (artista: Artista, status: string) => {
     setActionLoading(artista.id);
     try {
-      await fetch(`${API_URL}/artistas/${artista.id}/status`, {
+      await adminFetch(`/artistas/${artista.id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -127,11 +126,22 @@ export default function AdminDashboard() {
     if (!editingArtista) return;
     setSubmittingModal(true);
     try {
-      const res = await fetch(`${API_URL}/artistas/${editingArtista.id}`, {
+      const res = await adminFetch(`/artistas/${editingArtista.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...editForm,
+          nome: editForm.nome,
+          nome_artistico: editForm.nome_artistico,
+          email: editForm.email,
+          contato: editForm.contato,
+          cidade: editForm.cidade,
+          area_atuacao: editForm.area_atuacao,
+          bio: editForm.bio,
+          foto_url: editForm.foto_url,
+          instagram: editForm.instagram,
+          site: editForm.site,
+          disponibilidade: editForm.disponibilidade,
+          status: editForm.status,
           tags: editTagsText.split(",").map((t) => t.trim()).filter(Boolean),
           forceStatus: true,
         }),
@@ -165,7 +175,7 @@ export default function AdminDashboard() {
     if (!deletingFeedback) return;
     setSubmittingModal(true);
     try {
-      const res = await fetch(`${API_URL}/feedbacks/${deletingFeedback.id}`, { method: "DELETE" });
+      const res = await adminFetch(`/feedbacks/${deletingFeedback.id}`, { method: "DELETE" });
       if (res.ok) {
         setDeletingFeedback(null);
         fetchFeedbacks();
@@ -183,7 +193,7 @@ export default function AdminDashboard() {
     if (!deletingArtista) return;
     setSubmittingModal(true);
     try {
-      const res = await fetch(`${API_URL}/artistas/${deletingArtista.id}`, { method: "DELETE" });
+      const res = await adminFetch(`/artistas/${deletingArtista.id}`, { method: "DELETE" });
       if (res.ok) {
         setDeletingArtista(null);
         fetchArtistas();

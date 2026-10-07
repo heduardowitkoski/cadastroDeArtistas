@@ -6,9 +6,11 @@ import type { Session } from '@supabase/supabase-js'
 export function PrivateRoute({
   children,
   loginPath = "/admin/login",
+  requiredRole,
 }: {
   children: React.ReactNode
   loginPath?: string
+  requiredRole?: 'admin'
 }) {
   const [session, setSession] = useState<Session | null | undefined>(undefined)
 
@@ -33,6 +35,11 @@ export function PrivateRoute({
   }
 
   if (!session) {
+    return <Navigate to={loginPath} replace />
+  }
+
+  // Apenas UX: a API valida o token e o papel novamente no servidor.
+  if (requiredRole && session.user.app_metadata?.role !== requiredRole) {
     return <Navigate to={loginPath} replace />
   }
 

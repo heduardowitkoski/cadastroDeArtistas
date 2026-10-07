@@ -56,6 +56,6 @@
    - Realizar sessão de apresentação e capacitação com a equipe do Conselho Municipal de Políticas Culturais de Bagé.
    - Finalizar manuais operacionais do sistema.
 
-> **Nota técnica:** para ativar o módulo de feedback **e as novas colunas** (`nome_artistico`, `cpf_cnpj`, `tags`, `disponibilidade`) no banco, executar o script atualizado `backend/supabase.sql` no SQL Editor do Supabase (cria as tabelas `artistas` e `feedbacks` com dados de exemplo).
+> **Aviso de segurança (06/10/2026):** `backend/supabase.sql` é um script destrutivo de bootstrap: contém `DROP TABLE ... CASCADE`, recria `artistas` e `feedbacks`, insere exemplos e desativa RLS. **Não o execute sobre um banco existente, de homologação ou de produção.** A atualização segura do schema e das policies depende de uma etapa separada de migração e validação do estado real do banco. A orientação anterior de executá-lo para ativar colunas/feedback está revogada.
 
 > **Obs.:** Favoritos, nota de eventos e "Disponível" no catálogo são elementos visuais de demonstração; o fluxo real de dados segue via API (`/artistas`, `/artistas/aprovados`, `/feedbacks`).

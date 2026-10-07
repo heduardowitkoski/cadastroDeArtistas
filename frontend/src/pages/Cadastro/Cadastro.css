@@ -276,6 +276,19 @@
   display: block;
 }
 
+.field-error {
+  display: block;
+  margin-top: 4px;
+  color: var(--rose);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input-group [aria-invalid="true"] {
+  border-color: var(--rose);
+  outline-color: var(--rose);
+}
+
 /* Uploads de mídia interativos */
 .upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
 .upload-card {

@@ -1,25 +1,43 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-  private readonly logger = new Logger(SupabaseService.name);
-  private supabase: SupabaseClient;
+  private readonly authClient: SupabaseClient;
+  private readonly databaseClient: SupabaseClient;
 
-  constructor(private configService: ConfigService) {
-    const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
-    const supabaseKey = this.configService.get<string>('SUPABASE_ANON_KEY');
+  constructor(configService: ConfigService) {
+    const supabaseUrl = configService.get<string>('SUPABASE_URL');
+    const publishableKey = configService.get<string>(
+      'SUPABASE_PUBLISHABLE_KEY',
+    );
+    const secretKey = configService.get<string>('SUPABASE_SECRET_KEY');
 
-    if (!supabaseUrl || !supabaseKey) {
-      this.logger.error('Supabase URL and Key must be provided in environment variables.');
+    if (!supabaseUrl || !publishableKey || !secretKey) {
       throw new Error('Missing Supabase configuration');
     }
 
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    const options = {
+      auth: { autoRefreshToken: false, persistSession: false },
+    };
+    this.authClient = createClient(
+      supabaseUrl,
+      publishableKey,
+      options,
+    ) as SupabaseClient;
+    this.databaseClient = createClient(
+      supabaseUrl,
+      secretKey,
+      options,
+    ) as SupabaseClient;
   }
 
-  getClient(): SupabaseClient {
-    return this.supabase;
+  getAuthClient(): SupabaseClient {
+    return this.authClient;
+  }
+
+  getDatabaseClient(): SupabaseClient {
+    return this.databaseClient;
   }
 }
