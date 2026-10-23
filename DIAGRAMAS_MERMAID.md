@@ -1,5 +1,8 @@
 # Ilustração do Sistema - Cadastro Municipal de Artistas
 
+> **Leitura atual — 23/10/2026:** diagramas conceituais preservados; não representam todo o schema nem comprovam homologação. A API atual aplica guards administrativos, DTOs e projeção pública; `/artista/editar` segue indisponível até C-02. O backend vigente da equipe é `https://cadastro-artistas-api-matheus.onrender.com`; o frontend de produção foi preparado localmente para esse destino e aguarda publicação. RLS foi aplicado manualmente. Campos e categorias ainda exigem as decisões C-03/C-04. Não regenerar PNGs como se houvesse mudança de escopo aprovada.
+
+
 Este documento explica, de forma simples e visual, o sistema de **Cadastro Municipal de Artistas** de Bagé. Os diagramas usam o formato **Mermaid**, que pode ser visto direto no GitHub (é só trocar a aba para "Preview" ou abrir pelo próprio site do GitHub).
 
 ---

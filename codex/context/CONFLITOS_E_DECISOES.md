@@ -1,5 +1,27 @@
 # Conflitos e decisões que o Codex não pode inventar
 
+## Revisão de todas as decisões abertas — 23/10/2026
+
+Os registros antigos abaixo preservam o que foi observado na época; referências a API sem guard, RLS não aplicado ou autoedição roteada não representam mais o código atual.
+
+| Decisão | Estado atual / evidência | Encaminhamento |
+|---|---|---|
+| C-01 | Baseline WCAG 2.1 AA preservada; conformidade integral não comprovada | Leitor, zoom e contraste antes de afirmar aceite; não migrar baseline sem decisão |
+| C-02 | Artista pode gerar conta no cadastro; autoedição segue indisponível; PUT somente admin | Decidir confirmação, vínculo UID–ficha e ownership; não habilitar nesta rodada |
+| C-03 | Cadastro multisseleção serializa área em TEXT; editor/catálogo têm vocabulários distintos | Cardinalidade/vocabulário ainda dependem da equipe |
+| C-04 | Front pede um documento; back opcional valida o que recebe; suporta CNPJ alfanumérico | Obrigatoriedade, LGPD e relação CPF/CNPJ continuam abertas |
+| C-05 | Disponibilidade tem dado de cadastro; selo do mural é demonstrativo | Não transformar o selo em regra sem aceite |
+| C-06 | Favoritos locais e métricas são demonstração | Sem backend novo/favoritos/ranking |
+| C-07 | DOD histórico expandido não é backlog obrigatório | Manter itens condicionados ao aceite |
+| C-08 | Bootstrap é destrutivo; RLS já aplicado manualmente e novo Render GET 200 | Não executar SQL/migrations/grants para esta troca de URL |
+| C-09 | Diagramas conceituais sinalizados; PNGs históricos e modelo detalhado incompleto | Sincronizar após decisões funcionais, sem inventar schema |
+| C-10 (operacional) | Novo Render da equipe criado para substituir antigo 500; GET novo 200 reconfirmado | URL pública fixa em PROD e localhost em DEV, ignorando VITE_API_URL temporariamente; reverter workaround antes da PRD final |
+
+C-10 foi autorizada expressamente no prompt desta rodada: serviço `cadastro-artistas-api-matheus`, URL `https://cadastro-artistas-api-matheus.onrender.com`; variáveis SUPABASE_URL/SUPABASE_PUBLISHABLE_KEY/SUPABASE_SECRET_KEY/FRONTEND_URL fornecidas externamente segundo a equipe. O site oficial ainda usa o antigo; publicar e validar. Esta exceção não autoriza segredo versionado. A-24 exige recuperar Vercel e remover hardcodes; A-25 exige rotação e saneamento do commit local preexistente, sem filter-repo automático.
+
+## Histórico preservado das rodadas anteriores
+
+
 ## C-01 — Acessibilidade 2.1 x 2.2
 
 O repositório documenta WCAG 2.1 AA.

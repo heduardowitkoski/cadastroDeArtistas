@@ -1,3 +1,22 @@
+# API do Cadastro Municipal de Artistas — configuração atual
+
+Atualizado em 23/10/2026. Nenhum código backend foi modificado nesta rodada.
+
+Novo serviço da equipe: `cadastro-artistas-api-matheus`.
+URL: `https://cadastro-artistas-api-matheus.onrender.com`.
+Root Directory: `backend/`. Build informado pela equipe: `npm install && npm run build`.
+Start: `npm run start:prod`. A API usa `PORT` fornecida pelo provedor; não fixar outra porta no Render. Usar runtime Node compatível com as dependências (supabase-js instalado exige Node >=22; testes locais em Node 24.22.0).
+
+Variáveis externas do novo serviço: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `FRONTEND_URL`. Nenhum valor deve ser copiado para Git ou relatórios. `.env.example` conserva somente os três nomes Supabase vazios; FRONTEND_URL é configuração adicional do runtime/CORS. No código atual, CORS permite também origens fora da lista; isso não substitui guards e não foi alterado nesta rodada.
+
+Auth usa o cliente Publishable; artistas/feedbacks usam cliente Secret separado, sem JWT do usuário. GET `/artistas/aprovados` respondeu 200 no novo Render nesta rodada. RLS já foi aplicado manualmente; não executar migrations nem `supabase.sql` para recuperar o deploy. Não há `/health` registrado no código atual; esta rodada não o implementou.
+
+Gates: `npm run test:e2e -- --runInBand`, `npm test -- --runInBand`, `npx tsc --noEmit -p tsconfig.json`, `npm run build`, `npx eslint "{src,apps,libs,test}/**/*.ts"` (sem --fix).
+
+Referência operacional: `../codex/output/NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+## Template NestJS original — referência histórica
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

@@ -1,5 +1,8 @@
 # Diagramas UML - Cadastro Municipal de Artistas
 
+> **Leitura atual — 23/10/2026:** diagramas conceituais preservados; não representam todo o schema nem comprovam homologação. A API atual aplica guards administrativos, DTOs e projeção pública; `/artista/editar` segue indisponível até C-02. O backend vigente da equipe é `https://cadastro-artistas-api-matheus.onrender.com`; o frontend de produção foi preparado localmente para esse destino e aguarda publicação. RLS foi aplicado manualmente. Campos e categorias ainda exigem as decisões C-03/C-04. Não regenerar PNGs como se houvesse mudança de escopo aprovada.
+
+
 Este documento reúne os diagramas do sistema **Cadastro Municipal de Artistas** em formato **PlantUML**, com linguagem simples para ser apresentado à equipe da Secretaria de Cultura e ao Conselho Municipal de Políticas Culturais. Os códigos podem ser copiados e colados em editores como o [PlantText](https://www.planttext.com/) ou o servidor oficial do [PlantUML](http://www.plantuml.com/plantuml/).
 
 ---

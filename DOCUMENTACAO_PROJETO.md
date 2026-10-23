@@ -1,5 +1,9 @@
 # Relatório de Status e Documentação Técnica - Cadastro Municipal de Artistas
 
+> **Estado reconciliado em 23/10/2026:** os rótulos “Concluído” abaixo registram implementação, não aceite final de produção. RLS já foi aplicado manualmente, acesso direto do browser foi restringido e o novo Render `cadastro-artistas-api-matheus` respondeu 200 em `/artistas/aprovados`. O backend local também funcionou pós-RLS. O frontend local foi atualizado para o novo Render, mas o bundle oficial inspecionado ainda aponta ao antigo; publicação e smoke tests permanecem pendentes. A-03 não está encerrado. Ver `codex/output/FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e a tabela atual de `BACKLOG_PRIORIZADO.md`.
+
+> **Limites funcionais atuais:** autoedição do artista segue indisponível; categorias e obrigatoriedade CPF/CNPJ dependem de C-03/C-04. Cadastro usa Auth + ficha no backend com compensação, sem transação única; confirmação de e-mail segue pendente. Uploads além da foto não têm persistência completa. “Salvar rascunho” ainda chama o envio definitivo. Guards/DTOs e allowlist pública estão implementados; CRUD real, teclado/leitor, desempenho e consentimento exigem homologação própria.
+
 ## 1. Arquitetura Tecnológica Implementada
 
 - **Front-end:** React (v19) + TypeScript + Vite + Vanilla CSS. Aplicação SPA (Single Page Application) responsiva, estruturada em componentes modulares, seguindo o **design system do Figma** (tema claro, paleta `#F8F7FF`/`#7C3AED`/`#1A1035`) aplicado ao catálogo público, área do artista, painel administrativo e telas de login/feedback.

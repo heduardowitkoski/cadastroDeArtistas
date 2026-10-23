@@ -1,5 +1,24 @@
 # Matriz de rastreabilidade — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — 23/10/2026
+
+A evidência atual prevalece sobre as tabelas históricas abaixo. Estado completo A-01–A-25 em BACKLOG_PRIORIZADO.md; inventário documental em DOCUMENTATION_RECONCILIATION_REPORT.md.
+
+| RF/RNF/CT; achado | Código/evidência atual | Resultado e pendência |
+|---|---|---|
+| RF-04/05; A-03/A-23; CT catálogo pós-RLS | GET novo Render /artistas/aprovados; allowlist/mapper backend | 200, array, campos privados ausentes; nenhuma linha impressa. Novo Render operacional para leitura |
+| RNF-02; A-03; CT Data API/RLS | Postcheck manual informado: RLS true nas duas tabelas, zero policies, grants browser/sequences removidos, service_role preservado | SQL não repetido; authenticated direto e contagens/schema finais ainda precisam evidência formal |
+| RF-01/04/05/07/08/09/10/11; A-22/A-24; CT destino API | apiConfig.ts exporta localhost em DEV e novo Render em PROD; cinco consumidores diretos importam configuração; AdminDashboard usa adminFetch | Fonte e bundle sem URL antiga; build com VITE_API_URL antiga não a reintroduz. Publicação oficial pendente |
+| RNF-05/07; A-10/A-11; CT gates | Front: lint, tsc, 3 testes, build; back: 48 E2E/8 unit, tsc, build, lint sem fix | Todos passam; aviso de chunk JS grande. Mocks não comprovam escritas reais |
+| RF-07/08/09/10/11; A-01/A-04 | Guards admin e JWT só para auth; cliente DB separado | Código backend não alterado; homologar usuário comum/admin reais; autoedição continua bloqueada |
+| RNF-02; A-25; CT secrets/Git/bundle | .env removidos somente do índice, arquivos preservados; scanner sem literal secreto no índice ou bundle | HEAD local anterior contém Secret, origin/main local sem backend/.env; rotação e histórico seguro pendentes |
+| RNF-06; A-16; CT reconciliação | Inventário de 40 MD/0 MDX; banners datados em relatórios, guias e controles atualizados | Histórico preservado; não declarar WCAG, upload ou rascunho concluídos por documentação |
+
+API pública mantém allowlist, POST artista mantém Pendente e endpoints administrativos mantêm Bearer/admin. Nenhum contrato, RLS, grants, schema ou regra CPF/CNPJ foi alterado. Escrever dados de teste e alterar status em produção não fez parte desta rodada.
+
+## Histórico preservado das rodadas anteriores
+
+
 ## Rodada backend pós-RLS / Render — 07/10/2026 (estado mais recente)
 
 O RLS e os testes negativos da Data API foram **informados como realizados pelo demandante**; esta rodada não os repetiu. Linhas posteriores deste arquivo registram estados históricos. Relatório: `BACKEND_POST_RLS_RENDER_REPORT.md`.

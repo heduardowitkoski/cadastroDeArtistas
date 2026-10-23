@@ -1,5 +1,8 @@
 # FRONTEND_UX_A11Y_RESPONSIVE — relatório da rodada de 07/10/2026
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 ## 1. Resumo executivo
 
 Objetivo: corrigir lacunas confirmadas de UX, acessibilidade e responsividade nas rotas públicas e no painel administrativo, preservando a identidade visual e o contrato existente. **Estado final: parcialmente concluído; correções locais prontas para homologação.** Lint, typecheck, 3 testes unitários existentes e build passaram. O navegador local confirmou reflow em cinco larguras e cenários selecionados de erro, vazio, foco e menu. WCAG 2.1 AA, zoom real, leitor de tela, integração e persistência remotas não foram comprovados.

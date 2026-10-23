@@ -8,6 +8,7 @@ import {
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { useDialogFocus } from "../../lib/useDialogFocus";
+import { API_URL } from "../../lib/apiConfig";
 import "./Portal.css";
 
 const CATEGORIAS = [
@@ -73,8 +74,6 @@ export default function Portal() {
   const modalRef = useRef<HTMLDivElement>(null);
   const modalHeadingId = "modal-artista-titulo";
 
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
-
   useEffect(() => {
     setLoading(true);
     setLoadError(false);
@@ -92,7 +91,7 @@ export default function Portal() {
         setLoadError(true);
         setLoading(false);
       });
-  }, [API_URL]);
+  }, []);
   useDialogFocus(Boolean(selectedArtista), modalRef, () => setSelectedArtista(null));
 
   const filtered = artistas.filter((a) => {

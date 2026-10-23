@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../lib/apiConfig";
 import {
   firstInvalidStep,
   hasStepErrors,
@@ -211,8 +212,6 @@ export default function CadastroArtista() {
       ].filter(Boolean).length / 9) * 100
     )
   );
-
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const buildPayload = () => ({
     nome: form.nome,

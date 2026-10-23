@@ -1,9 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
+// TODO PRD: REMOVER ANTES DO DEPLOY PRD FINAL — configurar VITE_SUPABASE_URL na Vercel.
 const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL ||
   'https://asxqxyukeokrhxischog.supabase.co'
 
+// TODO PRD: REMOVER ANTES DO DEPLOY PRD FINAL — configurar VITE_SUPABASE_PUBLISHABLE_KEY na Vercel.
 const supabasePublishableKey =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   'sb_publishable_TRSEfXCLkEtpQQ8uDQXfCQ_FFrAF5wR'

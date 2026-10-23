@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../lib/apiConfig";
 import { ChevronLeft, Palette, Star, Check, Loader, MessageSquareHeart } from "lucide-react";
 import "./Feedback.css";
 
@@ -25,8 +26,6 @@ export default function Feedback() {
     form.mensagem.trim().length >= 10 && form.mensagem.trim().length <= 2000 &&
     (!form.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) &&
     (!form.nome.trim() || form.nome.trim().length >= 2);
-
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

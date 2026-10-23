@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { API_URL } from "../../lib/apiConfig";
 import {
   Star, Check, Loader, User, Save, LogOut, CheckCircle, AlertCircle,
   Upload, Image, FileText, Video, Headphones
@@ -75,8 +76,6 @@ export default function EditarCadastro() {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3001").replace(/\/$/, "");
-
   useEffect(() => {
     let active = true;
     supabase.auth.getUser().then(async ({ data }) => {
@@ -117,7 +116,7 @@ export default function EditarCadastro() {
       }
     });
     return () => { active = false; };
-  }, [API_URL]);
+  }, []);
 
   const update = (field: string, value: unknown) =>
     setForm((prev) => ({ ...prev, [field]: value }));

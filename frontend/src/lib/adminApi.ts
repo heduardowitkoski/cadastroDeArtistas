@@ -1,6 +1,5 @@
 import { supabase } from './supabase'
-
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001').replace(/\/$/, '')
+import { API_URL } from './apiConfig'
 
 export async function adminFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const { data, error } = await supabase.auth.getSession()

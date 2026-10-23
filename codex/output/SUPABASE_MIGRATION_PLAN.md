@@ -1,5 +1,8 @@
 # Plano para a candidata de segurança RLS — não executado
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 > **Registro de 07/10/2026:** este plano descreve a candidata histórica. A revisão A-03 preparou `RLS_MIGRATION_FINAL.sql`, que também revoga grants das duas sequences identificadas, e `A03_RLS_MANUAL_TEST_CHECKLIST.md`. A aplicação está **bloqueada pelo frontend Vercel Production em branco** e por gates remotos pendentes. Nenhum SQL foi executado. Para os passos atuais, use `A03_RLS_FINAL_REPORT.md` e o checklist; não aplicar a candidata antiga.
 
 Arquivo local: `RLS_MIGRATION_CANDIDATE.sql`. **Não** usar `backend/supabase.sql`: contém `DROP TABLE ... CASCADE`, recria tabelas, insere dados de exemplo e desativa RLS. Preservar os 11 artistas e 3 feedbacks reportados. Esta candidata altera apenas RLS e grants de tabela, sem `DROP`, `TRUNCATE` ou recriação.

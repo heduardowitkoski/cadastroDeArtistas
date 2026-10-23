@@ -1,6 +1,8 @@
 # Documentação de Acessibilidade (WCAG 2.1 AA)
 
-Este documento descreve as melhorias de acessibilidade implementadas na aplicação **Cadastro Municipal de Artistas**, em conformidade com as **Diretrizes de Acessibilidade para Conteúdo Web (WCAG 2.1 Nível AA)**.
+> **Revisão documental de 23/10/2026:** WCAG 2.1 AA é a baseline/alvo, não uma conformidade integral comprovada. As melhorias abaixo registram implementação; a rodada UX de 07/10 corrigiu também modais/labels administrativos e retorno de foco. Zoom real, leitor de tela, contraste completo e percurso integral continuam pendentes no `codex/output/FRONTEND_MANUAL_TEST_CHECKLIST.md`. A migração de URL desta rodada não reexecutou auditoria de acessibilidade nem alterou layout.
+
+Este documento descreve as melhorias de acessibilidade implementadas na aplicação **Cadastro Municipal de Artistas**, tendo como alvo as **Diretrizes de Acessibilidade para Conteúdo Web (WCAG 2.1 Nível AA)**.
 
 ---
 

@@ -1,5 +1,8 @@
 # Auditoria do estado real — 06/10/2026
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 ## Método e limites
 
 Leitura na ordem exigida por `AGENTS.md`, seguida de `codex/prompts/00_AUDITORIA_ESTADO_REAL.md`, manifests, código, SQL e testes. O estado inicial de Git continha `AGENTS.md`, `frontend/AGENTS.md`, `backend/AGENTS.md` e `codex/` não rastreados; nenhum arquivo de aplicação foi editado nesta auditoria. Evidência de código não equivale a teste de ponta a ponta. Não havia `.env*` em `frontend/` ou `backend/`, nem acesso configurado a uma base de homologação; não foram feitas operações contra o Supabase ou produção. Assim, persistência e comportamento publicados permanecem **não verificados em execução**.

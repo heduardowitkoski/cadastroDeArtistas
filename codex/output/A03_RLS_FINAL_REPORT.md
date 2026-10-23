@@ -1,5 +1,8 @@
 # A-03 — revisão final de RLS/grants, sem aplicação remota
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 Data: 07/10/2026. **Estado: P0 bloqueado pelo frontend de produção e por validação remota pendente; A-03 não está resolvido.** Nenhuma migration, SQL, mudança de Vercel/Render/Supabase ou operação remota de escrita foi executada nesta rodada.
 
 ## Resumo executivo

@@ -1,5 +1,44 @@
 # Backlog priorizado — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — reconciliação de 23/10/2026
+
+Esta seção substitui as fotografias anteriores. RLS foi aplicado manualmente; novo backend da equipe está online. O GET real ao novo Render retornou 200 e o antigo retornou 500. O bundle oficial ainda contém a URL antiga; o novo bundle local ignora VITE_API_URL antiga e usa o novo Render. **A-03 permanece parcial, não totalmente encerrado.** Relatórios: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md`, `DOCUMENTATION_RECONCILIATION_REPORT.md`; roteiro: `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+A revisão cobre todos os itens existentes A-01 a A-23; A-24/A-25 são dívidas explícitas desta rodada. Uma UI existente ou um teste com mock não comprova persistência/homologação. Nenhuma decisão de negócio nova foi tomada.
+
+| ID | Pri | Estado anterior | Estado real atual | Evidência | Pendência | Próximo passo |
+|---|---|---|---|---|---|---|
+| A-01 | P0 | API contida; homologação pendente | Contenção preservada | Seis rotas com guards; 48 E2E atuais, inclusive 401/403 | Auth/admin real no novo Render | Executar negativos e admin com conta aprovada |
+| A-02 | P0 | Allowlist API; RLS pendente nos textos antigos | Projeção pública e restrição direta informada | GET novo Render 200 sem email/CPF/status/data; postcheck manual | authenticated direto e fluxos privados reais | Repetir checklist de privacidade |
+| A-03 | P0 | RLS preparado ou Render 500 | RLS aplicado; local e novo Render GET 200; fechamento parcial | Postcheck da equipe; GET novo reconfirmado; site oficial ainda usa antigo | Publicar frontend, smoke, authenticated direto e registro final contagens/schema | Publicar build seguro e concluir NEW_RENDER_POST_DEPLOY_CHECKLIST |
+| A-04 | P0 | Autoedição bloqueada | Contida; não habilitada | App.tsx usa EdicaoIndisponivel; PUT é admin | C-02/ownership | Decidir vínculo UID–ficha antes de implementar |
+| A-05 | P1 | Auth/ficha não atômicos | Mitigado no backend, integração de escrita pendente | create + compensação; E2E atuais | Resposta ambígua/compensação e confirmação real | Homologar com fixtures autorizadas |
+| A-06 | P1 | Validações implementadas localmente | Preservadas | DTOs/ValidationPipe e testes atuais | Dados reais/legados e fluxo publicado | Homologar sem relaxar regras |
+| A-07 | P1 | Salvar rascunho envia definitivo | Aberto, confirmado no código | CadastroArtista: rótulo chama handleSubmit | Decisão de rascunho | Definir escopo/rótulo antes de mudança |
+| A-08 | P1 | Uploads incompletos | Aberto | Galeria/vídeo/documento guardam nome; sem persistência completa | RF-03/Storage/limites | Decidir e projetar em rodada própria |
+| A-09 | P1 | Erros e estados de UI corrigidos localmente | Correções preservadas; integração parcial | res.ok, erros separados, retry; relatório UX | PUT/DELETE/sucesso real e falhas | Homologar no novo destino |
+| A-10 | P2 | Cobertura local parcial | 48 E2E + 8 unit back + 3 front passam; DEV/build auditados | Gates desta rodada; mocks no back | E2E com persistência/usuários/performance | Executar QA integrado autorizado |
+| A-11 | P2 | Lint legado falhava | Lint atual completo passa sem fix | npx eslint no backend; npm run lint no frontend | Script backend ainda contém --fix | Usar checagem sem fix em CI |
+| A-12 | P2 | Labels/modais corrigidos em UX | Código preservado; auditoria assistiva pendente | IDs, papéis e useDialogFocus | Leitor/contraste/Tab completo | Executar checklist assistivo |
+| A-13 | P2 | Foco/alertas corrigidos localmente | Preservado | Hook comum e foco no primeiro inválido | Todos os fechamentos e tecnologias assistivas | Homologar teclado/leitor |
+| A-14 | P2 | Busca/categorias divergentes | Aberto | Busca nome/área/tags sem nome artístico; área serializada em texto | C-03 e vocabulário | Decidir sem mudar cardinalidade agora |
+| A-15 | P2 | Deploy pouco documentado/CORS amplo | Guias reconciliados; CORS amplo permanece | READMEs e novo Render documentados; main.ts | Restringir origem após decisão; roteiro de infra | Tratar manutenção sem usar CORS como auth |
+| A-16 | P2 | Docs/diagramas divergentes | Reconciliação executada; diagramas conceituais sinalizados | 40 documentos analisados; histórico preservado | Detalhamento de schema/PNGs/manuais | Atualizar após decisões C-02/C-03/C-04 |
+| A-17 | P2 | Reflow parcial; carga/WCAG não comprovadas | Parcial | Evidências UX anteriores; bundle ~548 kB | Zoom/leitor/1000 registros/usuários | Medir em homologação |
+| A-18 | P3 | Controles demonstrativos/inertes | Parcial e condicionado | Ordenar sem ação; favoritos/disponível demonstrativos; busca admin removida em UX | Termos/privacidade e escopo de interações | Decidir sem implementar favoritos/ranking |
+| A-19 | P3 | Exportação/manuais/treinamento | Pendente/condicionado | Não há exportação administrativa no código examinado | Aceite de RNF-09 e treinamento | Planejar entrega com equipe |
+| A-20 | P1 | Confirmação de email não implementada | Aberto | email_confirm:false; SMTP fora do escopo | Verificação e acesso do artista | Decidir C-02 e fluxo aprovado |
+| A-21 | P2 | Validação pode rejeitar legado | Risco preservado | DTOs administrativos validam campos enviados | Avaliação real de registros legados | Homologar editor com fixtures |
+| A-22 | P1 | Fallbacks divergiam da configuração desejada | Exceção temporária aprovada, não encerrada | Supabase público mantido; API PROD fixa no novo Render | Acesso Vercel e remoção de fallback | Vincular encerramento a A-24 |
+| A-23 | P2 | Render/env não comprovados | Novo serviço da equipe opera leitura pós-RLS | Variáveis externas informadas; GET 200; clientes separados | Admin e escritas reais; estado efetivo do deploy | Homologar sem copiar valores |
+| A-24 | P1 | Novo item | Remover workarounds temporários antes de PRD final | TODOs em apiConfig.ts e supabase.ts | Vercel, 3 VITE externas, remover hardcodes, .env ignorado, Secret só servidor, rotação, redeploy, smoke/security | Exigir checklist final antes de PRD definitiva |
+| A-25 | P0 | Segredo em commit local anterior | Histórico local requer saneamento e rotação | c1c17d7 contém Secret em backend/.env; origin/main local não contém esse arquivo | Revogar/rotacionar, revisar refs remotas e limpar história | Não push/bypass; preparar histórico seguro sob equipe |
+
+A-24 só encerra com acesso ao Vercel, VITE_API_URL/VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY configuradas externamente, API hardcoded e fallbacks públicos removidos, .env não rastreado, Secret exclusivamente no Render, chaves expostas rotacionadas, backend/frontend redeployados e smoke/security tests aprovados. A-25 não é resolvido apenas removendo .env do índice; o commit local comprometido permanece no histórico, não foi reescrito nesta rodada.
+
+## Histórico preservado das rodadas anteriores
+
+
 ## Rodada backend pós-RLS / Render — 07/10/2026 (estado mais recente)
 
 Esta seção atualiza o estado operacional após o **postcheck de RLS informado pelo demandante**; as seções anteriores são evidência histórica e não devem ser interpretadas como estado remoto atual. Detalhes e limites: `BACKEND_POST_RLS_RENDER_REPORT.md`.

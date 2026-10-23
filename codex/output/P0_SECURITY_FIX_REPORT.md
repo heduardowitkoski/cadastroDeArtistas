@@ -1,5 +1,8 @@
 # Contenção P0 da API — 06/10/2026
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 Escopo desta rodada: A-01, A-02 e a contenção segura de A-04. Referências: RF-01, RF-04, RF-05, RF-07, RF-09, RF-11; RNF-02 e CT de acesso anônimo, usuário sem papel, admin, catálogo público e criação pública. Nenhum banco remoto foi acessado. `backend/supabase.sql` não foi executado nem teve comandos SQL alterados; recebeu apenas aviso em comentário.
 
 ## Antes e depois

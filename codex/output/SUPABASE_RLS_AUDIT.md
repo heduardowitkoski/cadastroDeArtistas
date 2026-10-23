@@ -1,5 +1,8 @@
 # Auditoria Supabase real — 06/10/2026
 
+> **Atualização operacional — 23/10/2026:** o restante deste documento preserva a rodada histórica e não é uma instrução para reaplicar SQL. Segundo o postcheck manual informado pela equipe, RLS já está ativo nas duas tabelas, grants de anon/authenticated removidos, sequences protegidas, service_role preservado e acesso anônimo direto bloqueado. Backend local funcionou pós-RLS; o novo Render `https://cadastro-artistas-api-matheus.onrender.com` teve GET `/artistas/aprovados` 200 reconfirmado nesta rodada. O antigo continua 500. O frontend foi corrigido localmente; o bundle oficial ainda requer publicação. A-03 permanece parcial até smoke/security tests publicados, teste direto de authenticated e formalização final de contagens/schema. **Não reexecutar migrations, grants ou o bootstrap.** Estado consolidado: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md` e `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
+
+
 > **Atualização de escopo informada pelo demandante em 07/10/2026:** foram identificadas `public.artistas_id_seq` e `public.feedbacks_id_seq`; não foram identificados triggers públicos nem funções/RPC/views dependentes relevantes na auditoria anterior. Esses fatos foram **informados**, não reconfirmados por consulta remota nesta rodada. `RLS_MIGRATION_FINAL.sql` inclui precheck para verificá-los antes da aplicação. A-03 permanece P0 bloqueado pelo frontend Vercel e pelos testes reais pendentes; ver `A03_RLS_FINAL_REPORT.md`.
 
 ## Evidência recebida

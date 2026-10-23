@@ -1,5 +1,12 @@
 # Fontes do projeto e precedência
 
+## Precedência técnica desta reconciliação — 23/10/2026
+
+Por instrução expressa desta rodada, divergências sobre estado técnico são resolvidas por: (1) código atual, (2) evidência manual mais recente, (3) testes automatizados atuais, (4) relatório mais recente, (5) documentação histórica. Código existente não decide requisitos de negócio pendentes, especialmente C-02/C-03/C-04. Os nove prompts em `codex/prompts/` são roteiros históricos; lê-los não autoriza executá-los nem expandir o escopo desta migração.
+
+RLS já aplicado e novo Render funcionando substituem os estados antigos de migração pendente e backend não validado. `backend/supabase.sql` permanece destrutivo e proibido para recuperação de base existente. `codex/` e AGENTS estão versionados atualmente; notas antigas dizendo que eram ignorados são históricas. Referência documental atual: `codex/output/DOCUMENTATION_RECONCILIATION_REPORT.md`.
+
+
 ## Arquivos atuais do Git
 
 ### `DOCUMENTACAO_PROJETO.md`
