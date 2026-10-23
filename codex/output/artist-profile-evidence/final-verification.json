@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-23",
+  "backend_e2e": 115,
+  "backend_unit": 8,
+  "frontend": 25,
+  "total": 148,
+  "new_since_99": 49,
+  "frontend_lint": "PASSOU",
+  "frontend_typecheck": "PASSOU",
+  "frontend_build": "PASSOU",
+  "backend_lint_without_fix": "PASSOU",
+  "backend_typecheck": "PASSOU",
+  "backend_build": "PASSOU",
+  "production_secret_shaped_literal_matches": 0,
+  "protected_paths_unchanged": [
+    "backend/supabase.sql",
+    "backend/src/supabase",
+    "frontend/src/lib/apiConfig.ts",
+    "frontend/src/lib/supabase.ts",
+    "frontend/vercel.json"
+  ],
+  "remote_writes": 0,
+  "sql_runtime": "BLOQUEADO: sem PostgreSQL/Supabase local; não aplicado remotamente",
+  "auth_redirect_login_retest": "BLOQUEADO: configuração/conta controlada pendentes",
+  "notes": "Patterns complementam revisão do diff; não são prova universal de ausência de segredo. Erros induzidos nos testes são intencionais.",
+  "git_diff_check": "PASSOU",
+  "design_qa": "passed"
+}

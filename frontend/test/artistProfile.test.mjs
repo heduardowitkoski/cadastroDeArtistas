@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFavorites,writeFavorites,nextFavorites,profileVisit,httpUrl,instagramUrl,phoneUrl,assetUrl } from '../src/lib/artistProfile.ts';
+const memory=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)}};
+test('CT-FAV-01 favoritar/desfavoritar artistas distintos sem contador global',()=>{let ids=nextFavorites([],1);ids=nextFavorites(ids,4);assert.deepEqual(ids,[1,4]);assert.deepEqual(nextFavorites(ids,1),[4]);});
+test('CT-FAV-02 estado persiste no storage desse navegador',()=>{const s=memory();assert.equal(writeFavorites(s,[1,4]),true);assert.deepEqual(readFavorites(s),[1,4]);});
+test('CT-FAV-03 storage bloqueado/corrompido não quebra página',()=>{const denied={getItem(){throw new Error('blocked')},setItem(){throw new Error('blocked')}};assert.deepEqual(readFavorites(denied),[]);assert.equal(writeFavorites(denied,[1]),false);assert.deepEqual(readFavorites({getItem:()=>'{bad'}),[]);});
+test('CT-FAV-04 ids inválidos não entram em favoritos',()=>assert.deepEqual(readFavorites({getItem:()=>JSON.stringify([1,1,-1,'x',4,null])}),[1,4]));
+test('CT-VISITA-FRONT-01 reutiliza sessão sem fingerprint',()=>{const s=memory();let calls=0;const uuid=()=>{calls++;return 'fixture-session'};assert.equal(profileVisit(s,uuid),'fixture-session');assert.equal(profileVisit(s,uuid),'fixture-session');assert.equal(calls,1);});
+test('CT-VISITA-FRONT-02 storage indisponível não gera visitas infinitas',()=>assert.equal(profileVisit({getItem(){throw new Error('blocked')},setItem(){}},()=>{throw new Error('should not create')}),null));
+test('CT-LINK-01 aceita http/https e rejeita javascript/data e credenciais',()=>{assert.equal(httpUrl('javascript:alert(1)'),null);assert.equal(httpUrl('data:text/html,fixture'),null);assert.equal(httpUrl('https://user:pass@example.test'),null);assert.equal(httpUrl('https://example.test/'),'https://example.test/');});
+test('CT-LINK-02 Instagram normaliza @,nome e URL real',()=>{for(const value of ['@artista','artista','https://instagram.com/artista/'])assert.equal(instagramUrl(value),'https://www.instagram.com/artista/');assert.equal(instagramUrl('https://evil.test/artista'),null);});
+test('CT-LINK-03 telefone público vira tel seguro',()=>{assert.equal(phoneUrl('(53) 99999-0000'),'tel:53999990000');assert.equal(phoneUrl('bad'),null);assert.equal(phoneUrl(null),null);});
+test('CT-MIDIA-FRONT-01 URL backend usa API e mantém Base64 legado seguro',()=>{const path='/artistas/1/arquivos/0f5a91c0-f594-432b-baf1-c3fb419b4cab?thumbnail=1';assert.equal(assetUrl(path,'https://api.example.test'),'https://api.example.test'+path);assert.equal(assetUrl('data:image/png;base64,fixture'),'data:image/png;base64,fixture');assert.equal(assetUrl('data:image/svg+xml;base64,fixture'),undefined);assert.equal(assetUrl('javascript:alert(1)'),undefined);});

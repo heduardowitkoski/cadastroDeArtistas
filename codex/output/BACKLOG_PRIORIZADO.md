@@ -1,5 +1,21 @@
 # Backlog priorizado — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — perfil completo, 23/10/2026
+
+Esta atualização prevalece para os recursos desta rodada; tabelas abaixo preservam seus contextos históricos. Relatório: [COMPLETE_ARTIST_PROFILE_FEATURES_REPORT.md](COMPLETE_ARTIST_PROFILE_FEATURES_REPORT.md). **148 testes locais passaram (115 E2E + 8 unitários backend + 25 frontend), 49 novos. Zero escrita remota/commit/push/deploy.**
+
+| Item | Estado atualizado | Pendência que impede fechamento integral |
+|---|---|---|
+| A-08 | **Parcial implementado:** bytes foto/galeria/PDF em arquitetura Storage privado, validação server-side, thumbnails, review admin, cleanup e migrations locais; cadastro/navegador e falhas simuladas testados | Aplicar/homologar banco/bucket/policies manualmente; vídeo e áudio adiados; não marcar concluído |
+| A-10 | 148 testes verdes e novos cenários de perfil, mídias, favoritos, visitas, agenda, privacidade e guards | Atomicidade SQL/persistência/contas reais não comprovadas por mocks |
+| A-12/A-13/A-17 | Perfil 320..1440 sem overflow, lightbox/PDF/drawer por teclado, retorno do foco e retry; QA visual aprovado | Leitor de tela, zoom real 200%, fotos/PDFs reais e desempenho remoto pendentes; sem WCAG integral |
+| A-18 | Favoritos públicos agora persistem por navegador; perfil compartilha link e possui ações reais | Sem contador global de favoritos/ranking; demais controles antigos fora do escopo preservam dívidas |
+| A-05/A-20 | Recebimento e confirmation link PASSOU conforme evidência humana; código resend já usa URL oficial | Redirect FALHOU por localhost; configuração remota e login após confirmação aguardam reteste |
+| A-03/A-01/A-02 | Guard e projeção pública preservados, negativos locais ampliados; SQL novo prevê RLS/revogação e bucket privado | Nenhum novo teste remoto de políticas/Storage executado; A-03 continua parcial |
+| A-04/C-02 | Agenda somente admin, sem autoedição ou vínculo UID–ficha inventado | Ownership permanece decisão aberta |
+
+Rota `/artistas/:id` substitui modal público; catálogo/destaque navegam para ela. Visitas são reais via backend/RPC e membro desde deriva do cadastro; agenda pública filtra futuro/público. C-03/C-04 não mudam. Os recursos novos só podem operar em produção depois do [checklist](ARTIST_PROFILE_DEPLOY_CHECKLIST.md); não aplicar bootstrap nem relaxar RLS. A-24/A-25 e demais dívidas não foram encerradas.
+
 ## Estado atual — rodada de qualidade local de 23/10/2026
 
 Esta seção prevalece sobre fotografias históricas abaixo para as alterações desta rodada. Relatório: [FRONT_QUALITY_INTEGRATION_ROUND_REPORT.md](FRONT_QUALITY_INTEGRATION_ROUND_REPORT.md). **99 testes locais passam (76 E2E + 8 unit backend + 15 frontend), 40 novos; 122 CTs oficiais mapeados e 70 com asserções automatizadas relacionadas, sempre com limites explícitos.** Não há aceite integral de produção/WCAG.

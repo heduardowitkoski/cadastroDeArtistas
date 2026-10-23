@@ -18,6 +18,21 @@ async function start() {
   const tokens = new Map();
   fixture.service.getAuthClient().auth.getUser = async token => ({data:{user: tokens.get(token)||null},error:tokens.has(token)?null:{message:'Invalid local fixture token'}});
   const module = await Test.createTestingModule({imports:[AppModule]}).overrideProvider(SupabaseService).useValue(fixture.service).compile();
+  if(process.env.ARTIST_PROFILE_FIXTURE==='1') {
+    const { readFile }=require('node:fs/promises');
+    const { resolve }=require('node:path');
+    const { PDFDocument }=require('pdf-lib');
+    const { ArtistProfileService }=require('../src/artistas/profile/artist-profile.service');
+    const { prepareMedia }=require('../src/artistas/profile/media-validation');
+    const image=await require('sharp')(await readFile(resolve(__dirname,'../../frontend/public/bage-bg.jpg'))).jpeg().toBuffer();
+    const doc=await PDFDocument.create();doc.addPage().drawText('SMOKE_TEST - Portfolio ficticio local');
+    const pdf=Buffer.from(await doc.save());
+    const file=(buffer,name,mime)=>({buffer,size:buffer.length,originalname:name,mimetype:mime});
+    Object.assign(fixture.state.artists[0],{nome_artistico:'Arte do Pampa',area_atuacao:'Artes Visuais',bio:'Produção artística e memória da nossa cidade.\n\nPerfil sintético para validar a nova página, a galeria, o portfólio e a agenda em ambiente local.',instagram:'@arte_do_pampa',site:'https://example.test',tags:['Arte local','Memória','Cultura'],disponibilidade:['Fins de semana','Eventos diurnos']});
+    const profile=module.get(ArtistProfileService);
+    await profile.store(1,await prepareMedia({photo:[file(image,'foto.jpg','image/jpeg')],gallery:Array.from({length:8},(_,i)=>file(image,`SMOKE_TEST_Trabalho ${i+1}.jpg`,'image/jpeg')),portfolio:[file(pdf,'SMOKE_TEST_Portfolio.pdf','application/pdf')]}));
+    await profile.saveEvent(1,{titulo:'SMOKE_TEST_Encontro de arte',descricao:'Evento fictício para teste local.',starts_at:'2030-10-23T18:00:00-03:00',local:'Espaço cultural',cidade:'Bagé',link:null,is_public:true});
+  }
   const app = module.createNestApplication();
   app.enableCors({origin:'http://127.0.0.1:5187',credentials:true});
   app.use(json({limit:'10mb'}));

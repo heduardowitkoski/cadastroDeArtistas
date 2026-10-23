@@ -1,6 +1,25 @@
 # Confirmação de e-mail — 23/10/2026
 
-**CÓDIGO PRONTO; CONFIGURAÇÃO REMOTA PENDENTE.** Contratos testados com mocks; envio/recebimento/click real BLOQUEADOS porque o usuário informou não haver caixa de teste controlada. Nenhuma confirmação foi desabilitada e nenhum e-mail real foi solicitado nesta rodada.
+## Atualização — rodada de perfil completo
+
+**Nova evidência real informada pelo usuário prevalece sobre o bloqueio histórico de entrega.** Não foi um envio de e-mail executado pelo agente nesta rodada.
+
+| Etapa | Estado atual | Origem / pendência |
+|---|---|---|
+| EMAIL RECEIVED | **PASSOU** | Usuário informou que a mensagem chegou |
+| CONFIRMATION LINK | **PASSOU** | Confirmação informada como realizada |
+| REDIRECT | **FALHOU POR LOCALHOST** | Link abriu `localhost:3000`; destino de produção incorreto |
+| LOGIN AFTER CONFIRM | **AGUARDA RETESTE APÓS CORREÇÃO** | Não há evidência nova de login real após ajustar configuração |
+
+Auditoria do código atual: `auth.resend({type:'signup', email, options:{emailRedirectTo:'https://cadastro-de-artistas.vercel.app/artista/login'}})` já está correto e permanece server-side, fixo e independente do payload do cadastro. Os testes continuam conferindo o redirect exato. Não foi alterado só para produzir um diff.
+
+Hipóteses operacionais a verificar, sem afirmar causa remota única não observada: Redirect URL não permitida pode cair no Site URL; Site URL/template pode conter localhost; deploy pode estar em versão antiga ou o link ter sido emitido antes da correção. Conferir no Supabase manualmente: Site URL `https://cadastro-de-artistas.vercel.app`, Redirect URL exata `https://cadastro-de-artistas.vercel.app/artista/login` e template com `ConfirmationURL`. Manter Confirm Email ativo. Referência: [redirecionamentos Supabase](https://supabase.com/docs/guides/auth/redirect-urls).
+
+Configurações remotas não foram lidas com credencial administrativa nem modificadas nesta rodada. Reteste exige caixa/conta controladas: emitir link novo pelo fluxo suportado após a configuração, clicar uma vez e conferir o login. Nunca salvar URL completa de confirmação, JWT, senha ou token como evidência. Ver ordem de implantação em [ARTIST_PROFILE_DEPLOY_CHECKLIST.md](ARTIST_PROFILE_DEPLOY_CHECKLIST.md).
+
+## Histórico da rodada anterior
+
+**Código preparado naquela rodada; configuração remota pendente.** Contratos testados com mocks; envio/recebimento/click ficaram BLOQUEADOS à época porque não havia caixa de teste controlada. O estado de entrega foi atualizado acima com a evidência posterior do usuário. Nenhuma confirmação foi desabilitada e nenhum e-mail real foi solicitado pelo agente na rodada atual.
 
 ## Causa e decisão
 

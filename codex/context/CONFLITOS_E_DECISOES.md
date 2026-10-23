@@ -1,5 +1,24 @@
 # Conflitos e decisões que o Codex não pode inventar
 
+## Decisões atuais — perfil completo, 23/10/2026
+
+O prompt atual autoriza expressamente perfil dedicado, Storage, favoritos locais, visitas e agenda; isso supera somente as restrições históricas de implementação desses recursos. Não autoriza deploy, escrita remota, SQL destrutivo ou exposição de dados privados.
+
+- **C-01:** WCAG 2.1 AA segue alvo; teclado/reflow foram testados, sem certificação integral, leitor ou zoom real 200%.
+- **C-02:** agenda gerida somente por admin enquanto ownership permanecer aberto. Confirmação de e-mail não aprova ficha, não concede papel admin e não habilita autoedição.
+- **C-03/C-04:** categorias/cardinalidade e regra CPF/CNPJ preservadas. Chips de atuação apenas apresentam o texto atual; nenhuma normalização de banco nova.
+- **C-05:** perfil mostra opções de disponibilidade existentes; não transforma arbitrariamente texto em booleano nem muda selo histórico do catálogo fora do escopo.
+- **C-06:** favoritos agora são locais persistidos e compartilhados entre catálogo/perfil, sem número global fictício. Visitas usam backend/RPC com sessão e contador real. Isso não autoriza ranking/destaque por popularidade.
+- **C-08:** duas migrations novas versionadas para schema/bucket privado; não aplicadas. Bootstrap antigo intocado, RLS antigo preservado. Policy nova restritiva não libera browser em outros buckets.
+- **C-09:** diagramas textuais receberam extensão da arquitetura atual, identificada como implementação local; imagens históricas não foram regeneradas.
+- **C-10:** destino API/hardcodes temporários preexistentes não alterados. A-24 e A-25 continuam pendentes.
+- **Mídias:** 10 MB por arquivo conforme requisito; uma foto, oito imagens e um PDF por artista; limites de dimensões e reprocessamento são decisão técnica de proteção da primeira versão. Vídeo/áudio adiados, sem controles falsos. Novas fotos Storage e DataURL legado compatível, sem backfill.
+- **Dados públicos:** allowlist existente mantida, sem e-mail/CPF/CNPJ/UID/status administrativo. Data de membro derivada, cidade sem endereço preciso, sem mapa rastreador/API paga.
+- **E-mail:** nova evidência humana de recebimento/confirmation link PASSOU; redirect FALHOU localhost. Código já fixa URL oficial; configurar Supabase manualmente e retestar login, sem registrar tokens.
+- **Validação:** 148 testes locais passam; não equivalem à aprovação integral de 122 CTs oficiais nem a policies/atomicidade PostgreSQL reais. Zero escrita remota nesta rodada; fixtures só em memória.
+
+Detalhes: `codex/output/COMPLETE_ARTIST_PROFILE_FEATURES_REPORT.md` e checklist de deploy. O histórico abaixo é preservado e não autoriza repetir exclusões, prompts antigos ou alterar decisões abertas.
+
 ## Decisões da rodada de qualidade — 23/10/2026
 
 - C-01: baseline WCAG2.1 AA preservada. Auditoria local/contraste/40 reflows documentados, sem declarar conformidade integral; zoom200% e leitor pendentes.

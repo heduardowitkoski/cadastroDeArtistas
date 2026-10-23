@@ -1,14 +1,15 @@
 import { filterArtists } from "../../lib/catalogFilter";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Search, Heart, MapPin, Music, Paintbrush, Camera, BookOpen, Theater,
   Mic, Palette, Star, Award, Users, Tag, Filter, Eye, ChevronRight,
-  Globe, Phone, ExternalLink, Sparkles, User, X
+  Globe, Sparkles, User
 } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
-import { useDialogFocus } from "../../lib/useDialogFocus";
+import { useFavorites } from "../../lib/useFavorites";
+import { assetUrl } from "../../lib/mediaUrl";
 import { API_URL } from "../../lib/apiConfig";
 import "./Portal.css";
 
@@ -68,12 +69,9 @@ export default function Portal() {
   const [artistas, setArtistas] = useState<Artista[]>([]);
   const [busca, setBusca] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("all");
-  const [favoritos, setFavoritos] = useState<number[]>([]);
+  const { ids: favoritos, toggle: toggleFavorite, persistent } = useFavorites();
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [selectedArtista, setSelectedArtista] = useState<Artista | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const modalHeadingId = "modal-artista-titulo";
 
   useEffect(() => {
     setLoading(true);
@@ -93,7 +91,6 @@ export default function Portal() {
         setLoading(false);
       });
   }, []);
-  useDialogFocus(Boolean(selectedArtista), modalRef, () => setSelectedArtista(null));
 
   const filtered = filterArtists(artistas, busca, categoriaFiltro);
 
@@ -103,10 +100,10 @@ export default function Portal() {
 
   const toggleFavorito = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavoritos((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
+    toggleFavorite(id);
   };
 
-  const abrirPerfil = (artista: Artista) => setSelectedArtista(artista);
+
 
 
 
@@ -178,6 +175,7 @@ export default function Portal() {
         </div>
       </section>
 
+      {!persistent && <p role="status" className="container">O armazenamento está indisponível; seus favoritos valem só nesta visita.</p>}
       {/* ─── Catálogo ─── */}
       <main className="portal-catalog" id="main-content">
         <div className="container">
@@ -213,14 +211,10 @@ export default function Portal() {
                     <li key={artista.id} style={{ listStyle: "none" }}>
                       <article
                         className="artist-card card"
-                        onClick={(event) => {
-                          event.currentTarget.querySelector<HTMLButtonElement>(".artist-card-cta")?.focus();
-                          abrirPerfil(artista);
-                        }}
                       >
                         <div className="artist-card-photo">
                           {artista.foto_url ? (
-                            <img src={artista.foto_url} alt={`Foto de ${artista.nome_artistico || artista.nome}`} />
+                            <img src={assetUrl(artista.foto_url)} alt={`Foto de ${artista.nome_artistico || artista.nome}`} />
                           ) : (
                             <div className="artist-card-placeholder" aria-hidden="true"><Users size={40} aria-hidden="true" /></div>
                           )}
@@ -250,9 +244,9 @@ export default function Portal() {
                             </span>
                           </div>
                           <p className="artist-card-bio">{artista.bio || "Artista local de Bagé."}</p>
-                          <button type="button" className="artist-card-cta" aria-label={`Ver perfil de ${artista.nome_artistico || artista.nome} — ${artista.area_atuacao}`} onClick={(event) => { event.stopPropagation(); abrirPerfil(artista); }}>
+                          <Link to={`/artistas/${artista.id}`} className="artist-card-cta" aria-label={`Ver perfil de ${artista.nome_artistico || artista.nome} — ${artista.area_atuacao}`}>
                             <Eye size={14} aria-hidden="true" /> Ver perfil
-                          </button>
+                          </Link>
                         </div>
                       </article>
                     </li>
@@ -267,7 +261,7 @@ export default function Portal() {
                 <div className="featured-card">
                   <div className="featured-photo">
                     {featured.foto_url ? (
-                      <img src={featured.foto_url} alt={`Foto de ${featured.nome_artistico || featured.nome}`} />
+                      <img src={assetUrl(featured.foto_url)} alt={`Foto de ${featured.nome_artistico || featured.nome}`} />
                     ) : (
                       <div className="featured-placeholder" aria-hidden="true"><Users size={36} aria-hidden="true" /></div>
                     )}
@@ -292,9 +286,9 @@ export default function Portal() {
                         <p className="featured-stat-label">Avaliação</p>
                       </div>
                     </div>
-                    <button className="featured-cta" onClick={() => setSelectedArtista(featured)}>
+                    <Link className="featured-cta" to={`/artistas/${featured.id}`}>
                       Ver perfil completo
-                    </button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -334,101 +328,6 @@ export default function Portal() {
           </div>
         </div>
       </main>
-
-      {/* ─── Modal Artista ─── */}
-      {selectedArtista && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedArtista(null)}
-          role="presentation"
-          aria-hidden="false"
-        >
-          <div
-            id="modal-artista-card"
-            ref={modalRef}
-            className="modal-card"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={modalHeadingId}
-            tabIndex={-1}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="modal-close"
-              onClick={() => setSelectedArtista(null)}
-              aria-label="Fechar perfil do artista"
-            >
-              <X size={14} aria-hidden="true" />
-            </button>
-            <div className="modal-photo">
-              {selectedArtista.foto_url ? (
-                <img src={selectedArtista.foto_url} alt={`Foto de ${selectedArtista.nome_artistico || selectedArtista.nome}`} />
-              ) : (
-                <div className="modal-placeholder" aria-hidden="true"><Users size={60} aria-hidden="true" /></div>
-              )}
-            </div>
-            <div className="modal-info">
-              <span className="artist-cat-badge" aria-label={`Categoria: ${selectedArtista.area_atuacao}`}>
-                {CATEGORIA_ICON[selectedArtista.area_atuacao] || <Star size={14} aria-hidden="true" />}
-                {selectedArtista.area_atuacao}
-              </span>
-              <h2 id={modalHeadingId}>{selectedArtista.nome_artistico || selectedArtista.nome}</h2>
-              {selectedArtista.cidade && (
-                <p className="modal-city">
-                  <MapPin size={14} aria-hidden="true" /> {selectedArtista.cidade}
-                </p>
-              )}
-              {selectedArtista.tags && selectedArtista.tags.length > 0 && (
-                <div className="modal-tags" aria-label="Palavras-chave do artista">
-                  {selectedArtista.tags.map((t) => (
-                    <span key={t} className="modal-tag">{t}</span>
-                  ))}
-                </div>
-              )}
-              {selectedArtista.disponibilidade && selectedArtista.disponibilidade.length > 0 && (
-                <p className="modal-avail">
-                  <span className="availability-label">Disponibilidade:</span>{" "}
-                  {selectedArtista.disponibilidade.join(" · ")}
-                </p>
-              )}
-              <p className="modal-bio">{selectedArtista.bio || "Artista local de Bagé."}</p>
-              <div className="modal-links">
-                {selectedArtista.instagram && (
-                  <a
-                    href={`https://instagram.com/${selectedArtista.instagram.replace("@", "")}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="btn btn-secondary btn-sm"
-                    aria-label={`Instagram de ${selectedArtista.nome_artistico || selectedArtista.nome} (abre em nova aba)`}
-                  >
-                    <ExternalLink size={14} aria-hidden="true" /> Instagram
-                  </a>
-                )}
-                {selectedArtista.site && (
-                  <a
-                    href={selectedArtista.site}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="btn btn-secondary btn-sm"
-                    aria-label={`Site de ${selectedArtista.nome_artistico || selectedArtista.nome} (abre em nova aba)`}
-                  >
-                    <Globe size={14} aria-hidden="true" /> Site
-                  </a>
-                )}
-                {selectedArtista.contato && (
-                  <a
-                    href={`tel:${selectedArtista.contato}`}
-                    className="btn btn-secondary btn-sm"
-                    aria-label={`Ligar para ${selectedArtista.nome_artistico || selectedArtista.nome}`}
-                  >
-                    <Phone size={14} aria-hidden="true" /> Contato
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ─── Footer ─── */}
       <Footer />

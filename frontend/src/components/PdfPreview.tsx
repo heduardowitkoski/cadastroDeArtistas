@@ -1,0 +1,23 @@
+import { useEffect, useRef, useState } from 'react'
+import { getDocument, GlobalWorkerOptions, type PDFDocumentProxy, type RenderTask } from 'pdfjs-dist'
+import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
+import { X, ChevronLeft, ChevronRight, Download } from 'lucide-react'
+import { adminFetch } from '../lib/adminApi'
+import { useDialogFocus } from '../lib/useDialogFocus'
+import './PdfPreview.css'
+
+GlobalWorkerOptions.workerSrc=workerUrl
+export default function PdfPreview({url,name,admin=false,onClose}:{url:string;name:string;admin?:boolean;onClose:()=>void}){
+  const dialog=useRef<HTMLDivElement>(null);const area=useRef<HTMLDivElement>(null);const canvas=useRef<HTMLCanvasElement>(null)
+  const [doc,setDoc]=useState<PDFDocumentProxy|null>(null);const [page,setPage]=useState(1);const [error,setError]=useState('');const [loading,setLoading]=useState(true);const [text,setText]=useState('');const [width,setWidth]=useState(800)
+  useDialogFocus(true,dialog,onClose)
+  useEffect(()=>{const node=area.current;if(!node)return;const observer=new ResizeObserver(entries=>setWidth(Math.max(100,Math.min(1000,entries[0].contentRect.width-24))));observer.observe(node);return()=>observer.disconnect()},[])
+  useEffect(()=>{let active=true;const controller=new AbortController();let task:ReturnType<typeof getDocument>|undefined
+    const load=async()=>{try{const response=admin?await adminFetch(url,{signal:controller.signal}):await fetch(url,{signal:controller.signal});if(!response.ok)throw new Error();const bytes=new Uint8Array(await response.arrayBuffer());if(!active)return;task=getDocument({data:bytes,enableXfa:false,useSystemFonts:true,stopAtErrors:true,maxImageSize:40_000_000,canvasMaxAreaInBytes:16_000_000});const pdf=await task.promise;if(active)setDoc(pdf)}catch{if(active){setError('Não foi possível visualizar o PDF. Você pode baixar o arquivo para conferir.');setLoading(false)}}};void load();return()=>{active=false;controller.abort();void task?.destroy()}
+  },[url,admin])
+  useEffect(()=>{if(!doc||!canvas.current)return;let active=true;let render:RenderTask|undefined;setLoading(true);setText('')
+    const show=async()=>{try{const pdfPage=await doc.getPage(page);if(!active)return;const original=pdfPage.getViewport({scale:1});const scale=Math.min(1.6,width/original.width,Math.sqrt(4_000_000/(original.width*original.height)));const viewport=pdfPage.getViewport({scale});const node=canvas.current!;node.width=Math.ceil(viewport.width);node.height=Math.ceil(viewport.height);render=pdfPage.render({canvas:node,viewport});await render.promise;const content=await pdfPage.getTextContent();if(active){setText(content.items.map(item=>'str' in item?item.str:'').join(' '));setLoading(false)}}catch{if(active){setError('Não foi possível renderizar esta página. Baixe o PDF para conferir.');setLoading(false)}}};void show();return()=>{active=false;render?.cancel()}
+  },[doc,page,width])
+  const download=async()=>{try{const response=admin?await adminFetch(url):await fetch(url);if(!response.ok)throw new Error();const objectUrl=URL.createObjectURL(await response.blob());const link=document.createElement('a');link.href=objectUrl;link.download='portfolio.pdf';link.click();window.setTimeout(()=>URL.revokeObjectURL(objectUrl),60000)}catch{setError('Não foi possível baixar o PDF. Tente novamente.')}}
+  return <div className="pdf-preview-overlay"><div className="pdf-preview" ref={dialog} role="dialog" aria-modal="true" aria-labelledby="pdf-preview-title" tabIndex={-1}><header><div><h2 id="pdf-preview-title">{name}</h2><p>Visualização do portfólio</p></div><button className="btn btn-secondary" onClick={onClose} aria-label="Fechar visualização do PDF"><X aria-hidden="true"/></button></header><div className="pdf-preview-controls"><button className="btn btn-secondary" disabled={!doc||page===1} onClick={()=>setPage(p=>p-1)}><ChevronLeft aria-hidden="true"/>Anterior</button><p role="status">{doc?`Página ${page} de ${doc.numPages}`:'Carregando PDF…'}</p><button className="btn btn-secondary" disabled={!doc||page===doc.numPages} onClick={()=>setPage(p=>p+1)}>Próxima<ChevronRight aria-hidden="true"/></button><button className="btn btn-primary" onClick={download}><Download size={17} aria-hidden="true"/>Baixar PDF</button></div>{error&&<p role="alert" className="pdf-preview-error">{error}</p>}<div className="pdf-page-area" ref={area} aria-busy={loading}>{loading&&<p role="status">Carregando página…</p>}<canvas ref={canvas} aria-label={`Página ${page} do portfólio`} role="img"/></div>{text&&<details><summary>Texto desta página</summary><p>{text}</p></details>}</div></div>
+}

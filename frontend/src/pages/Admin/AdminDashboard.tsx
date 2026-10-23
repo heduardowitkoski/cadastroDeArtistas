@@ -1,4 +1,6 @@
 import { HomeButton } from "../../components/HomeButton";
+import ArtistTools from './ArtistTools';
+import { assetUrl } from '../../lib/mediaUrl';
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -71,6 +73,7 @@ export default function AdminDashboard() {
   const [adminName, setAdminName] = useState("");
 
   const [editingArtista, setEditingArtista] = useState<Artista | null>(null);
+  const [toolsArtist, setToolsArtist] = useState<Artista | null>(null);
   const [editForm, setEditForm] = useState<Partial<Artista>>({});
   const [editTagsText, setEditTagsText] = useState("");
   const [deletingArtista, setDeletingArtista] = useState<Artista | null>(null);
@@ -511,8 +514,8 @@ export default function AdminDashboard() {
                 {filtered.map((artista) => (
                   <div key={artista.id} className="artista-row card">
                     <div className="artista-row-photo">
-                      {artista.foto_url ? (
-                        <img src={artista.foto_url} alt={artista.nome} />
+                      {artista.foto_url && !(artista.foto_url.startsWith("/artistas/") && artista.status!=="Aprovado") ? (
+                        <img src={assetUrl(artista.foto_url)} alt={artista.nome} />
                       ) : (
                         <div className="artista-row-placeholder"><User size={24} /></div>
                       )}
@@ -557,6 +560,8 @@ export default function AdminDashboard() {
                         )}
                       </div>
                       <div className="actions-crud">
+                        <button className="btn btn-secondary btn-sm" data-artist-tools-id={artista.id} onClick={()=>setToolsArtist(artista)} aria-label={`Mídias e agenda de ${artista.nome}`}>Mídias e agenda</button>
+                        {artista.status==="Aprovado"&&<Link className="btn btn-secondary btn-sm" to={`/artistas/${artista.id}`}>Ver perfil</Link>}
                         <button className="btn btn-secondary btn-sm" onClick={() => handleOpenEdit(artista)} title="Editar dados">
                           <Pencil size={14} /> Editar
                         </button>
@@ -699,6 +704,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+      {toolsArtist&&<ArtistTools artist={toolsArtist} onClose={()=>{const id=toolsArtist.id;setToolsArtist(null);void fetchArtistas().then(()=>requestAnimationFrame(()=>document.querySelector<HTMLButtonElement>(`[data-artist-tools-id="${id}"]`)?.focus()));}}/>}
     </div>
   );
 }

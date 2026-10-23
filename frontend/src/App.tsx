@@ -8,12 +8,15 @@ import AdminDashboard from './pages/Admin/AdminDashboard'
 import ArtistaLogin from './pages/Artista/ArtistaLogin'
 import EdicaoIndisponivel from './pages/Artista/EdicaoIndisponivel'
 import { PrivateRoute } from './components/PrivateRoute'
+import { lazy, Suspense } from 'react'
+const ArtistProfile=lazy(()=>import('./pages/ArtistProfile/ArtistProfile'))
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Portal />} />
+        <Route path="/artistas/:id" element={<Suspense fallback={<main className="container" role="status">Carregando perfil do artista…</main>}><ArtistProfile /></Suspense>} />
         <Route path="/cadastrar" element={<CadastroArtista />} />
         <Route path="/como-funciona" element={<ComoFunciona />} />
         <Route path="/feedback" element={<Feedback />} />

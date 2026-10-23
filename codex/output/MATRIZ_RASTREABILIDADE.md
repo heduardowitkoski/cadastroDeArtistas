@@ -1,5 +1,22 @@
 # Matriz de rastreabilidade — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — extensão do perfil completo, 23/10/2026
+
+**148 testes locais passam, 49 novos.** A matriz dos 122 IDs oficiais em [INTEGRATION_TEST_COVERAGE_REPORT.md](INTEGRATION_TEST_COVERAGE_REPORT.md) continua referência de numeração e limites. Não foram renumerados CTs nem convertidos 148 testes em 148 CTs oficiais aceitos. Os novos cenários são auxiliares desta funcionalidade; cobertura parcial anterior não vira aprovação integral.
+
+| RF/RNF/escopo | Evidência adicional | Resultado e limite |
+|---|---|---|
+| RF03/05; upload e perfil | `backend/test/artist-profile.e2e-spec.ts`: perfil aprovado/privado/ausente, allowlist, legado/empty/bio, arquivos reais, MIME/extensão/bytes/limites/path/cleanup | PASSOU local; 39 cenários E2E novos; Storage/SQL reais aguardam implantação humana |
+| RF01/02/03; cadastro | Multipart validado antes de Auth, 201 e mídia pendente sem duplicar conta; wizard com foto+galeria+PDF em memória | PASSOU local; sem escrita remota/caixa controlada |
+| RF04/05; navegação e consulta | Browser CTA/destaque → `/artistas/:id`, refresh, breadcrumb, título, galeria/PDF e retry | PASSOU local; rewrite Vercel existente preservado, refresh publicado pendente |
+| RF07; autorização | Anônimo401 e comum403 em nove operações admin; revisão privada; 404 público para pendente/rejeitado | PASSOU local; papel validado server-side, sem ownership novo |
+| Novos cenários auxiliares — favoritos/URLs/sessão | `frontend/test/artistProfile.test.mjs`, 10 testes: persistência/independência/storage indisponível e URLs/sessão; browser refresh e clipboard | PASSOU local; sem contador global/sem CT oficial inventado |
+| Novos cenários auxiliares — visitas/agenda | E2E dedup/concorrência simulada e CRUD admin/filtro futuro/público; browser cria/edita/remove | PASSOU local; atomicidade PL/pgSQL e concorrência real ainda não executadas |
+| RNF01/02; reflow/segurança | Cinco larguras, teclado/foco, CSP/nosniff e projeção; migrations RLS restritas revisáveis | PASSOU nas asserções; policies efetivas/negação direta remota BLOQUEADAS; leitor/zoom reais pendentes |
+| A-05/A-20; confirmação | Nova evidência humana: EMAIL RECEIVED e CONFIRMATION LINK PASSOU | REDIRECT FALHOU localhost; LOGIN AFTER CONFIRM aguarda reteste; código exato já correto |
+
+Novos logs/JSON/capturas em `artist-profile-evidence/`; [relatório mestre](COMPLETE_ARTIST_PROFILE_FEATURES_REPORT.md), [perfil](ARTIST_PUBLIC_PROFILE_REPORT.md), [Storage](ARTIST_MEDIA_STORAGE_REPORT.md) e [deploy](ARTIST_PROFILE_DEPLOY_CHECKLIST.md). Sem nova alegação de negação direta no ambiente remoto: teste com mock não prova policy aplicada. C-02/C-03/C-04 e os CTs antigos bloqueados mantêm seus limites.
+
 ## Estado atual — CTs oficiais e qualidade local de 23/10/2026
 
 Matriz completa com os **122 IDs originais**, cenários, arquivos de teste, evidências e pendências em [INTEGRATION_TEST_COVERAGE_REPORT.md](INTEGRATION_TEST_COVERAGE_REPORT.md). O PDF indicado pelo usuário está emcodex/docs. Atribuições RN/UC só foram feitas quando explicitadas; não se inventou numeração a partir dos diagramas históricos.

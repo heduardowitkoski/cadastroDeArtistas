@@ -1,5 +1,28 @@
 # Ilustração do Sistema - Cadastro Municipal de Artistas
 
+## Extensão atual — perfil completo, 23/10/2026
+
+Fluxo implementado localmente, com testes em memória; bucket/policies/migrations aguardam aplicação humana. A arquitetura histórica abaixo permanece como registro, sem valer como prova de execução remota.
+
+```mermaid
+flowchart LR
+  Catalogo[Catálogo e destaque] --> Perfil[Perfil por ID]
+  Perfil --> Publica[API verifica artista Aprovado]
+  Publica --> DTO[Dados públicos, mídias e eventos futuros]
+  Perfil --> Favoritos[localStorage: favorito por navegador]
+  Perfil --> Visita[UUID de sessão enviado ao backend]
+  Visita --> RPC[RPC restrita: dedup e incremento]
+  Cadastro[Cadastro multipart] --> Validacao[Backend valida bytes e DTO]
+  Validacao --> Privado[Storage privado e metadados]
+  Admin[Admin autenticado] --> Revisao[Revisão de mídias e CRUD de agenda]
+  Revisao --> Privado
+  Publica --> Privado
+  Exclusao[Exclusão definitiva] --> Fila[Fila durável antes da operação]
+  Fila --> Cascata[Cascatas no banco e cleanup com retry]
+```
+
+Sem bucket público, novo Base64 no cadastro, acesso direto anon às tabelas/RPCs, ownership presumido, mapa preciso ou favorito global fictício. Desaprovação conserva mídias/agenda e bloqueia novas leituras públicas. Ver `codex/output/COMPLETE_ARTIST_PROFILE_FEATURES_REPORT.md` e checklist antes de deploy.
+
 > **Leitura atual — 23/10/2026:** diagramas conceituais preservados; não representam todo o schema nem comprovam homologação. A API atual aplica guards administrativos, DTOs e projeção pública; `/artista/editar` segue indisponível até C-02. O backend vigente da equipe é `https://cadastro-artistas-api-matheus.onrender.com`; o frontend de produção foi preparado localmente para esse destino e aguarda publicação. RLS foi aplicado manualmente. Campos e categorias ainda exigem as decisões C-03/C-04. Não regenerar PNGs como se houvesse mudança de escopo aprovada.
 
 

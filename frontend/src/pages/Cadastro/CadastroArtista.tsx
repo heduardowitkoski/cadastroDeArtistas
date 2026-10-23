@@ -11,7 +11,7 @@ import {
 } from "../../lib/cadastroValidation";
 import {
   ChevronRight, Star, Clock, CheckCircle, AlertCircle,
-  Image, Video, Headphones, Upload, MapPin, Check,
+  Image, Upload, MapPin, Check,
   Loader, ArrowLeft, User, Sparkles, FileText
 } from "lucide-react";
 import "./Cadastro.css";
@@ -128,67 +128,22 @@ export default function CadastroArtista() {
         : [...prev.disponibilidade, v],
     }));
 
-  const compressImageFile = (file: File, maxWidth = 800, quality = 0.6): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new window.Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          let width = img.width;
-          let height = img.height;
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL("image/jpeg", quality));
-          } else {
-            resolve(event.target?.result as string);
-          }
-        };
-        img.onerror = () => resolve(event.target?.result as string);
-        img.src = event.target?.result as string;
-      };
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleFotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const compressedDataUrl = await compressImageFile(file);
-      setForm((prev) => ({
-        ...prev,
-        foto_url: compressedDataUrl,
-        foto_nome: file.name,
-      }));
-    } catch {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setForm((prev) => ({
-          ...prev,
-          foto_url: event.target?.result as string,
-          foto_nome: file.name,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleGenericFileUpload = (fieldName: keyof FormData, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({
-      ...prev,
-      [fieldName]: file.name,
-    }));
+  const [mediaFiles, setMediaFiles] = useState<{photo?: File;gallery: File[];portfolio?: File}>({gallery:[]});
+  const [uploadError, setUploadError] = useState("");
+  const [mediaPending, setMediaPending] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState("");
+  useEffect(() => {
+    if (!mediaFiles.photo) { setPhotoPreview(""); return; }
+    const url=URL.createObjectURL(mediaFiles.photo);setPhotoPreview(url);
+    return()=>URL.revokeObjectURL(url);
+  },[mediaFiles.photo]);
+  const selectMedia = (field: "photo"|"gallery"|"portfolio", files: FileList|null) => {
+    const items=Array.from(files||[]);setUploadError("");
+    if(items.some(f=>!f.size||f.size>10*1024*1024)){setUploadError("Cada arquivo deve ter conteúdo e no máximo 10 MB.");return;}
+    if(field==="gallery"&&items.length>8){setUploadError("Selecione até 8 imagens para a galeria.");return;}
+    if(items.some(f=>field==="portfolio"?f.type!=="application/pdf":!['image/jpeg','image/png','image/webp'].includes(f.type))){setUploadError("Use PDF para o portfólio e JPEG, PNG ou WebP para imagens.");return;}
+    setMediaFiles(prev=>({...prev,[field]:field==="gallery"?items:items[0]}));
+    update(field==="photo"?"foto_nome":field==="gallery"?"galeria_nome":"portfolio_doc_nome",items.map(f=>f.name).join(", "));
   };
 
   const temCpfOuCnpj = Boolean(form.cpf.trim() || form.cnpj.trim());
@@ -196,6 +151,7 @@ export default function CadastroArtista() {
   const fieldErrors = validateCadastro(form, senha, confirmarSenha);
 
   const advanceStep = () => {
+    if (step === 2 && uploadError) { setError(uploadError); return; }
     if (hasStepErrors(fieldErrors, step)) {
       setShowErrors(true);
       return;
@@ -209,7 +165,7 @@ export default function CadastroArtista() {
     Math.round(
       ([
         form.nome, form.email, form.contato, temCpfOuCnpj, form.categorias.length > 0,
-        form.bio, form.foto_url, form.instagram, form.site,
+        form.bio, mediaFiles.photo || form.foto_url, form.instagram, form.site,
       ].filter(Boolean).length / 9) * 100
     )
   );
@@ -232,6 +188,7 @@ export default function CadastroArtista() {
   });
 
   const handleSubmit = async () => {
+    if (uploadError) { setStep(2); setError(uploadError); return; }
     const invalidStep = firstInvalidStep(fieldErrors);
     if (invalidStep >= 0) {
       setStep(invalidStep);
@@ -242,10 +199,14 @@ export default function CadastroArtista() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/artistas`, {
+      const hasFiles=Boolean(mediaFiles.photo||mediaFiles.portfolio||mediaFiles.gallery.length);
+      const payload=buildPayload();
+      const multipart=new window.FormData();
+      if(hasFiles){multipart.append("dados",JSON.stringify({...payload,foto_url:mediaFiles.photo?null:payload.foto_url}));if(mediaFiles.photo)multipart.append("photo",mediaFiles.photo);for(const file of mediaFiles.gallery)multipart.append("gallery",file);if(mediaFiles.portfolio)multipart.append("portfolio",mediaFiles.portfolio);}
+      const res = await fetch(`${API_URL}/artistas${hasFiles?"/com-midias":""}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload()),
+        ...(hasFiles?{}:{headers:{"Content-Type":"application/json"}}),
+        body:hasFiles?multipart:JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -256,6 +217,7 @@ export default function CadastroArtista() {
 
       const result = await res.json().catch(() => null);
       setEmailVerification(result?.email_verification === "requested" ? "requested" : "pending");
+      setMediaPending(result?.media_upload === "pending");
       setSuccess(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
@@ -279,6 +241,7 @@ export default function CadastroArtista() {
           <p>{emailVerification === "requested"
             ? "Solicitamos o e-mail de confirmação. Verifique sua caixa de entrada e a pasta de spam antes de entrar na sua conta."
             : "Seu cadastro foi recebido, mas o envio do e-mail de confirmação não pôde ser confirmado. Procure a equipe responsável para concluir a verificação."}</p>
+          {mediaPending && <p role="alert">Sua ficha foi salva, mas as mídias não puderam ser confirmadas. Procure a equipe responsável para conferir ou reenviar os arquivos; não refaça o cadastro.</p>}
           <div className="cadastro-success-actions" style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
             <HomeButton />
           </div>
@@ -316,7 +279,7 @@ export default function CadastroArtista() {
         `Instagram: ${form.instagram || "—"}`,
         `Site: ${form.site || "—"}`
       ],
-      ok: Boolean(form.foto_url || form.portfolio_doc_nome || form.instagram || form.site),
+      ok: Boolean(mediaFiles.photo || mediaFiles.gallery.length || mediaFiles.portfolio || form.foto_url || form.instagram || form.site),
     },
   ];
 
@@ -672,9 +635,10 @@ export default function CadastroArtista() {
                 <div>
                   <h2 className="artista-card-title" tabIndex={-1}>Materiais e Mídias</h2>
                   <p className="artista-card-subtitle">
-                    Adicione uma foto para enriquecer seu perfil. Galeria, documentos, vídeos e áudios ainda são seleções locais e não são enviados com o cadastro.
+                    Envie uma foto, até 8 imagens de galeria e um portfólio PDF. Máximo de 10 MB por arquivo. Os materiais ficam privados até a aprovação. Vídeo e áudio ainda não estão disponíveis.
                   </p>
 
+                  {uploadError&&<p role="alert" className="field-error">{uploadError}</p>}
                   <div className="upload-grid">
                     {/* Foto de perfil */}
                     <div className="upload-card">
@@ -691,8 +655,8 @@ export default function CadastroArtista() {
                       <input
                           id="upload-foto"
                           type="file"
-                          accept="image/*"
-                          onChange={handleFotoUpload}
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={(e)=>selectMedia("photo",e.target.files)}
                           style={{ display: "none" }}
                           aria-label="Selecionar foto de perfil"
                         />
@@ -718,9 +682,9 @@ export default function CadastroArtista() {
                       <input
                           id="upload-galeria"
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp"
                           multiple
-                          onChange={(e) => handleGenericFileUpload("galeria_nome", e)}
+                          onChange={(e)=>selectMedia("gallery",e.target.files)}
                           style={{ display: "none" }}
                           aria-label="Selecionar fotos da galeria"
                         />
@@ -737,7 +701,7 @@ export default function CadastroArtista() {
                         <div className="upload-icon" aria-hidden="true"><FileText size={22} aria-hidden="true" /></div>
                         <div>
                           <p className="upload-title">Portfólio (Documento)</p>
-                          <p className="upload-subtitle">Arquivo PDF ou DOC completo</p>
+                          <p className="upload-subtitle">PDF de até 10 MB, sem senha ou ações ativas</p>
                         </div>
                       </div>
                       <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-portfolio")?.click()}>
@@ -746,8 +710,8 @@ export default function CadastroArtista() {
                       <input
                           id="upload-portfolio"
                           type="file"
-                          accept=".pdf,.doc,.docx"
-                          onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)}
+                          accept="application/pdf,.pdf"
+                          onChange={(e)=>selectMedia("portfolio",e.target.files)}
                           style={{ display: "none" }}
                           aria-label="Selecionar documento de portfólio"
                         />
@@ -758,74 +722,12 @@ export default function CadastroArtista() {
                       )}
                     </div>
 
-                    {/* Vídeos */}
-                    <div className="upload-card">
-                      <div className="upload-card-head">
-                        <div className="upload-icon" aria-hidden="true"><Video size={22} aria-hidden="true" /></div>
-                        <div>
-                          <p className="upload-title">Vídeos de Apresentação</p>
-                          <p className="upload-subtitle">Vídeo demonstrativo (MP4)</p>
-                        </div>
-                      </div>
-                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-video")?.click()}>
-<Upload size={14} aria-hidden="true" /> Selecionar vídeo
-                      </button>
-                      <input
-                          id="upload-video"
-                          type="file"
-                          accept="video/*"
-                          onChange={(e) => handleGenericFileUpload("video_nome", e)}
-                          style={{ display: "none" }}
-                          aria-label="Selecionar vídeo de apresentação"
-                        />
-                      {form.video_nome && (
-                        <span className="upload-file-name" aria-live="polite">
-                          <Check size={12} aria-hidden="true" /> {form.video_nome}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Áudios */}
-                    <div className="upload-card">
-                      <div className="upload-card-head">
-                        <div className="upload-icon" aria-hidden="true"><Headphones size={22} aria-hidden="true" /></div>
-                        <div>
-                          <p className="upload-title">Áudios / Músicas</p>
-                          <p className="upload-subtitle">Faixa de áudio ou amostra (MP3/WAV)</p>
-                        </div>
-                      </div>
-                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-audio")?.click()}>
-<Upload size={14} aria-hidden="true" /> Selecionar áudio
-                      </button>
-                      <input
-                          id="upload-audio"
-                          type="file"
-                          accept="audio/*"
-                          onChange={(e) => handleGenericFileUpload("audio_nome", e)}
-                          style={{ display: "none" }}
-                          aria-label="Selecionar áudio ou música"
-                        />
-                      {form.audio_nome && (
-                        <span className="upload-file-name" aria-live="polite">
-                          <Check size={12} aria-hidden="true" /> {form.audio_nome}
-                        </span>
-                      )}
-                    </div>
                   </div>
 
-                  <div className="form-grid-2" style={{ marginTop: 24 }}>
+                  <div className="form-grid-2" style={{marginTop:24}}>
                     <div className="input-group col-span-2">
-                      <label htmlFor="cad-foto-url">Ou informe a URL da foto de perfil (caso prefira link externo)</label>
-                      <input
-                        id="cad-foto-url"
-                        value={form.foto_url}
-                        onChange={(e) => update("foto_url", e.target.value)}
-                        aria-invalid={showErrors && Boolean(fieldErrors.foto_url)}
-                        aria-describedby={showErrors && fieldErrors.foto_url ? "cad-foto-url-error" : undefined}
-                        placeholder="https://link-para-sua-foto.jpg"
-                        autoComplete="off"
-                      />
-                      {showErrors && fieldErrors.foto_url && <span id="cad-foto-url-error" className="field-error" role="alert">{fieldErrors.foto_url}</span>}
+                      <label htmlFor="cad-foto-url">URL da foto (opcional; o arquivo selecionado tem prioridade)</label>
+                      <input id="cad-foto-url" value={form.foto_url} onChange={e=>update("foto_url",e.target.value)} aria-invalid={showErrors&&Boolean(fieldErrors.foto_url)} placeholder="https://exemplo.com/foto.jpg"/>
                     </div>
                     <div className="input-group">
                       <label htmlFor="cad-instagram">Instagram</label>
@@ -937,8 +839,8 @@ export default function CadastroArtista() {
             <p className="preview-label" aria-hidden="true">Prévia do perfil</p>
             <div className="preview-card" aria-live="polite" aria-label="Visualização prévia do cartão de artista">
               <div className="preview-photo">
-                {form.foto_url ? (
-                  <img src={form.foto_url} alt="Foto de perfil do artista (prévia)" />
+                {(photoPreview || form.foto_url) ? (
+                  <img src={photoPreview || form.foto_url} alt="Foto de perfil do artista (prévia)" />
                 ) : (
                   <div className="preview-photo-placeholder" aria-hidden="true"><User size={30} aria-hidden="true" /></div>
                 )}

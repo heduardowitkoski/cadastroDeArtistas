@@ -68,6 +68,8 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     }
 
     order() {
+      if (this.table === 'artist_media')
+        return Promise.resolve({ data: [], error: null });
       if (this.table === dbReadFailure) {
         return Promise.resolve({
           data: null,

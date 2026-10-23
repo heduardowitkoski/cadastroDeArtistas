@@ -445,6 +445,7 @@
 .cta-card-btn:hover { background: #9A3412; }
 
 /* ─── Modal ─── */
+.artist-card-cta, .featured-cta { text-decoration: none; }
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -610,3 +611,5 @@
   background: var(--purple-primary) !important;
   color: white !important;
 }
+
+.artist-card{cursor:default}.artist-card-cta{cursor:pointer}

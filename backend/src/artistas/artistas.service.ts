@@ -20,6 +20,8 @@ import {
 import { CreateArtistaDto } from './dto/create-artista.dto';
 import { UpdateArtistaDto } from './dto/update-artista.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { ArtistProfileService } from './profile/artist-profile.service';
+import type { PreparedMedia } from './profile/media-validation';
 
 type DbResult<T> = {
   data: T;
@@ -31,7 +33,10 @@ type DbResult<T> = {
 export class ArtistasService {
   private readonly logger = new Logger(ArtistasService.name);
 
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(
+    private readonly supabaseService: SupabaseService,
+    private readonly profile: ArtistProfileService,
+  ) {}
 
   async findAll() {
     const { data, error } = (await this.supabaseService
@@ -61,7 +66,7 @@ export class ArtistasService {
     return (data ?? []).map(toPublicArtista);
   }
 
-  async create(createDto: CreateArtistaDto) {
+  async create(createDto: CreateArtistaDto, media: PreparedMedia[] = []) {
     const { senha, ...payload } = createDto;
     const databaseClient = this.supabaseService.getDatabaseClient();
     const { data: existing, error: lookupError } = (await databaseClient
@@ -117,6 +122,18 @@ export class ArtistasService {
         'Cadastro sem confirmação. Contate o suporte antes de tentar novamente.',
       );
     }
+    // Ficha/Auth já persistidos: erro de mídia é parcial, sem recriar a conta.
+    let mediaUpload: 'saved' | 'pending' = 'saved';
+    if (media.length) {
+      try {
+        await this.profile.store(result.data.id, media);
+      } catch {
+        mediaUpload = 'pending';
+        this.logger.warn(
+          'Cadastro persistido; mídias aguardam recuperação administrativa.',
+        );
+      }
+    }
     // Só solicitar confirmação depois de confirmar a ficha. Falha de e-mail
     // não desfaz um cadastro persistido nem reutiliza a senha em outra chamada.
     const emailVerification = await this.requestEmailConfirmation(
@@ -126,6 +143,7 @@ export class ArtistasService {
       id: result.data.id,
       status: 'Pendente',
       email_verification: emailVerification,
+      ...(media.length ? { media_upload: mediaUpload } : {}),
     };
   }
 
@@ -245,6 +263,7 @@ export class ArtistasService {
   }
 
   async delete(id: number) {
+    const cleanupJob = await this.profile.prepareArtistDeletion(id);
     const { error } = await this.supabaseService
       .getDatabaseClient()
       .from('artistas')
@@ -252,6 +271,12 @@ export class ArtistasService {
       .eq('id', id);
 
     if (error) throwDatabaseError(this.logger, 'artistas', 'delete', error);
-    return { message: 'Artista excluído com sucesso.' };
+    const cleanupPending = cleanupJob
+      ? !(await this.profile.cleanup(cleanupJob))
+      : false;
+    return {
+      message: 'Artista excluído com sucesso.',
+      ...(cleanupPending ? { cleanup_pending: true } : {}),
+    };
   }
 }

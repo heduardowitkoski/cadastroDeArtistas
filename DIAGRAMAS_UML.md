@@ -1,5 +1,37 @@
 # Diagramas UML - Cadastro Municipal de Artistas
 
+## Extensão atual — perfil e mídias, 23/10/2026
+
+Implementação local autorizada nesta rodada; migrations ainda não aplicadas. O modelo abaixo complementa os diagramas históricos, sem substituir decisões C-02/C-03/C-04 ou comprovar homologação. Não houve geração/substituição de PNGs.
+
+```plantuml
+@startuml
+actor Visitante
+actor Artista
+actor Administrador
+rectangle Frontend {
+  usecase "Consultar perfil aprovado por ID" as Perfil
+  usecase "Favoritar no navegador / compartilhar" as Favoritar
+  usecase "Enviar foto, galeria e PDF" as Enviar
+  usecase "Revisar mídias / gerenciar agenda" as Revisar
+}
+Visitante --> Perfil
+Visitante --> Favoritar
+Artista --> Enviar
+Administrador --> Revisar
+component "API NestJS\nprojeção pública + guards admin" as API
+database "Postgres\nRLS + RPCs restritas" as DB
+cloud "Storage privado artist-media" as Storage
+Perfil --> API
+Enviar --> API
+Revisar --> API
+API --> DB
+API --> Storage
+@enduml
+```
+
+Novas entidades: `artist_media`, `artist_events`, `artist_profile_stats`, `artist_view_sessions` têm FK para `artistas` com cascata; `artist_media_cleanup` preserva fila independente após exclusão. Nenhuma edição de agenda pelo artista enquanto ownership não estiver decidido. Contador de favoritos global não existe. Contratos e limites em `codex/output/ARTIST_PUBLIC_PROFILE_REPORT.md` e `ARTIST_MEDIA_STORAGE_REPORT.md`.
+
 > **Leitura atual — 23/10/2026:** diagramas conceituais preservados; não representam todo o schema nem comprovam homologação. A API atual aplica guards administrativos, DTOs e projeção pública; `/artista/editar` segue indisponível até C-02. O backend vigente da equipe é `https://cadastro-artistas-api-matheus.onrender.com`; o frontend de produção foi preparado localmente para esse destino e aguarda publicação. RLS foi aplicado manualmente. Campos e categorias ainda exigem as decisões C-03/C-04. Não regenerar PNGs como se houvesse mudança de escopo aprovada.
 
 
