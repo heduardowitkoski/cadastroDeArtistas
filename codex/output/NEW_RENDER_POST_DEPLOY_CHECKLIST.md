@@ -1,5 +1,11 @@
 # Checklist pós-deploy no novo Render — 23/10/2026
 
+## Atualização: smoke publicado em 23/10/2026
+
+Resultado: **7 grupos PASSOU, 0 FALHOU, 10 BLOQUEADO**, de 17 grupos da matriz obrigatória. Frontend oficial confirmado no novo Render, catálogo com 11 cards, GETs admin anônimos 401, Data API anon 401/42501 e feedback fictício POST 201, ID **6**. Sem e-mail controlado para artista (confirmado pelo usuário) e sem credenciais de teste admin/comum. Storage e captura Network completa não são expostos pela automação disponível; bundle publicado sem credencial real. Metadados RLS não reconsultados. A-03 continua parcial.
+
+Relatório: `FINAL_SMOKE_SECURITY_TEST_REPORT.md`. Evidências sanitizadas: `FINAL_SMOKE_SECURITY_EVIDENCE.json`. Nenhum código funcional, RLS, schema ou grant alterado; nenhum registro preexistente modificado. Os itens DEV/build abaixo são da rodada anterior, preservados como histórico; gates locais foram repetidos com sucesso nesta rodada.
+
 ## Evidências desta rodada
 
 - [x] GET novo Render `/artistas/aprovados` = 200, array sem campos privados.
@@ -9,31 +15,34 @@
 - [x] Nenhum valor real de Secret Key/JWT privilegiado no bundle examinado.
 - [x] .env removidos somente do índice, preservados localmente e ignorados.
 
-O site oficial inspecionado ainda usa o backend antigo. Não marcar caixas de publicação com base apenas no build local. Nenhuma escrita de dados foi realizada nesta rodada.
+O site oficial foi publicado pela equipe e agora usa o novo backend. Nesta rodada houve apenas uma escrita remota autorizada: feedback fictício ID 6, ainda pendente de limpeza administrativa. Nenhum artista foi criado.
 
 ## Antes de enviar/publicar
 
 - [ ] Rotacionar a chave do commit local c1c17d7; atualizar somente os ambientes backend autorizados.
 - [ ] Preparar histórico seguro, revisar referências remotas e retirar o commit comprometido sob responsabilidade da equipe. Não contornar Push Protection nem executar limpeza automática de histórico.
-- [ ] Confirmar `git ls-files backend/.env frontend/.env` vazio e `git check-ignore -v` reconhecendo os dois; exemplos sem valores.
+- [x] Confirmar `git ls-files backend/.env frontend/.env` vazio e `git check-ignore -v` reconhecendo os dois; exemplos sem valores.
 - [ ] Revisar e publicar somente mudanças/histórico seguros; fazer novo deploy frontend.
 
 ## Site oficial
 
-- [ ] Frontend publicado atualizado; conferir novo build e recarregar sem cache.
-- [ ] Network usa `https://cadastro-artistas-api-matheus.onrender.com`.
-- [ ] Não há chamadas para `https://cadastro-artistas-api.onrender.com`.
-- [ ] GET `/artistas/aprovados` = 200 no percurso do site.
-- [ ] Catálogo carrega; busca/filtro/perfil funcionam e erro/vazio continuam distintos.
+- [x] Frontend publicado atualizado: HTML 200, bundle `index-DIaE6b-I.js` e catálogo observado no navegador.
+- [x] Destino `https://cadastro-artistas-api-matheus.onrender.com`: DevTools informado pelo usuário e novo host confirmado no bundle oficial; captura Network integral indisponível nesta automação.
+- [x] Bundle publicado não contém `https://cadastro-artistas-api.onrender.com`; configuração funcional aponta somente ao novo backend.
+- [x] GET `/artistas/aprovados` = 200; catálogo oficial observado com 11 cards.
+- [x] Catálogo carrega sem “Catálogo indisponível” e sem erros no console observado.
+- [ ] Busca/filtro/perfil e estados de erro/vazio completos homologados nesta rodada.
 - [ ] Nenhum secret aparece no Network.
 - [ ] Nenhum secret aparece no Local Storage.
-- [ ] Nenhum `sb_secret_` aparece no bundle **como valor real**. Registrar a ocorrência isolada `startsWith` do SDK: uma no build local, sem credencial. Se o gate exigir zero ocorrências textuais, explicitar a exceção em vez de declarar zero ou ocultar o SDK.
+- [x] Nenhum `sb_secret_` aparece no bundle publicado **como valor real**. Uma ocorrência isolada `startsWith` do SDK foi distinguida de chave; nenhum JWT service_role ou nome SUPABASE_SECRET_KEY no bundle examinado.
+- [ ] Session Storage inspecionado para ausência de Secret Key; API de inspeção indisponível no navegador integrado.
 
 ## Smoke positivos — responsável e fixtures autorizadas
 
-Usar homologação ou registros fictícios expressamente autorizados. Não modificar/excluir cadastros reais como teste. Registrar resultados sem credenciais. Esta rodada não executou estas escritas/logins.
+Usar homologação ou registros fictícios expressamente autorizados. Não modificar/excluir cadastros reais como teste. Nesta rodada foi criado somente o feedback fictício abaixo; cadastro/admin/comum ficaram bloqueados por falta de contas autorizadas. Não usar a chave privilegiada como substituto de login admin.
 
-- [ ] Feedback POST `/feedbacks` funciona: 201, persistência privada.
+- [x] Feedback POST `/feedbacks` retornou 201, ID 6 e marcador esperado, sem senha/segredo na resposta.
+- [ ] Confirmar persistência do feedback ID 6 por leitura admin autorizada; sem credenciais nesta rodada.
 - [ ] Cadastro POST `/artistas` funciona: 201.
 - [ ] Cadastro nasce Pendente e senha não aparece na ficha/resposta.
 - [ ] Login admin funciona com conta autorizada.
@@ -42,12 +51,12 @@ Usar homologação ou registros fictícios expressamente autorizados. Não modif
 - [ ] PATCH status funciona: 200, somente fixture autorizada.
 - [ ] Artista aprovado aparece no catálogo.
 - [ ] Artista rejeitado/desaprovado deixa de aparecer.
-- [ ] Rotas administrativas sem token retornam 401.
+- [x] GET `/artistas` e GET `/feedbacks` sem token retornaram 401. Métodos mutáveis não foram testados contra registros existentes.
 - [ ] Usuário comum sem papel admin recebe 403 nas rotas administrativas.
 
 ## Banco e segurança — conferir sem reaplicar SQL
 
-- [ ] Data API anon continua bloqueada.
+- [x] Data API anon: SELECT artistas e feedbacks com Publishable apenas retornaram 401, código 42501; consultas pediram zero registros.
 - [ ] Data API authenticated comum continua bloqueada; JWT de teste não aparece em relatório ou comando compartilhado.
 - [ ] RLS continua ativo nas duas tabelas.
 - [ ] Nenhuma policy pública criada.
@@ -55,6 +64,18 @@ Usar homologação ou registros fictícios expressamente autorizados. Não modif
 - [ ] Contagens/schema finais documentados e comparados com evidência anterior, considerando mudanças legítimas.
 
 Não executar bootstrap, migration, GRANT/REVOKE ou mudanças de RLS nesta validação. As etapas antigas de migração são histórico de execução já realizada.
+
+## Fixture criada nesta rodada — remoção pendente
+
+- Tipo: feedback; ID **6**.
+- Nome fictício: `SMOKE_TEST_FEEDBACK`.
+- Marcador exato na mensagem: `SMOKE_TEST_FEEDBACK_20261023T041808670_4450d874`.
+- Criação confirmada por resposta 201 em 23/10/2026, aproximadamente 01:18, São Paulo.
+- [ ] Operador admin autorizado: conferir novamente ID 6 e o marcador exato via API/painel administrativo. Se não coincidirem ou houver dúvida, não excluir.
+- [ ] Após a conferência, excluir somente `/feedbacks/6` pela API administrativa oficial com Bearer admin; registrar HTTP esperado.
+- [ ] Confirmar ausência pela leitura admin. Não usar busca textual ampla seguida de exclusão.
+
+Nenhum DELETE foi executado nesta rodada. A falta de credenciais bloqueia a limpeza automática; não usar Secret Key para contornar os guards.
 
 ## PRD final — retirar a solução transitória (A-24)
 

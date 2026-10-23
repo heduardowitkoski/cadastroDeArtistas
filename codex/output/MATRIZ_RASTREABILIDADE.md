@@ -1,6 +1,25 @@
 # Matriz de rastreabilidade — auditoria e contenção P0 de 06/10/2026
 
-## Estado atual — 23/10/2026
+## Estado atual — smoke publicado de 23/10/2026
+
+Relatório: `FINAL_SMOKE_SECURITY_TEST_REPORT.md`; evidência: `FINAL_SMOKE_SECURITY_EVIDENCE.json`. Resultado da matriz de 17 grupos: **7 PASSOU, 0 FALHOU, 10 BLOQUEADO**. Nenhuma alteração funcional nesta rodada; histórico abaixo preservado.
+
+| RF/RNF/CT; achado | Evidência executada | Estado / prova pendente |
+|---|---|---|
+| RF-04/05; A-03/A-23; CT catálogo oficial | HTML/bundle publicado novo; DOM com 11 cards; GET 200 sem campos privados; zero erros de console observados | PASSOU para catálogo/novo destino, publicação deixou de ser pendência |
+| RF-07/11; A-01/A-02; CT anônimo admin | GET /artistas e /feedbacks sem Authorization retornaram 401 | PASSOU nos dois GETs; 403 comum/admin positivo bloqueados por falta de contas |
+| RNF-02; A-03; CT Data API anon | SELECT id limit=0 em artistas/feedbacks, somente Publishable: 401/42501 | PASSOU; authenticated direto bloqueado; metadados RLS não reconsultados |
+| RF-11; CT feedback público | POST único fictício 201, ID 6 e marcador da rodada, sem senha/segredo | PASSOU no POST; leitura admin independente e limpeza bloqueadas |
+| RF-01/07/08/10; CT cadastro/Pendente/admin/status | Sem e-mail controlado para artista (confirmado pelo usuário) ou contas admin/comum disponíveis | BLOQUEADO; nenhum POST artista/PATCH/DELETE real realizado |
+| RNF-02; CT segredo frontend | Bundle publicado/local sem Secret real/JWT privilegiado; um prefixo literal do SDK | Parcial: Local/Session Storage e captura Network completa não expostos pela ferramenta; grupo BLOQUEADO |
+| RNF-02; A-15; CT CORS | Origem oficial aceita; preflight POST 204; origem fictícia também refletida | PASSOU para origem oficial; risco de CORS amplo registrado, sem mudar código |
+| RNF-05/07; A-10; CT gates | 3 testes frontend, 48 E2E e 8 unit backend; lint front, typechecks, builds e diff check | PASSOU; warning de chunk grande, Supabase dos E2E simulado |
+| RNF-02; A-25; CT Git | Nenhum .env rastreado; ignore efetivo; log alcançável backend/.env vazio | Rotação anterior não comprovada; nenhuma operação de publicação/histórico executada |
+| CT limpeza fixture | ID 6 e marcador exato salvos no momento da criação | BLOQUEADO por falta de admin; zero removidas e nenhum registro preexistente alterado |
+
+A-03 continua parcial porque há gates obrigatórios bloqueados. Não reaplicar SQL nem fechar o item por catálogo 200 ou testes simulados. Nenhuma decisão C-02/C-03/C-04 alterada.
+
+## Histórico — estado da reconciliação em 23/10/2026
 
 A evidência atual prevalece sobre as tabelas históricas abaixo. Estado completo A-01–A-25 em BACKLOG_PRIORIZADO.md; inventário documental em DOCUMENTATION_RECONCILIATION_REPORT.md.
 

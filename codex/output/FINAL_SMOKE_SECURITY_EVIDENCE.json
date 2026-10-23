@@ -1,0 +1,97 @@
+{
+  "startedAt": "2026-10-23T04:17:29.303Z",
+  "fixture": {
+    "type": "feedback",
+    "marker": "SMOKE_TEST_FEEDBACK_20261023T041808670_4450d874",
+    "createdThisRound": true,
+    "requestStartedAt": "2026-10-23T04:18:08.675Z",
+    "id": 6,
+    "cleanup": "pending admin credentials",
+    "createdConfirmedAt": "2026-10-23T04:18:09.478Z"
+  },
+  "tests": {
+    "published": {
+      "http": 200,
+      "scriptAssets": [
+        "/assets/index-DIaE6b-I.js"
+      ],
+      "newApi": true,
+      "oldApi": false,
+      "actualSecret": false,
+      "secretVariable": false,
+      "sdkPrefixOccurrences": 1
+    },
+    "catalogue": {
+      "http": 200,
+      "array": true,
+      "count": 11,
+      "privateFields": [],
+      "actualSecret": false,
+      "allowOrigin": "https://cadastro-de-artistas.vercel.app"
+    },
+    "anonymous /artistas": {
+      "http": 401,
+      "actualSecret": false
+    },
+    "anonymous /feedbacks": {
+      "http": 401,
+      "actualSecret": false
+    },
+    "Data API anon artistas": {
+      "http": 401,
+      "code": "42501",
+      "denied": true
+    },
+    "Data API anon feedbacks": {
+      "http": 401,
+      "code": "42501",
+      "denied": true
+    },
+    "cors": {
+      "http": 204,
+      "allowOrigin": "https://cadastro-de-artistas.vercel.app",
+      "allowMethods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "allowHeaders": "content-type"
+    },
+    "feedbackPost": {
+      "http": 201,
+      "returnedId": 6,
+      "markerMatches": true,
+      "actualSecret": false,
+      "passwordField": false
+    },
+    "corsOtherOrigin": {
+      "http": 204,
+      "allowOrigin": "https://smoke-test.invalid",
+      "permissive": true
+    },
+    "browser": {
+      "artistCards": 11,
+      "catalogueErrorVisible": false,
+      "loading": false,
+      "consoleErrors": 0,
+      "localStorageInspectable": false,
+      "sessionStorageInspectable": false,
+      "networkCaptureInspectable": false,
+      "source": "IAB DOM inspection and browser API capability limits"
+    },
+    "credentials": {
+      "authorizedArtistEmail": false,
+      "source": "user confirmed no controlled artist test account; none in local config",
+      "adminTestCredentialsAvailable": false,
+      "commonTestCredentialsAvailable": false
+    },
+    "localBundle": {
+      "newApi": true,
+      "oldApi": false,
+      "actualSecret": false,
+      "sdkPrefixOccurrences": 1
+    },
+    "git": {
+      "trackedEnvFiles": false,
+      "reachableBackendEnvHistory": false,
+      "head": "5e305d9"
+    }
+  },
+  "completedAt": "2026-10-23T04:19:13.437Z"
+}

@@ -1,6 +1,23 @@
 # Backlog priorizado — auditoria e contenção P0 de 06/10/2026
 
-## Estado atual — reconciliação de 23/10/2026
+## Estado atual — smoke publicado de 23/10/2026
+
+**7 grupos PASSOU, 0 FALHOU, 10 BLOQUEADO.** Frontend oficial já publicado: bundle usa somente o novo Render e o navegador exibiu 11 cards sem erro. GET público 200 sem campos privados; GETs administrativos anônimos 401; SELECT direto anon nas duas tabelas 401/42501; POST de feedback fictício 201, ID **6**. Cadastro bloqueado por falta de e-mail controlado confirmada pelo usuário; credenciais de teste admin/comum não disponíveis. Relatório: `FINAL_SMOKE_SECURITY_TEST_REPORT.md`; prova sanitizada: `FINAL_SMOKE_SECURITY_EVIDENCE.json`.
+
+| ID | Estado e evidência mais recente | Pendência / próximo passo |
+|---|---|---|
+| A-03 | **Parcial, não resolvido**: frontend oficial/catálogo, 401 anon, Data API anon e POST feedback provados | Cadastro, admin real, 403 comum, Data API authenticated, metadados RLS/contagens/schema finais e inspeção storage/Network bloqueados; não encerrar |
+| A-01/A-02 | Guards negativos reais 401 e catálogo sem campos privados confirmados; Data API anon negada | Homologar admin real e usuário comum autorizado; não usar Secret como bypass |
+| A-05/A-23 | Novo Render opera GET e POST feedback; resposta 201 devolveu ID/marcador | Cadastro Pendente e administração reais ainda bloqueados; conferir persistência do feedback por admin |
+| A-10 | 59 testes locais passaram (48 E2E, 8 unit backend, 3 frontend); gates locais passaram | Não converter mocks em prova dos fluxos reais bloqueados |
+| A-15 | CORS oficial funciona; preflight de origem fictícia também foi aceito | CORS amplo confirmado como risco separado, sem correção nesta rodada |
+| A-24 | Publicação no novo host confirmada; workaround DEV/PROD ainda ativo | Recuperar Vercel e remover hardcodes antes da PRD final, com retestes |
+| A-25 | `.env` ignorados/não rastreados; histórico alcançável atual não mostra commits de backend/.env | Rotação da credencial antes exposta continua sem confirmação; não afirmar quitação apenas pelo histórico limpo |
+| Operação da rodada | Uma fixture própria criada: feedback ID 6, marcador SMOKE_TEST_FEEDBACK_20261023T041808670_4450d874; nenhuma excluída | Admin autorizado deve conferir ID + marcador e limpar somente essa fixture via API oficial |
+
+Nenhum código funcional, RLS, grants, schema, role, variável remota ou registro preexistente alterado. C-02/C-03/C-04 não receberam novas decisões. Itens não citados mantêm seu último estado documentado abaixo.
+
+## Histórico — reconciliação de 23/10/2026
 
 Esta seção substitui as fotografias anteriores. RLS foi aplicado manualmente; novo backend da equipe está online. O GET real ao novo Render retornou 200 e o antigo retornou 500. O bundle oficial ainda contém a URL antiga; o novo bundle local ignora VITE_API_URL antiga e usa o novo Render. **A-03 permanece parcial, não totalmente encerrado.** Relatórios: `FRONTEND_NEW_RENDER_MIGRATION_REPORT.md`, `DOCUMENTATION_RECONCILIATION_REPORT.md`; roteiro: `NEW_RENDER_POST_DEPLOY_CHECKLIST.md`.
 
