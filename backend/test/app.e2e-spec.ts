@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
@@ -30,6 +30,7 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
   let insertedArtist: Record<string, unknown> | undefined;
   let authMode: 'ok' | 'duplicate' | 'failure' = 'ok';
   let dbInsertFailure = false;
+  let dbReadFailure: 'artistas' | 'feedbacks' | null = null;
   let dbInsertThrows = false;
   let existingArtistEmail = false;
   let compensationFailure = false;
@@ -65,6 +66,16 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     }
 
     order() {
+      if (this.table === dbReadFailure) {
+        return Promise.resolve({
+          data: null,
+          error: {
+            code: this.table === 'artistas' ? 'untrusted' : '42501',
+            message: 'private-test-marker',
+          },
+          status: this.table === 'artistas' ? 0 : 403,
+        });
+      }
       return Promise.resolve({
         data:
           this.table === 'artistas'
@@ -223,6 +234,7 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     deletedUsers.length = 0;
     authMode = 'ok';
     dbInsertFailure = false;
+    dbReadFailure = null;
     dbInsertThrows = false;
     existingArtistEmail = false;
     compensationFailure = false;
@@ -339,6 +351,33 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     expect(response.body).toMatchObject({ mensagem: 'Mensagem de teste' });
     expect(databaseTables).toEqual(['feedbacks']);
   });
+
+  it.each([
+    ['artistas', '/artistas/aprovados', false, 'unknown, status=0'],
+    ['feedbacks', '/feedbacks', true, '42501'],
+  ] as const)(
+    'falha de leitura em %s retorna erro genérico e log seguro',
+    async (table, path, admin, expectedCode) => {
+      dbReadFailure = table;
+      const log = jest.spyOn(Logger.prototype, 'error').mockImplementation();
+      try {
+        const call = request(app.getHttpServer()).get(path);
+        if (admin) call.set('Authorization', 'Bearer admin-token');
+        const response = await call.expect(503);
+        expect(JSON.stringify(response.body)).not.toContain(
+          'private-test-marker',
+        );
+        expect(log).toHaveBeenCalledWith(
+          `Supabase ${table}.select failed (code=${expectedCode})`,
+        );
+        expect(JSON.stringify(log.mock.calls)).not.toContain(
+          'private-test-marker',
+        );
+      } finally {
+        log.mockRestore();
+      }
+    },
+  );
 
   it('permite cadastro público válido com status Pendente e sem senha na ficha', async () => {
     const response = await request(app.getHttpServer())

@@ -9,7 +9,7 @@ jest.mock('@supabase/supabase-js', () => ({
 describe('SupabaseService', () => {
   const values: Record<string, string> = {
     SUPABASE_URL: 'https://example.supabase.co',
-    SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+    SUPABASE_PUBLISHABLE_KEY: 'test-publishable-key',
     SUPABASE_SECRET_KEY: 'test-secret-key',
   };
 
@@ -24,14 +24,41 @@ describe('SupabaseService', () => {
   it('falha antes de criar clientes se a chave privilegiada faltar', () => {
     expect(
       () => new SupabaseService(config({ SUPABASE_SECRET_KEY: '' })),
-    ).toThrow('Missing Supabase configuration');
+    ).toThrow('Missing Supabase configuration: SUPABASE_SECRET_KEY');
     expect(createClient).not.toHaveBeenCalled();
   });
 
-  it('não usa chave legada como fallback da chave pública', () => {
+  it('falha antes de criar clientes se a URL faltar', () => {
+    expect(() => new SupabaseService(config({ SUPABASE_URL: '  ' }))).toThrow(
+      'Missing Supabase configuration: SUPABASE_URL',
+    );
+    expect(createClient).not.toHaveBeenCalled();
+  });
+
+  it('falha antes de criar clientes se a chave pública faltar', () => {
     expect(
       () => new SupabaseService(config({ SUPABASE_PUBLISHABLE_KEY: '' })),
-    ).toThrow('Missing Supabase configuration');
+    ).toThrow('Missing Supabase configuration: SUPABASE_PUBLISHABLE_KEY');
+    expect(createClient).not.toHaveBeenCalled();
+  });
+
+  it('não usa chaves legadas como fallback', () => {
+    const legacy = {
+      SUPABASE_ANON_KEY: 'test-legacy-anon-key',
+      SUPABASE_SERVICE_ROLE_KEY: 'test-legacy-service-key',
+    };
+    expect(
+      () =>
+        new SupabaseService(
+          config({ ...legacy, SUPABASE_PUBLISHABLE_KEY: undefined }),
+        ),
+    ).toThrow('Missing Supabase configuration: SUPABASE_PUBLISHABLE_KEY');
+    expect(
+      () =>
+        new SupabaseService(
+          config({ ...legacy, SUPABASE_SECRET_KEY: undefined }),
+        ),
+    ).toThrow('Missing Supabase configuration: SUPABASE_SECRET_KEY');
     expect(createClient).not.toHaveBeenCalled();
   });
 
@@ -53,5 +80,6 @@ describe('SupabaseService', () => {
       options,
     );
     expect(service.getAuthClient()).not.toBe(service.getDatabaseClient());
+    expect(options).not.toHaveProperty('global');
   });
 });

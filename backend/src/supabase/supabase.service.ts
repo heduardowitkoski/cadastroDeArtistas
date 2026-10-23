@@ -8,14 +8,19 @@ export class SupabaseService {
   private readonly databaseClient: SupabaseClient;
 
   constructor(configService: ConfigService) {
-    const supabaseUrl = configService.get<string>('SUPABASE_URL');
-    const publishableKey = configService.get<string>(
-      'SUPABASE_PUBLISHABLE_KEY',
-    );
-    const secretKey = configService.get<string>('SUPABASE_SECRET_KEY');
+    const supabaseUrl = configService.get<string>('SUPABASE_URL')?.trim();
+    const publishableKey = configService
+      .get<string>('SUPABASE_PUBLISHABLE_KEY')
+      ?.trim();
+    const secretKey = configService.get<string>('SUPABASE_SECRET_KEY')?.trim();
 
+    const missing = [
+      !supabaseUrl && 'SUPABASE_URL',
+      !publishableKey && 'SUPABASE_PUBLISHABLE_KEY',
+      !secretKey && 'SUPABASE_SECRET_KEY',
+    ].filter(Boolean);
     if (!supabaseUrl || !publishableKey || !secretKey) {
-      throw new Error('Missing Supabase configuration');
+      throw new Error(`Missing Supabase configuration: ${missing.join(', ')}`);
     }
 
     const options = {

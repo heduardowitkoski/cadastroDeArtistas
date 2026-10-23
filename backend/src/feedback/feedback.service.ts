@@ -1,14 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
+import { throwDatabaseError } from '../supabase/database-error';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 type DbResult<T> = {
   data: T;
-  error: { message: string } | null;
+  error: { message: string; code?: string } | null;
 };
 
 @Injectable()
 export class FeedbackService {
+  private readonly logger = new Logger(FeedbackService.name);
+
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async findAll() {
@@ -20,7 +23,7 @@ export class FeedbackService {
       Record<string, unknown>[] | null
     >;
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'feedbacks', 'select', error);
     return data;
   }
 
@@ -32,7 +35,7 @@ export class FeedbackService {
       .select()
       .single()) as DbResult<Record<string, unknown> | null>;
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'feedbacks', 'insert', error);
     return data;
   }
 
@@ -43,7 +46,7 @@ export class FeedbackService {
       .delete()
       .eq('id', id);
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'feedbacks', 'delete', error);
     return { message: 'Feedback excluído com sucesso.' };
   }
 }

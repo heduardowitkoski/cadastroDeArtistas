@@ -8,6 +8,10 @@ import {
 } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
 import {
+  logDatabaseError,
+  throwDatabaseError,
+} from '../supabase/database-error';
+import {
   PUBLIC_ARTISTA_COLUMNS,
   PublicArtista,
   toPublicArtista,
@@ -20,6 +24,7 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 type DbResult<T> = {
   data: T;
   error: { message: string; code?: string } | null;
+  status?: number;
 };
 
 @Injectable()
@@ -37,12 +42,12 @@ export class ArtistasService {
       Record<string, unknown>[] | null
     >;
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'artistas', 'select', error);
     return data;
   }
 
   async findAprovados() {
-    const { data, error } = (await this.supabaseService
+    const { data, error, status } = (await this.supabaseService
       .getDatabaseClient()
       .from('artistas')
       .select(PUBLIC_ARTISTA_COLUMNS)
@@ -51,7 +56,8 @@ export class ArtistasService {
       PublicArtista[] | null
     >;
 
-    if (error) throw new Error(error.message);
+    if (error)
+      throwDatabaseError(this.logger, 'artistas', 'select', error, status);
     return (data ?? []).map(toPublicArtista);
   }
 
@@ -64,6 +70,7 @@ export class ArtistasService {
       .eq('email', createDto.email)
       .limit(1)) as DbResult<{ id: number }[] | null>;
     if (lookupError) {
+      logDatabaseError(this.logger, 'artistas', 'select', lookupError);
       throw new ServiceUnavailableException(
         'Não foi possível verificar o e-mail do cadastro.',
       );
@@ -93,6 +100,7 @@ export class ArtistasService {
       );
     }
     if (result.error) {
+      logDatabaseError(this.logger, 'artistas', 'insert', result.error);
       await this.compensateNewUser(userId);
       if (result.error.code === '23505') {
         throw new ConflictException('Já existe um cadastro com este e-mail.');
@@ -182,7 +190,7 @@ export class ArtistasService {
       .select()
       .single()) as DbResult<Record<string, unknown> | null>;
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'artistas', 'update', error);
     return data;
   }
 
@@ -200,7 +208,7 @@ export class ArtistasService {
       .select()
       .single()) as DbResult<Record<string, unknown> | null>;
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'artistas', 'update', error);
     return data;
   }
 
@@ -211,7 +219,7 @@ export class ArtistasService {
       .delete()
       .eq('id', id);
 
-    if (error) throw new Error(error.message);
+    if (error) throwDatabaseError(this.logger, 'artistas', 'delete', error);
     return { message: 'Artista excluído com sucesso.' };
   }
 }
