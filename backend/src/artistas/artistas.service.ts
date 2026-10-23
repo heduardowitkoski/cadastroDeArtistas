@@ -117,7 +117,39 @@ export class ArtistasService {
         'Cadastro sem confirmação. Contate o suporte antes de tentar novamente.',
       );
     }
-    return { id: result.data.id, status: 'Pendente' };
+    // Só solicitar confirmação depois de confirmar a ficha. Falha de e-mail
+    // não desfaz um cadastro persistido nem reutiliza a senha em outra chamada.
+    const emailVerification = await this.requestEmailConfirmation(
+      createDto.email,
+    );
+    return {
+      id: result.data.id,
+      status: 'Pendente',
+      email_verification: emailVerification,
+    };
+  }
+
+  private async requestEmailConfirmation(
+    email: string,
+  ): Promise<'requested' | 'pending'> {
+    try {
+      const { error } = await this.supabaseService.getAuthClient().auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          // URL fixa da aplicação oficial; não aceitar redirect fornecido no POST.
+          emailRedirectTo:
+            'https://cadastro-de-artistas.vercel.app/artista/login',
+        },
+      });
+      if (error) throw error;
+      return 'requested';
+    } catch {
+      this.logger.warn(
+        'Cadastro persistido; solicitação de confirmação de e-mail pendente.',
+      );
+      return 'pending';
+    }
   }
 
   private async createAuthUser(email: string, senha: string): Promise<string> {

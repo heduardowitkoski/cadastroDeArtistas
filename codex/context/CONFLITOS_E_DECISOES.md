@@ -1,5 +1,16 @@
 # Conflitos e decisões que o Codex não pode inventar
 
+## Decisões da rodada de qualidade — 23/10/2026
+
+- C-01: baseline WCAG2.1 AA preservada. Auditoria local/contraste/40 reflows documentados, sem declarar conformidade integral; zoom200% e leitor pendentes.
+- C-02: pedido explícito de manter confirmação de e-mail orientou createUserfalse + solicitação resend após ficha confirmada, server-side e com redirect oficial fixo. SMTP/entrega real pendentes; confirmação não concede aprovação nem ownership. Autoedição continua indisponível e PUT exige admin. Essa decisão não encerra vínculo UID–ficha.
+- C-03/C-04: nenhuma mudança em categorias/cardinalidade/CPF-CNPJ. Nome artístico foi apenas incluído na busca. Bio20..2000 foi alinhada ao CT-RF02-09 do PDF oficial, sem inventar regra.
+- C-05/C-06: disponibilidade/favoritos/destaque demonstrativos preservados; carrossel só avaliado, sem ranking. Ordem de criação atual não equivale a última aprovação.
+- C-08/C-10: sem SQL/RLS/grants/schema/bucket/ambiente remoto ou reversão de workaround; somente leituras remotas públicas. Nenhum commit/push/deploy.
+- Rastreabilidade:122 CTs oficiais preservados,70 com asserções automatizadas relacionadas. Testes em memória não se tornam prova de produção. Sem caixa/contas controladas, entrega e-mail e fluxos reais permanecem bloqueados conforme resposta do usuário.
+
+Detalhes e justificativas: codex/output/FRONT_QUALITY_INTEGRATION_ROUND_REPORT.md e relatórios especializados. O histórico a seguir não é autorização para executar novamente prompts antigos, redesign ou exclusões já concluídas.
+
 ## Revisão de todas as decisões abertas — 23/10/2026
 
 Os registros antigos abaixo preservam o que foi observado na época; referências a API sem guard, RLS não aplicado ou autoedição roteada não representam mais o código atual.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Star, User, Sparkles, Building2, Menu, X, MessageSquareHeart, HelpCircle, Grid
@@ -13,6 +13,7 @@ export function Navbar({ activePage }: NavbarProps) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const menuButton = useRef<HTMLButtonElement>(null);
   const pathname = location.pathname;
 
   const isNavActive = (path: string, pageKey?: string) => {
@@ -21,7 +22,7 @@ export function Navbar({ activePage }: NavbarProps) {
   };
 
   return (
-    <header className="portal-header">
+    <header className="portal-header" onKeyDown={(event) => { if (event.key === "Escape" && mobileMenuOpen) { setMobileMenuOpen(false); menuButton.current?.focus(); } }}>
       <div className="container header-content">
         {/* Marca / Logo */}
         <Link to="/" className="header-brand" style={{ textDecoration: "none" }} aria-label="Cadastro Municipal de Artistas — Página inicial">
@@ -93,6 +94,7 @@ export function Navbar({ activePage }: NavbarProps) {
           {/* Botão Menu Mobile */}
           <button
             id="mobile-menu-btn"
+            ref={menuButton}
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}

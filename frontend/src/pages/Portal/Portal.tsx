@@ -1,3 +1,4 @@
+import { filterArtists } from "../../lib/catalogFilter";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -94,15 +95,7 @@ export default function Portal() {
   }, []);
   useDialogFocus(Boolean(selectedArtista), modalRef, () => setSelectedArtista(null));
 
-  const filtered = artistas.filter((a) => {
-    const areaStr = (a.area_atuacao || "").toLowerCase();
-    const nomeBusca = a.nome.toLowerCase().includes(busca.toLowerCase());
-    const categoriaBusca = areaStr.includes(busca.toLowerCase());
-    const tagsBusca = (a.tags || []).some((t) => t.toLowerCase().includes(busca.toLowerCase()));
-    const matchBusca = !busca || nomeBusca || categoriaBusca || tagsBusca;
-    const matchCategoria = categoriaFiltro === "all" || areaStr.includes(categoriaFiltro.toLowerCase());
-    return matchBusca && matchCategoria;
-  });
+  const filtered = filterArtists(artistas, busca, categoriaFiltro);
 
   const featured = artistas[0] || null;
   const totalCategorias = new Set(artistas.map((a) => a.area_atuacao)).size;
@@ -115,12 +108,7 @@ export default function Portal() {
 
   const abrirPerfil = (artista: Artista) => setSelectedArtista(artista);
 
-  const handleCardKeyDown = (e: React.KeyboardEvent, artista: Artista) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      abrirPerfil(artista);
-    }
-  };
+
 
   return (
     <div className="portal-page">
@@ -223,13 +211,12 @@ export default function Portal() {
                 <ul className="artists-grid" aria-label="Lista de artistas">
                   {filtered.map((artista) => (
                     <li key={artista.id} style={{ listStyle: "none" }}>
-                      <div
+                      <article
                         className="artist-card card"
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => abrirPerfil(artista)}
-                        onKeyDown={(e) => handleCardKeyDown(e, artista)}
-                        aria-label={`Ver perfil de ${artista.nome_artistico || artista.nome} — ${artista.area_atuacao}`}
+                        onClick={(event) => {
+                          event.currentTarget.querySelector<HTMLButtonElement>(".artist-card-cta")?.focus();
+                          abrirPerfil(artista);
+                        }}
                       >
                         <div className="artist-card-photo">
                           {artista.foto_url ? (
@@ -263,11 +250,11 @@ export default function Portal() {
                             </span>
                           </div>
                           <p className="artist-card-bio">{artista.bio || "Artista local de Bagé."}</p>
-                          <div className="artist-card-cta" aria-hidden="true">
+                          <button type="button" className="artist-card-cta" aria-label={`Ver perfil de ${artista.nome_artistico || artista.nome} — ${artista.area_atuacao}`} onClick={(event) => { event.stopPropagation(); abrirPerfil(artista); }}>
                             <Eye size={14} aria-hidden="true" /> Ver perfil
-                          </div>
+                          </button>
                         </div>
-                      </div>
+                      </article>
                     </li>
                   ))}
                 </ul>

@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-10-23T05:47:01.298Z",
+  "method": "Somente GET público e GET Data API anon; Publishable, sem credencial privilegiada",
+  "anon": [
+    {
+      "table": "artistas",
+      "status": 401,
+      "code": "42501",
+      "blocked": true
+    },
+    {
+      "table": "feedbacks",
+      "status": 401,
+      "code": "42501",
+      "blocked": true
+    }
+  ],
+  "backend": {
+    "status": 200,
+    "count": 11,
+    "hasPrivateFields": false
+  },
+  "authenticated": "BLOQUEADO: nenhuma conta comum controlada autorizada"
+}

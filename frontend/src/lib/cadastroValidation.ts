@@ -87,7 +87,7 @@ export function validateCadastro(form: CadastroFields, senha: string, confirmarS
   if (senha.length < 6 || senha.length > 128) errors.senha = 'A senha deve ter pelo menos 6 e no máximo 128 caracteres.'
   if (!confirmarSenha || senha !== confirmarSenha) errors.confirmarSenha = 'As senhas devem coincidir.'
   if (!form.categorias.length || form.categorias.join(', ').length > 500) errors.categorias = 'Selecione ao menos uma categoria.'
-  if (form.bio.length > 2000) errors.bio = 'A mini-bio deve ter até 2000 caracteres.'
+  if (form.bio.trim().length < 20 || form.bio.length > 2000) errors.bio = 'A mini-bio deve ter de 20 a 2000 caracteres.'
   if (form.tags.length > 20) errors.tags = 'Selecione até 20 tags.'
   if (form.disponibilidade.length > 10) errors.disponibilidade = 'Selecione até 10 opções de disponibilidade.'
   if (form.instagram && !/^(@?[a-z\d._]{1,30}|https?:\/\/(www\.)?instagram\.com\/[a-z\d._]+\/?)$/i.test(form.instagram.trim())) errors.instagram = 'Informe @perfil ou um link válido do Instagram.'

@@ -1,0 +1,122 @@
+[
+  {
+    "file": "frontend/src/App.css",
+    "line": 67,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 81,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 92,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 101,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 139,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 159,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 187,
+    "query": "(max-width: 768px)"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 201,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 202,
+    "query": "(max-width: 768px)"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 203,
+    "query": "(max-width: 640px)"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 204,
+    "query": "(prefers-reduced-motion: reduce)"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 327,
+    "query": "(max-width: 1100px)"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 331,
+    "query": "(max-width: 768px)"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 344,
+    "query": "(max-width: 480px)"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 67,
+    "query": "(max-width: 480px)"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 512,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 516,
+    "query": "(max-width: 640px)"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 526,
+    "query": "(max-width: 768px)"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 527,
+    "query": "(max-width: 640px)"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 105,
+    "query": "(max-width: 900px)"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 109,
+    "query": "(max-width: 640px)"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 81,
+    "query": "(max-width: 640px)"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 554,
+    "query": "(max-width: 1024px)"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 561,
+    "query": "(max-width: 768px)"
+  }
+]

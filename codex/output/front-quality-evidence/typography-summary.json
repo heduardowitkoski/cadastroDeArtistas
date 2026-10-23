@@ -1,0 +1,16 @@
+{
+  "cssFiles": 9,
+  "declarationsBefore": 270,
+  "declarationsAfter": 273,
+  "smallBefore": {
+    "12px": 30,
+    "11px": 14,
+    "13px": 42
+  },
+  "smallAfter": {
+    "11px": 8,
+    "13px": 60,
+    "12px": 4
+  },
+  "mediaQueries": 24
+}

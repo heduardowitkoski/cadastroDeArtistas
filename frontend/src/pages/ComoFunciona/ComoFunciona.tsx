@@ -1,3 +1,4 @@
+import { HomeButton } from "../../components/HomeButton";
 import { Link } from "react-router-dom";
 import {
   Star, Award, UserPlus, FileCheck, Sparkles, Users, Building2,
@@ -10,7 +11,7 @@ const PASSOS = [
   { icon: <UserPlus size={22} />, titulo: "1. Você se cadastra", texto: "Na Área do Artista você cria seu cadastro com uma senha, conta sua história, escolhe sua categoria e diz quando tem disponibilidade." },
   { icon: <FileCheck size={22} />, titulo: "2. O Conselho analisa", texto: "Um analista dos Gestores do Conselho Municipal de Políticas Culturais confere as informações e aprova o cadastro." },
   { icon: <Sparkles size={22} />, titulo: "3. Você aparece no catálogo", texto: "Depois de aprovado, seu perfil entra no catálogo público, que qualquer pessoa pode visitar." },
-  { icon: <PencilLine size={22} />, titulo: "4. Você mantém tudo atualizado", texto: "Entrando com seu e-mail e senha você pode editar seus dados quando quiser. As mudanças passam por nova análise." },
+  { icon: <PencilLine size={22} />, titulo: "4. Mantenha seus dados atualizados", texto: "A edição pelo próprio artista está temporariamente indisponível. Para atualizar seu cadastro, entre em contato com a equipe responsável." },
 ];
 
 const AUDIENCIAS = [
@@ -38,12 +39,14 @@ export default function ComoFunciona() {
           </nav>
 
           <div className="header-nav">
+            <HomeButton />
             <Link to="/cadastrar" className="btn btn-outline btn-sm">Sou artista</Link>
             <Link to="/admin/login" className="btn btn-primary btn-sm">Área administrativa</Link>
           </div>
         </div>
       </header>
 
+      <main>
       {/* ─── Hero ─── */}
       <section className="cf-hero">
         <div className="hero-badge">
@@ -123,15 +126,16 @@ export default function ComoFunciona() {
             </Link>
             <span className="cf-ou">ou</span>
             <Link to="/artista/login" className="btn btn-outline cf-cta-big">
-              Já sou cadastrado(a) — entrar para editar
+              Já sou cadastrado(a) — entrar
             </Link>
           </div>
           <p className="cf-aviso">
-            Ao entrar com seu e-mail e senha você pode atualizar seus dados a qualquer momento.
+            A edição pelo próprio artista está temporariamente indisponível.
           </p>
         </div>
       </section>
 
+      </main>
       {/* ─── Footer ─── */}
       <footer className="portal-footer">
         <div className="container footer-content">

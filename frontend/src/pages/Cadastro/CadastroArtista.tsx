@@ -1,5 +1,5 @@
+import { HomeButton } from "../../components/HomeButton";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { API_URL } from "../../lib/apiConfig";
 import {
   firstInvalidStep,
@@ -84,6 +84,7 @@ export default function CadastroArtista() {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [emailVerification, setEmailVerification] = useState<"requested" | "pending">("pending");
   const [error, setError] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -253,6 +254,8 @@ export default function CadastroArtista() {
         throw new Error(detail);
       }
 
+      const result = await res.json().catch(() => null);
+      setEmailVerification(result?.email_verification === "requested" ? "requested" : "pending");
       setSuccess(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Não foi possível conectar ao servidor.";
@@ -273,8 +276,11 @@ export default function CadastroArtista() {
           <div className="success-icon" aria-hidden="true"><Check size={36} /></div>
           <h1>Cadastro enviado para análise!</h1>
           <p>Seu cadastro foi recebido pelos Gestores do Conselho Municipal de Políticas Culturais e aparecerá no catálogo assim que for aprovado.</p>
+          <p>{emailVerification === "requested"
+            ? "Solicitamos o e-mail de confirmação. Verifique sua caixa de entrada e a pasta de spam antes de entrar na sua conta."
+            : "Seu cadastro foi recebido, mas o envio do e-mail de confirmação não pôde ser confirmado. Procure a equipe responsável para concluir a verificação."}</p>
           <div className="cadastro-success-actions" style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
-            <Link to="/" className="btn btn-primary">Ver catálogo de artistas</Link>
+            <HomeButton />
           </div>
         </div>
       </div>
@@ -327,13 +333,13 @@ export default function CadastroArtista() {
             </div>
           </div>
           <div className="artista-header-actions">
-            <Link to="/" className="artista-sair">Sair</Link>
+            <HomeButton />
             <div className="artista-avatar" aria-hidden="true"><User size={16} aria-hidden="true" /></div>
           </div>
         </div>
       </header>
 
-      <div className="container artista-container">
+      <main className="container artista-container">
         {/* ─── Título ─── */}
         <div className="artista-title-wrap">
           <h1>Painel do Artista</h1>
@@ -598,15 +604,21 @@ export default function CadastroArtista() {
                   </div>
 
                   <div className="artista-section" style={{ marginTop: 28 }}>
-                    <label className="artista-label" htmlFor="cad-bio">Mini-bio</label>
+                    <label className="artista-label" htmlFor="cad-bio">Mini-bio * (20 a 2000 caracteres)</label>
                     <textarea
                       id="cad-bio"
+                      required
+                      minLength={20}
+                      aria-required="true"
+                      aria-invalid={showErrors && Boolean(fieldErrors.bio)}
+                      aria-describedby={showErrors && fieldErrors.bio ? "cad-bio-error" : undefined}
                       rows={4}
                       value={form.bio}
                       onChange={(e) => update("bio", e.target.value)}
                       maxLength={2000}
                       placeholder="Descreva sua arte, trajetória profissional, projetos anteriores e estilo de apresentação..."
                     />
+                    {showErrors && fieldErrors.bio && <span id="cad-bio-error" className="field-error" role="alert">{fieldErrors.bio}</span>}
                   </div>
 
                   <div className="artista-section" style={{ marginTop: 28 }}>
@@ -660,7 +672,7 @@ export default function CadastroArtista() {
                 <div>
                   <h2 className="artista-card-title" tabIndex={-1}>Materiais e Mídias</h2>
                   <p className="artista-card-subtitle">
-                    Adicione fotos, áudios, vídeos e seu documento de portfólio para enriquecer seu perfil.
+                    Adicione uma foto para enriquecer seu perfil. Galeria, documentos, vídeos e áudios ainda são seleções locais e não são enviados com o cadastro.
                   </p>
 
                   <div className="upload-grid">
@@ -673,9 +685,10 @@ export default function CadastroArtista() {
                           <p className="upload-subtitle">Imagem principal do card de artista</p>
                         </div>
                       </div>
-                      <label htmlFor="upload-foto" className="upload-btn">
-                        <Upload size={14} aria-hidden="true" /> Selecionar imagem
-                        <input
+                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-foto")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar imagem
+                      </button>
+                      <input
                           id="upload-foto"
                           type="file"
                           accept="image/*"
@@ -683,7 +696,6 @@ export default function CadastroArtista() {
                           style={{ display: "none" }}
                           aria-label="Selecionar foto de perfil"
                         />
-                      </label>
                       {form.foto_nome && (
                         <span className="upload-file-name" aria-live="polite">
                           <Check size={12} aria-hidden="true" /> {form.foto_nome}
@@ -700,9 +712,10 @@ export default function CadastroArtista() {
                           <p className="upload-subtitle">Fotos de trabalhos e apresentações</p>
                         </div>
                       </div>
-                      <label htmlFor="upload-galeria" className="upload-btn">
-                        <Upload size={14} aria-hidden="true" /> Carregar fotos
-                        <input
+                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-galeria")?.click()}>
+<Upload size={14} aria-hidden="true" /> Carregar fotos
+                      </button>
+                      <input
                           id="upload-galeria"
                           type="file"
                           accept="image/*"
@@ -711,7 +724,6 @@ export default function CadastroArtista() {
                           style={{ display: "none" }}
                           aria-label="Selecionar fotos da galeria"
                         />
-                      </label>
                       {form.galeria_nome && (
                         <span className="upload-file-name" aria-live="polite">
                           <Check size={12} aria-hidden="true" /> {form.galeria_nome}
@@ -728,9 +740,10 @@ export default function CadastroArtista() {
                           <p className="upload-subtitle">Arquivo PDF ou DOC completo</p>
                         </div>
                       </div>
-                      <label htmlFor="upload-portfolio" className="upload-btn">
-                        <Upload size={14} aria-hidden="true" /> Enviar documento PDF
-                        <input
+                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-portfolio")?.click()}>
+<Upload size={14} aria-hidden="true" /> Enviar documento PDF
+                      </button>
+                      <input
                           id="upload-portfolio"
                           type="file"
                           accept=".pdf,.doc,.docx"
@@ -738,7 +751,6 @@ export default function CadastroArtista() {
                           style={{ display: "none" }}
                           aria-label="Selecionar documento de portfólio"
                         />
-                      </label>
                       {form.portfolio_doc_nome && (
                         <span className="upload-file-name" aria-live="polite">
                           <Check size={12} aria-hidden="true" /> {form.portfolio_doc_nome}
@@ -755,9 +767,10 @@ export default function CadastroArtista() {
                           <p className="upload-subtitle">Vídeo demonstrativo (MP4)</p>
                         </div>
                       </div>
-                      <label htmlFor="upload-video" className="upload-btn">
-                        <Upload size={14} aria-hidden="true" /> Selecionar vídeo
-                        <input
+                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-video")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar vídeo
+                      </button>
+                      <input
                           id="upload-video"
                           type="file"
                           accept="video/*"
@@ -765,7 +778,6 @@ export default function CadastroArtista() {
                           style={{ display: "none" }}
                           aria-label="Selecionar vídeo de apresentação"
                         />
-                      </label>
                       {form.video_nome && (
                         <span className="upload-file-name" aria-live="polite">
                           <Check size={12} aria-hidden="true" /> {form.video_nome}
@@ -782,9 +794,10 @@ export default function CadastroArtista() {
                           <p className="upload-subtitle">Faixa de áudio ou amostra (MP3/WAV)</p>
                         </div>
                       </div>
-                      <label htmlFor="upload-audio" className="upload-btn">
-                        <Upload size={14} aria-hidden="true" /> Selecionar áudio
-                        <input
+                      <button type="button" className="upload-btn" onClick={() => document.getElementById("upload-audio")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar áudio
+                      </button>
+                      <input
                           id="upload-audio"
                           type="file"
                           accept="audio/*"
@@ -792,7 +805,6 @@ export default function CadastroArtista() {
                           style={{ display: "none" }}
                           aria-label="Selecionar áudio ou música"
                         />
-                      </label>
                       {form.audio_nome && (
                         <span className="upload-file-name" aria-live="polite">
                           <Check size={12} aria-hidden="true" /> {form.audio_nome}
@@ -955,7 +967,7 @@ export default function CadastroArtista() {
             </div>
           </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -38,19 +38,20 @@
 
 .form-grid { display: flex; flex-direction: column; gap: 20px; }
 
-.rating-stars { display: flex; gap: 6px; }
-.feedback-field-hint { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
+.rating-stars { display: flex; gap: 2px; flex-wrap: wrap; }
+.feedback-field-hint { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 13px; }
 .star-btn {
   background: none;
   border: none;
   cursor: pointer;
   color: var(--text-muted);
-  padding: 2px;
+  padding: 8px;
+  min-width: 44px; min-height: 44px;
   transition: var(--transition);
   line-height: 0;
 }
 .star-btn:hover { transform: translateY(-2px) scale(1.05); }
-.star-active { color: var(--amber); filter: drop-shadow(0 0 6px rgba(245,158,11,0.4)); }
+.star-active { color: #B45309; filter: drop-shadow(0 0 6px rgba(245,158,11,0.4)); }
 
 .feedback-actions {
   display: flex;

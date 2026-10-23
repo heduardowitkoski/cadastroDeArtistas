@@ -1,0 +1,1892 @@
+[
+  {
+    "file": "frontend/src/App.css",
+    "line": 2,
+    "selector": ".counter",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/App.css",
+    "line": 120,
+    "selector": "a",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 47,
+    "selector": "body",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 57,
+    "selector": "/* ─── Typography ─── */\nh1, h2, h3, h4, h5, h6",
+    "property": "line-height",
+    "value": "1.2"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 66,
+    "selector": "/* ─── Buttons ─── */\n.btn",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 67,
+    "selector": "/* ─── Buttons ─── */\n.btn",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 98,
+    "selector": ".btn-sm",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 122,
+    "selector": "/* ─── Badges ─── */\n.badge",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 123,
+    "selector": "/* ─── Badges ─── */\n.badge",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 124,
+    "selector": "/* ─── Badges ─── */\n.badge",
+    "property": "text-transform",
+    "value": "uppercase"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 125,
+    "selector": "/* ─── Badges ─── */\n.badge",
+    "property": "letter-spacing",
+    "value": "0.05em"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 135,
+    "selector": ".input-group label",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 135,
+    "selector": ".input-group label",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 135,
+    "selector": ".input-group label",
+    "property": "text-transform",
+    "value": "uppercase"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 135,
+    "selector": ".input-group label",
+    "property": "letter-spacing",
+    "value": "0.05em"
+  },
+  {
+    "file": "frontend/src/index.css",
+    "line": 144,
+    "selector": ".input-group input,\n.input-group textarea,\n.input-group select",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 29,
+    "selector": ".sidebar-brand .brand-title",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 29,
+    "selector": ".sidebar-brand .brand-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 29,
+    "selector": ".sidebar-brand .brand-title",
+    "property": "line-height",
+    "value": "1.3"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 30,
+    "selector": ".sidebar-brand .brand-sub",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 39,
+    "selector": ".sidebar-nav-item",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 40,
+    "selector": ".sidebar-nav-item",
+    "property": "font-weight",
+    "value": "500"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 58,
+    "selector": ".nav-count",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 59,
+    "selector": ".nav-count",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 70,
+    "selector": ".sidebar-progress-head",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 71,
+    "selector": ".sidebar-progress-head strong",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 74,
+    "selector": ".sidebar-progress-sub",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 92,
+    "selector": ".sidebar-user-name",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 92,
+    "selector": ".sidebar-user-name",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 93,
+    "selector": ".sidebar-user-role",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 109,
+    "selector": ".admin-error",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 111,
+    "selector": ".admin-header h1",
+    "property": "font-size",
+    "value": "24px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 111,
+    "selector": ".admin-header h1",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 112,
+    "selector": ".admin-header-sub",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 123,
+    "selector": ".admin-dash-header h2",
+    "property": "font-size",
+    "value": "26px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 123,
+    "selector": ".admin-dash-header h2",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 124,
+    "selector": ".dash-wave",
+    "property": "font-size",
+    "value": "24px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 125,
+    "selector": ".dash-date",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 125,
+    "selector": ".dash-date",
+    "property": "text-transform",
+    "value": "capitalize"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 138,
+    "selector": ".dash-search input",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 164,
+    "selector": ".stat-value",
+    "property": "font-size",
+    "value": "28px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 164,
+    "selector": ".stat-value",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 164,
+    "selector": ".stat-value",
+    "property": "line-height",
+    "value": "1.1"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 165,
+    "selector": ".stat-label",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 174,
+    "selector": ".dash-section-title",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 175,
+    "selector": ".dash-section-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 181,
+    "selector": ".dash-muted",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 185,
+    "selector": ".chart-label",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 185,
+    "selector": ".chart-label",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 193,
+    "selector": ".chart-count",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 193,
+    "selector": ".chart-count",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 216,
+    "selector": ".pending-name",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 216,
+    "selector": ".pending-name",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 217,
+    "selector": ".pending-area",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 217,
+    "selector": ".pending-area",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 236,
+    "selector": ".dash-link",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 237,
+    "selector": ".dash-link",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 249,
+    "selector": ".admin-empty h3",
+    "property": "font-size",
+    "value": "18px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 263,
+    "selector": ".artista-row-top h3",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 263,
+    "selector": ".artista-row-top h3",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 264,
+    "selector": ".artista-tags-mini",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 264,
+    "selector": ".artista-tags-mini",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 265,
+    "selector": ".artista-area",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 265,
+    "selector": ".artista-area",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 266,
+    "selector": ".artista-bio-preview",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 266,
+    "selector": ".artista-bio-preview",
+    "property": "line-height",
+    "value": "1.5"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 267,
+    "selector": ".artista-contacts",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 282,
+    "selector": ".feedback-message",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 282,
+    "selector": ".feedback-message",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 310,
+    "selector": ".modal-header h2",
+    "property": "font-size",
+    "value": "18px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 310,
+    "selector": ".modal-header h2",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 320,
+    "selector": ".select-input",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 325,
+    "selector": ".modal-form .avail-btn",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 347,
+    "selector": ".stat-value",
+    "property": "font-size",
+    "value": "23px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/AdminDashboard.css",
+    "line": 349,
+    "selector": ".admin-dash-header h2",
+    "property": "font-size",
+    "value": "22px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 52,
+    "selector": ".login-brand h1",
+    "property": "font-size",
+    "value": "22px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 52,
+    "selector": ".login-brand h1",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 53,
+    "selector": ".login-brand p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 61,
+    "selector": ".login-error",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Admin/Login.css",
+    "line": 64,
+    "selector": ".login-btn",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 35,
+    "selector": ".artista-login-brand h1",
+    "property": "font-size",
+    "value": "22px"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 35,
+    "selector": ".artista-login-brand h1",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 36,
+    "selector": ".artista-login-brand p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 39,
+    "selector": ".artista-login-btn",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 47,
+    "selector": ".artista-login-dica",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 51,
+    "selector": ".artista-login-dica a",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Artista/Artista.css",
+    "line": 61,
+    "selector": "/* Editar cadastro */\n.editar-banner",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 22,
+    "selector": ".artista-header-sub",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 24,
+    "selector": ".artista-header-sub",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 28,
+    "selector": ".artista-sair",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 29,
+    "selector": ".artista-sair",
+    "property": "font-weight",
+    "value": "500"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 47,
+    "selector": ".artista-title-wrap h1",
+    "property": "font-size",
+    "value": "30px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 48,
+    "selector": ".artista-title-wrap h1",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 52,
+    "selector": ".artista-title-wrap p",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 73,
+    "selector": ".artista-status-title",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 73,
+    "selector": ".artista-status-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 74,
+    "selector": ".artista-status-sub",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 77,
+    "selector": ".artista-status-pct",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 78,
+    "selector": ".artista-status-pct",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 115,
+    "selector": ".artista-step-circle",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 115,
+    "selector": ".artista-step-circle",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 131,
+    "selector": ".artista-step-label",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 132,
+    "selector": ".artista-step-label",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 154,
+    "selector": ".artista-card-title",
+    "property": "font-size",
+    "value": "20px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 154,
+    "selector": ".artista-card-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 155,
+    "selector": ".artista-card-subtitle",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 162,
+    "selector": ".artista-label",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 163,
+    "selector": ".artista-label",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 180,
+    "selector": ".categoria-btn",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 181,
+    "selector": ".categoria-btn",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 195,
+    "selector": ".categoria-header-row",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 195,
+    "selector": ".categoria-header-row",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 207,
+    "selector": ".tag-chip",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 208,
+    "selector": ".tag-chip",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 230,
+    "selector": "/* Textarea Modernizado */\n.artista-section textarea",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 237,
+    "selector": "/* Textarea Modernizado */\n.artista-section textarea",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 256,
+    "selector": ".avail-btn",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 257,
+    "selector": ".avail-btn",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 272,
+    "selector": ".cpf-cnpj-hint",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 274,
+    "selector": ".cpf-cnpj-hint",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 283,
+    "selector": ".field-error",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 284,
+    "selector": ".field-error",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 318,
+    "selector": ".upload-title",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 318,
+    "selector": ".upload-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 319,
+    "selector": ".upload-subtitle",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 319,
+    "selector": ".upload-subtitle",
+    "property": "line-height",
+    "value": "1.3"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 330,
+    "selector": ".upload-btn",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 331,
+    "selector": ".upload-btn",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 341,
+    "selector": ".upload-file-name",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 343,
+    "selector": ".upload-file-name",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 363,
+    "selector": ".review-section-head",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 364,
+    "selector": ".review-section-head",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 371,
+    "selector": ".review-section li",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 377,
+    "selector": ".form-error",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 382,
+    "selector": ".artista-lgpd",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 384,
+    "selector": ".artista-lgpd",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 395,
+    "selector": "/* Senha no cadastro */\n.form-senha-titulo",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 396,
+    "selector": "/* Senha no cadastro */\n.form-senha-titulo",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 404,
+    "selector": ".senha-hint",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 407,
+    "selector": ".cadastro-login-aviso",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 411,
+    "selector": ".cadastro-login-aviso",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 413,
+    "selector": ".cadastro-login-aviso a",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 429,
+    "selector": ".preview-label",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 429,
+    "selector": ".preview-label",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 429,
+    "selector": ".preview-label",
+    "property": "letter-spacing",
+    "value": "0.05em"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 429,
+    "selector": ".preview-label",
+    "property": "text-transform",
+    "value": "uppercase"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 450,
+    "selector": ".preview-cat",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 451,
+    "selector": ".preview-cat",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 456,
+    "selector": ".preview-name",
+    "property": "font-size",
+    "value": "18px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 456,
+    "selector": ".preview-name",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 457,
+    "selector": ".preview-city",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 458,
+    "selector": ".preview-bio",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 458,
+    "selector": ".preview-bio",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 461,
+    "selector": ".preview-avail span",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 462,
+    "selector": ".preview-avail span",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 477,
+    "selector": ".preview-cta",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 478,
+    "selector": ".preview-cta",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 485,
+    "selector": ".preview-dica",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 491,
+    "selector": ".preview-dica",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 508,
+    "selector": ".cadastro-success h2",
+    "property": "font-size",
+    "value": "28px"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 508,
+    "selector": ".cadastro-success h2",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Cadastro/Cadastro.css",
+    "line": 509,
+    "selector": ".cadastro-success p",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 12,
+    "selector": ".cf-hero-title",
+    "property": "font-size",
+    "value": "clamp(30px, 4vw, 42px)"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 13,
+    "selector": ".cf-hero-title",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 14,
+    "selector": ".cf-hero-title",
+    "property": "line-height",
+    "value": "1.15"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 18,
+    "selector": ".cf-hero-text",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 24,
+    "selector": ".cf-title",
+    "property": "font-size",
+    "value": "28px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 24,
+    "selector": ".cf-title",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 25,
+    "selector": ".cf-subtitle",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 48,
+    "selector": ".cf-idea h2",
+    "property": "font-size",
+    "value": "20px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 48,
+    "selector": ".cf-idea h2",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 49,
+    "selector": ".cf-idea p",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 49,
+    "selector": ".cf-idea p",
+    "property": "line-height",
+    "value": "1.8"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 73,
+    "selector": ".cf-step h3",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 73,
+    "selector": ".cf-step h3",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 74,
+    "selector": ".cf-step p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 74,
+    "selector": ".cf-step p",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 96,
+    "selector": ".cf-audiencia h3",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 96,
+    "selector": ".cf-audiencia h3",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 97,
+    "selector": ".cf-audiencia p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 97,
+    "selector": ".cf-audiencia p",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 101,
+    "selector": ".cf-cta-big",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 102,
+    "selector": ".cf-ou",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 102,
+    "selector": ".cf-ou",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/ComoFunciona/ComoFunciona.css",
+    "line": 103,
+    "selector": ".cf-aviso",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 36,
+    "selector": ".feedback-card-header h1",
+    "property": "font-size",
+    "value": "20px"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 36,
+    "selector": ".feedback-card-header h1",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 37,
+    "selector": ".feedback-card-header p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 37,
+    "selector": ".feedback-card-header p",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 42,
+    "selector": ".feedback-field-hint",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 50,
+    "selector": ".star-btn",
+    "property": "line-height",
+    "value": "0"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 75,
+    "selector": ".feedback-success h1",
+    "property": "font-size",
+    "value": "28px"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 75,
+    "selector": ".feedback-success h1",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Feedback/Feedback.css",
+    "line": 76,
+    "selector": ".feedback-success p",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 35,
+    "selector": ".brand-text",
+    "property": "line-height",
+    "value": "1.2"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 37,
+    "selector": ".brand-title",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 38,
+    "selector": ".brand-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 43,
+    "selector": ".brand-subtitle",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 45,
+    "selector": ".brand-subtitle",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 51,
+    "selector": ".header-nav-item",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 52,
+    "selector": ".header-nav-item",
+    "property": "font-weight",
+    "value": "500"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 61,
+    "selector": ".header-nav-item.active",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 81,
+    "selector": ".hero-badge",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 82,
+    "selector": ".hero-badge",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 88,
+    "selector": ".hero-title",
+    "property": "font-size",
+    "value": "clamp(36px, 5vw, 52px)"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 89,
+    "selector": ".hero-title",
+    "property": "font-weight",
+    "value": "800"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 90,
+    "selector": ".hero-title",
+    "property": "line-height",
+    "value": "1.15"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 97,
+    "selector": ".hero-description",
+    "property": "font-size",
+    "value": "17px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 100,
+    "selector": ".hero-description",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 123,
+    "selector": ".search-input",
+    "property": "font-size",
+    "value": "15px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 140,
+    "selector": ".search-btn",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 141,
+    "selector": ".search-btn",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 159,
+    "selector": ".filter-btn",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 160,
+    "selector": ".filter-btn",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 188,
+    "selector": ".catalog-count",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 189,
+    "selector": ".catalog-count-number",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 196,
+    "selector": ".catalog-sort",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 214,
+    "selector": ".catalog-empty h3",
+    "property": "font-size",
+    "value": "20px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 262,
+    "selector": ".artist-status-badge",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 263,
+    "selector": ".artist-status-badge",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 272,
+    "selector": ".artist-card-name",
+    "property": "font-size",
+    "value": "16px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 273,
+    "selector": ".artist-card-name",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 284,
+    "selector": ".artist-cat-badge",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 285,
+    "selector": ".artist-cat-badge",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 293,
+    "selector": ".artist-city",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 297,
+    "selector": ".artist-card-bio",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 299,
+    "selector": ".artist-card-bio",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 317,
+    "selector": ".artist-card-cta",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 318,
+    "selector": ".artist-card-cta",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 353,
+    "selector": ".featured-badge",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 354,
+    "selector": ".featured-badge",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 365,
+    "selector": ".featured-name",
+    "property": "font-size",
+    "value": "17px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 366,
+    "selector": ".featured-name",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 368,
+    "selector": ".featured-name",
+    "property": "line-height",
+    "value": "1.2"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 370,
+    "selector": ".featured-sub",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 372,
+    "selector": ".featured-bio",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 372,
+    "selector": ".featured-bio",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 374,
+    "selector": ".featured-stat-value",
+    "property": "font-size",
+    "value": "18px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 374,
+    "selector": ".featured-stat-value",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 375,
+    "selector": ".featured-stat-label",
+    "property": "font-size",
+    "value": "11px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 383,
+    "selector": ".featured-cta",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 384,
+    "selector": ".featured-cta",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 393,
+    "selector": ".stats-title",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 394,
+    "selector": ".stats-title",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 411,
+    "selector": ".stat-row-label",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 415,
+    "selector": ".stat-row-value",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 415,
+    "selector": ".stat-row-value",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 425,
+    "selector": ".cta-card h4",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 425,
+    "selector": ".cta-card h4",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 426,
+    "selector": ".cta-card p",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 426,
+    "selector": ".cta-card p",
+    "property": "line-height",
+    "value": "1.6"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 438,
+    "selector": ".cta-card-btn",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 439,
+    "selector": ".cta-card-btn",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 485,
+    "selector": ".modal-close",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 504,
+    "selector": ".modal-info h2",
+    "property": "font-size",
+    "value": "24px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 504,
+    "selector": ".modal-info h2",
+    "property": "font-weight",
+    "value": "700"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 505,
+    "selector": ".modal-city",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 511,
+    "selector": ".modal-tag",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 512,
+    "selector": ".modal-tag",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 516,
+    "selector": ".modal-avail",
+    "property": "font-size",
+    "value": "12px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 517,
+    "selector": ".availability-label",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 518,
+    "selector": ".modal-bio",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 518,
+    "selector": ".modal-bio",
+    "property": "line-height",
+    "value": "1.7"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 534,
+    "selector": ".footer-brand",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 534,
+    "selector": ".footer-brand",
+    "property": "font-weight",
+    "value": "600"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 535,
+    "selector": ".portal-footer p",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 536,
+    "selector": ".footer-links",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 544,
+    "selector": ".footer-links button,\n.footer-links a",
+    "property": "font-size",
+    "value": "13px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 589,
+    "selector": ".mobile-menu-drawer a",
+    "property": "font-size",
+    "value": "14px"
+  },
+  {
+    "file": "frontend/src/pages/Portal/Portal.css",
+    "line": 590,
+    "selector": ".mobile-menu-drawer a",
+    "property": "font-weight",
+    "value": "600"
+  }
+]

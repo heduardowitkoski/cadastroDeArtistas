@@ -1,5 +1,7 @@
+import { HomeButton } from "../../components/HomeButton";
+import { PasswordInput } from "../../components/PasswordInput";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Palette, LogIn, Loader } from "lucide-react";
 import "./Login.css";
@@ -29,7 +31,7 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page">
+    <main className="login-page">
       <div className="login-card card">
         <div className="login-brand">
           <div className="brand-icon" aria-hidden="true"><Palette size={24} aria-hidden="true" /></div>
@@ -53,9 +55,8 @@ export default function Login() {
           </div>
           <div className="input-group">
             <label htmlFor="admin-senha">Senha</label>
-            <input
+            <PasswordInput
               id="admin-senha"
-              type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="••••••••"
@@ -78,10 +79,10 @@ export default function Login() {
               : <><LogIn size={16} aria-hidden="true" /> <span>Entrar</span></>
             }
           </button>
-          <Link to="/" className="btn btn-secondary login-home-link">Voltar ao catálogo</Link>
+          <HomeButton className="login-home-link" />
         </form>
       </div>
       <div className="login-glow" aria-hidden="true" />
-    </div>
+    </main>
   );
 }

@@ -5,7 +5,7 @@ import { maskCpf, maskCnpj, maskPhone, validCpf, validCnpj, validateCadastro, fi
 const validForm = {
   nome: 'Maria Artista', nome_artistico: '', cpf: '529.982.247-25', cnpj: '',
   email: 'maria@example.com', contato: '(53) 99999-0000', cidade: 'Bagé',
-  categorias: ['Música'], bio: '', tags: [], disponibilidade: [],
+  categorias: ['Música'], bio: 'Artista local com trajetória musical.', tags: [], disponibilidade: [],
   foto_url: '', instagram: '@maria.artista', site: 'https://example.com',
 }
 

@@ -1,0 +1,448 @@
+{
+  "password": {
+    "shown": "text",
+    "hidden": "password",
+    "autocomplete": "current-password",
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "unintendedSubmissions": 0
+  },
+  "session": {
+    "home": "/",
+    "return": "/admin",
+    "loginRequired": false,
+    "scope": "Auth local simulado"
+  },
+  "responsive": [
+    {
+      "width": 320,
+      "page": "portal",
+      "client": 314,
+      "overflows": [],
+      "scroll": 314
+    },
+    {
+      "width": 320,
+      "page": "cadastro",
+      "client": 314,
+      "overflows": [],
+      "scroll": 314
+    },
+    {
+      "width": 320,
+      "page": "como-funciona",
+      "client": 314,
+      "overflows": [],
+      "scroll": 314
+    },
+    {
+      "width": 320,
+      "page": "feedback",
+      "client": 314,
+      "overflows": [],
+      "scroll": 314
+    },
+    {
+      "width": 320,
+      "page": "artista-login",
+      "client": 320,
+      "overflows": [],
+      "scroll": 320
+    },
+    {
+      "width": 320,
+      "page": "artista-area",
+      "client": 320,
+      "overflows": [],
+      "scroll": 320
+    },
+    {
+      "width": 320,
+      "page": "admin-login",
+      "client": 320,
+      "overflows": [],
+      "scroll": 320
+    },
+    {
+      "width": 320,
+      "page": "admin",
+      "client": 314,
+      "overflows": [],
+      "scroll": 314
+    },
+    {
+      "width": 375,
+      "page": "portal",
+      "client": 369,
+      "overflows": [],
+      "scroll": 369
+    },
+    {
+      "width": 375,
+      "page": "cadastro",
+      "client": 369,
+      "overflows": [],
+      "scroll": 369
+    },
+    {
+      "width": 375,
+      "page": "como-funciona",
+      "client": 369,
+      "overflows": [],
+      "scroll": 369
+    },
+    {
+      "width": 375,
+      "page": "feedback",
+      "client": 369,
+      "overflows": [],
+      "scroll": 369
+    },
+    {
+      "width": 375,
+      "page": "artista-login",
+      "client": 375,
+      "overflows": [],
+      "scroll": 375
+    },
+    {
+      "width": 375,
+      "page": "artista-area",
+      "client": 375,
+      "overflows": [],
+      "scroll": 375
+    },
+    {
+      "width": 375,
+      "page": "admin-login",
+      "client": 375,
+      "overflows": [],
+      "scroll": 375
+    },
+    {
+      "width": 375,
+      "page": "admin",
+      "client": 369,
+      "overflows": [],
+      "scroll": 369
+    },
+    {
+      "width": 768,
+      "page": "portal",
+      "client": 762,
+      "overflows": [],
+      "scroll": 762
+    },
+    {
+      "width": 768,
+      "page": "cadastro",
+      "client": 762,
+      "overflows": [],
+      "scroll": 762
+    },
+    {
+      "width": 768,
+      "page": "como-funciona",
+      "client": 762,
+      "overflows": [],
+      "scroll": 762
+    },
+    {
+      "width": 768,
+      "page": "feedback",
+      "client": 762,
+      "overflows": [],
+      "scroll": 762
+    },
+    {
+      "width": 768,
+      "page": "artista-login",
+      "client": 768,
+      "overflows": [],
+      "scroll": 768
+    },
+    {
+      "width": 768,
+      "page": "artista-area",
+      "client": 768,
+      "overflows": [],
+      "scroll": 768
+    },
+    {
+      "width": 768,
+      "page": "admin-login",
+      "client": 768,
+      "overflows": [],
+      "scroll": 768
+    },
+    {
+      "width": 768,
+      "page": "admin",
+      "client": 762,
+      "overflows": [],
+      "scroll": 762
+    },
+    {
+      "width": 1024,
+      "page": "portal",
+      "client": 1018,
+      "overflows": [],
+      "scroll": 1018
+    },
+    {
+      "width": 1024,
+      "page": "cadastro",
+      "client": 1018,
+      "overflows": [],
+      "scroll": 1018
+    },
+    {
+      "width": 1024,
+      "page": "como-funciona",
+      "client": 1018,
+      "overflows": [],
+      "scroll": 1018
+    },
+    {
+      "width": 1024,
+      "page": "feedback",
+      "client": 1018,
+      "overflows": [],
+      "scroll": 1018
+    },
+    {
+      "width": 1024,
+      "page": "artista-login",
+      "client": 1024,
+      "overflows": [],
+      "scroll": 1024
+    },
+    {
+      "width": 1024,
+      "page": "artista-area",
+      "client": 1024,
+      "overflows": [],
+      "scroll": 1024
+    },
+    {
+      "width": 1024,
+      "page": "admin-login",
+      "client": 1024,
+      "overflows": [],
+      "scroll": 1024
+    },
+    {
+      "width": 1024,
+      "page": "admin",
+      "client": 1018,
+      "overflows": [],
+      "scroll": 1018
+    },
+    {
+      "width": 1440,
+      "page": "portal",
+      "client": 1434,
+      "overflows": [],
+      "scroll": 1434
+    },
+    {
+      "width": 1440,
+      "page": "cadastro",
+      "client": 1434,
+      "overflows": [],
+      "scroll": 1434
+    },
+    {
+      "width": 1440,
+      "page": "como-funciona",
+      "client": 1434,
+      "overflows": [],
+      "scroll": 1434
+    },
+    {
+      "width": 1440,
+      "page": "feedback",
+      "client": 1434,
+      "overflows": [],
+      "scroll": 1434
+    },
+    {
+      "width": 1440,
+      "page": "artista-login",
+      "client": 1440,
+      "overflows": [],
+      "scroll": 1440
+    },
+    {
+      "width": 1440,
+      "page": "artista-area",
+      "client": 1440,
+      "overflows": [],
+      "scroll": 1440
+    },
+    {
+      "width": 1440,
+      "page": "admin-login",
+      "client": 1440,
+      "overflows": [],
+      "scroll": 1440
+    },
+    {
+      "width": 1440,
+      "page": "admin",
+      "client": 1440,
+      "overflows": [],
+      "scroll": 1440
+    }
+  ],
+  "artistPassword": {
+    "shown": "text",
+    "hidden": "password"
+  },
+  "emailLogin": {
+    "before": "Negado com mensagem de confirmação",
+    "after": "http://127.0.0.1:5187/artista/editar",
+    "scope": "Estados Auth simulados; entrega real bloqueada"
+  },
+  "cadastroEmpty": {
+    "focus": "cad-nome",
+    "invalid": 5
+  },
+  "bioMinimum": {
+    "blocked": true,
+    "focus": "cad-bio",
+    "error": "A mini-bio deve ter de 20 a 2000 caracteres."
+  },
+  "upload": {
+    "selections": [
+      {
+        "button": "Carregar fotos",
+        "multiple": true
+      },
+      {
+        "button": "Enviar documento PDF",
+        "multiple": false
+      },
+      {
+        "button": "Selecionar vídeo",
+        "multiple": false
+      },
+      {
+        "button": "Selecionar áudio",
+        "multiple": false
+      }
+    ],
+    "photo": {
+      "length": 1063,
+      "prefix": "data:image/jpeg;base64,"
+    },
+    "scope": "Somente fixture local; demais mídias guardam nome",
+    "rendered": [
+      {
+        "alt": "Foto de SMOKE_TEST_UI_UPLOAD",
+        "complete": true,
+        "dataURL": true,
+        "height": 48,
+        "width": 64
+      }
+    ]
+  },
+  "publicModal": {
+    "last": "Ligar para Nome público 1",
+    "first": "Fechar perfil do artista",
+    "restored": "Ver perfil de Nome público 1 — Música",
+    "bodyOverflow": ""
+  },
+  "adminModal": {
+    "last": " Salvar Alterações",
+    "first": "Fechar edição",
+    "restored": " Editar",
+    "scope": "Enter/Shift+Tab/Tab/Escape, modal 320px"
+  },
+  "cancelDeleteArtist": {
+    "visibleAfterCancel": true
+  },
+  "adminMenu": {
+    "restored": "Abrir menu do painel",
+    "closed": true
+  },
+  "publicMenu": {
+    "restored": "Abrir menu",
+    "closed": true
+  },
+  "feedback": {
+    "anonymousSuccess": true,
+    "cancelPreserved": true,
+    "error": {
+      "message": true,
+      "preserved": "SMOKE_TEST_Falha simulada de envio, sem escrita real."
+    }
+  },
+  "logout": {
+    "loginVisible": true,
+    "scope": "Auth simulado; /admin retorna ao formulário após Sair"
+  },
+  "catalogError": {
+    "visible": true
+  },
+  "catalogSlow": {
+    "loadingObserved": true
+  },
+  "catalogEmpty": {
+    "visible": true
+  },
+  "orientation": {
+    "scope": "Simulação de viewport paisagem, sem rotação física",
+    "cases": [
+      {
+        "page": "portal",
+        "height": 375,
+        "scroll": 806,
+        "width": 806
+      },
+      {
+        "page": "cadastro",
+        "height": 375,
+        "scroll": 806,
+        "width": 806
+      },
+      {
+        "page": "admin-login",
+        "height": 375,
+        "scroll": 806,
+        "width": 806
+      }
+    ]
+  },
+  "wizard320": [
+    {
+      "step": 2,
+      "client": 314,
+      "scroll": 314
+    },
+    {
+      "step": 3,
+      "client": 314,
+      "scroll": 314
+    },
+    {
+      "step": 4,
+      "client": 314,
+      "scroll": 314
+    }
+  ],
+  "zoom200": {
+    "status": "BLOQUEADO",
+    "reason": "Atalho de zoom aceito pelo IAB sem alterar dimensões; 200% real não comprovado. Reflow não o substitui."
+  },
+  "finalWizardReview320": {
+    "client": 314,
+    "scroll": 314
+  },
+  "finalCadastro320": {
+    "client": 314,
+    "scroll": 314
+  }
+}

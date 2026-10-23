@@ -1,0 +1,1445 @@
+[
+  {
+    "page": "portal",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "brand-title",
+        "text": "Cadastro Municipal",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "brand-subtitle",
+        "text": "de Artistas",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "header-nav-item ",
+        "text": "Como funciona",
+        "weight": "500"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "btn btn-primary btn-sm",
+        "text": "Sou artista",
+        "weight": "600"
+      },
+      {
+        "background": [
+          221,
+          208,
+          253
+        ],
+        "color": "rgb(221, 214, 254)",
+        "disabled": false,
+        "font": "12px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.04,
+        "selector": "hero-badge",
+        "text": "Plataforma oficial dos Gestores do Conse",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "52px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 1.06,
+        "selector": "hero-title",
+        "text": "Descubra talentosda nossa cidade",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "52px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 1.74,
+        "selector": "hero-title-highlight",
+        "text": "da nossa cidade",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(221, 214, 254)",
+        "disabled": false,
+        "font": "17px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.31,
+        "selector": "hero-description",
+        "text": "Encontre artistas locais por categoria, ",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "search-btn",
+        "text": "Buscar",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.1,
+        "selector": "catalog-count",
+        "text": "3 artistas encontrados",
+        "weight": "400"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 16.88,
+        "selector": "catalog-count-number",
+        "text": "3",
+        "weight": "700"
+      },
+      {
+        "background": [
+          4,
+          120,
+          87
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "11px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.48,
+        "selector": "artist-status-badge",
+        "text": "Disponível",
+        "weight": "700"
+      },
+      {
+        "background": [
+          242,
+          235,
+          253
+        ],
+        "color": "rgb(91, 33, 182)",
+        "disabled": false,
+        "font": "11px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.75,
+        "selector": "artist-cat-badge",
+        "text": "Música",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.83,
+        "selector": "artist-city",
+        "text": "Bagé",
+        "weight": "400"
+      },
+      {
+        "background": [
+          194,
+          65,
+          12
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "11px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.18,
+        "selector": "featured-badge",
+        "text": "Destaque",
+        "weight": "700"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "17px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.06,
+        "selector": "featured-name",
+        "text": "Nome público 1",
+        "weight": "700"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(233, 213, 255)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.28,
+        "selector": "featured-bio",
+        "text": "Biografia fictícia com mais de vinte car",
+        "weight": "400"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.74,
+        "selector": "featured-stat-label",
+        "text": "Eventos",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "featured-cta",
+        "text": "Ver perfil completo",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          247,
+          237
+        ],
+        "color": "rgb(124, 45, 18)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 8.83,
+        "selector": "H2",
+        "text": "É artista?",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          247,
+          237
+        ],
+        "color": "rgb(194, 65, 12)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.88,
+        "selector": "P",
+        "text": "Cadastre-se e apareça para contratantes ",
+        "weight": "400"
+      },
+      {
+        "background": [
+          194,
+          65,
+          12
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.18,
+        "selector": "cta-card-btn",
+        "text": "Fazer cadastro",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          247,
+          237
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.37,
+        "selector": "btn btn-outline btn-sm",
+        "text": "Já sou cadastrado (Entrar)",
+        "weight": "600"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(237, 233, 254)",
+        "disabled": false,
+        "font": "16px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 15.12,
+        "selector": "SPAN",
+        "text": "Cadastro de Artistas",
+        "weight": "700"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(167, 139, 250)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 6.6,
+        "selector": "P",
+        "text": "Plataforma oficial dos Gestores do Conse",
+        "weight": "400"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "H2",
+        "text": "Para Artistas",
+        "weight": "700"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 9.73,
+        "selector": "A",
+        "text": "Entrar na Área do Artista (Login)",
+        "weight": "400"
+      }
+    ]
+  },
+  {
+    "page": "cadastro",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "brand-title block",
+        "text": "Cadastro Municipal de Artistas",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "artista-header-sub",
+        "text": "Área do Artista",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "30px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 16.88,
+        "selector": "H1",
+        "text": "Painel do Artista",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.1,
+        "selector": "P",
+        "text": "Complete seu cadastro para fazer parte d",
+        "weight": "400"
+      },
+      {
+        "background": [
+          229,
+          219,
+          252
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 13.55,
+        "selector": "artista-status-title",
+        "text": "Seu cadastro está em rascunho",
+        "weight": "700"
+      },
+      {
+        "background": [
+          229,
+          219,
+          252
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "artista-status-sub",
+        "text": "Complete todas as etapas e envie para an",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "artista-step-circle active",
+        "text": "1",
+        "weight": "700"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.36,
+        "selector": "artista-step-label active",
+        "text": "Dados básicos",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": true,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.83,
+        "selector": "artista-step-circle ",
+        "text": "2",
+        "weight": "700"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": true,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.54,
+        "selector": "artista-step-label ",
+        "text": "Atuação",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "20px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "artista-card-title",
+        "text": "Dados básicos",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "LABEL",
+        "text": "Nome completo *",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(185, 28, 28)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 6.47,
+        "selector": "cpf-cnpj-hint",
+        "text": "* Preencha ao menos o CPF ou o CNPJ para",
+        "weight": "600"
+      },
+      {
+        "background": [
+          235,
+          225,
+          252
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.55,
+        "selector": "SPAN",
+        "text": "Crie a senha da sua conta de acesso",
+        "weight": "700"
+      }
+    ]
+  },
+  {
+    "page": "como-funciona",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "brand-title",
+        "text": "Cadastro Municipal",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "brand-subtitle",
+        "text": "de Artistas",
+        "weight": "600"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "btn btn-primary btn-sm",
+        "text": "Área administrativa",
+        "weight": "600"
+      },
+      {
+        "background": [
+          221,
+          208,
+          253
+        ],
+        "color": "rgb(221, 214, 254)",
+        "disabled": false,
+        "font": "12px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.04,
+        "selector": "hero-badge",
+        "text": "Entenda em poucos minutos",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "42px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 1.06,
+        "selector": "cf-hero-title",
+        "text": "Como funciona oCadastro de Artistas",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "42px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 1.74,
+        "selector": "hero-title-highlight",
+        "text": "Cadastro de Artistas",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(221, 214, 254)",
+        "disabled": false,
+        "font": "16px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.31,
+        "selector": "cf-hero-text",
+        "text": "Uma vitrine simples e gratuita para quem",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "20px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "H2",
+        "text": "Qual é a ideia?",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "P",
+        "text": "O Cadastro Municipal de Artistas é um ca",
+        "weight": "400"
+      },
+      {
+        "background": [
+          241,
+          239,
+          254
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "28px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 15.83,
+        "selector": "cf-title",
+        "text": "O caminho do seu cadastro",
+        "weight": "800"
+      },
+      {
+        "background": [
+          241,
+          239,
+          254
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 6.66,
+        "selector": "cf-subtitle",
+        "text": "Quatro passos, sem burocracia.",
+        "weight": "400"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "28px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 16.88,
+        "selector": "cf-title",
+        "text": "Para quem é?",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.1,
+        "selector": "cf-subtitle",
+        "text": "Todo mundo ganha com a cultura viva na c",
+        "weight": "400"
+      },
+      {
+        "background": [
+          241,
+          239,
+          254
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.26,
+        "selector": "cf-ou",
+        "text": "ou",
+        "weight": "600"
+      },
+      {
+        "background": [
+          241,
+          239,
+          254
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.03,
+        "selector": "btn btn-outline cf-cta-big",
+        "text": "Já sou cadastrado(a) — entrar para edita",
+        "weight": "600"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(237, 233, 254)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 15.12,
+        "selector": "SPAN",
+        "text": "Cadastro Municipal de Artistas",
+        "weight": "600"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(167, 139, 250)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 6.6,
+        "selector": "P",
+        "text": "© 2025 Gestores do Conselho Municipal de",
+        "weight": "400"
+      },
+      {
+        "background": [
+          26,
+          16,
+          53
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 9.73,
+        "selector": "BUTTON",
+        "text": "Termos de uso",
+        "weight": "400"
+      }
+    ]
+  },
+  {
+    "page": "feedback",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "SPAN",
+        "text": "Home",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "20px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "H1",
+        "text": "Avalie a Plataforma",
+        "weight": "700"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "P",
+        "text": "Conte-nos sua opinião e sugestões para m",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": false,
+        "font": "12px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.83,
+        "selector": "SPAN",
+        "text": "0 caracteres (faltam 10)",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": true,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "btn btn-primary",
+        "text": "Enviar Feedback",
+        "weight": "600"
+      }
+    ]
+  },
+  {
+    "page": "artista-login",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "SPAN",
+        "text": "Home",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "22px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "H1",
+        "text": "Área do Artista",
+        "weight": "800"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "P",
+        "text": "Entre para editar seus dados de cadastro",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "SPAN",
+        "text": "Entrar",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(124, 58, 237)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "A",
+        "text": "Crie seu perfil aqui",
+        "weight": "600"
+      }
+    ]
+  },
+  {
+    "page": "admin-login",
+    "pairs": [
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "22px",
+        "gradient": true,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "H1",
+        "text": "Painel Administrativo",
+        "weight": "800"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "P",
+        "text": "Gestão de Cadastros de Artistas",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "15px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "SPAN",
+        "text": "Entrar",
+        "weight": "600"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "SPAN",
+        "text": "Home",
+        "weight": "600"
+      }
+    ]
+  },
+  {
+    "page": "admin",
+    "pairs": [
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.06,
+        "selector": "brand-title",
+        "text": "Gestores do Conselho Municipal de Políti",
+        "weight": "700"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(167, 139, 250)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 2.56,
+        "selector": "brand-sub",
+        "text": "painel administrativo",
+        "weight": "400"
+      },
+      {
+        "background": [
+          124,
+          58,
+          237
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 5.7,
+        "selector": "SPAN",
+        "text": "Visão geral",
+        "weight": "500"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.74,
+        "selector": "SPAN",
+        "text": "Pendentes",
+        "weight": "500"
+      },
+      {
+        "background": [
+          235,
+          228,
+          254
+        ],
+        "color": "rgb(196, 181, 253)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.5,
+        "selector": "SPAN",
+        "text": "Cadastros aprovados",
+        "weight": "400"
+      },
+      {
+        "background": [
+          235,
+          228,
+          254
+        ],
+        "color": "rgb(255, 255, 255)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.23,
+        "selector": "STRONG",
+        "text": "—",
+        "weight": "700"
+      },
+      {
+        "background": [
+          235,
+          228,
+          254
+        ],
+        "color": "rgb(167, 139, 250)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 2.22,
+        "selector": "sidebar-progress-sub",
+        "text": "Dados indisponíveis",
+        "weight": "400"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(237, 233, 254)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": true,
+        "minimum": 4.5,
+        "ratio": 1.12,
+        "selector": "SPAN",
+        "text": "Home",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "26px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 16.88,
+        "selector": "H1",
+        "text": "Olá, admin! 👋",
+        "weight": "800"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.1,
+        "selector": "dash-date",
+        "text": "sexta-feira, 23 de outubro",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "14px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 17.96,
+        "selector": "btn btn-secondary admin-home-link",
+        "text": "Ver catálogo público",
+        "weight": "600"
+      },
+      {
+        "background": [
+          248,
+          247,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": false,
+        "font": "16px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.54,
+        "selector": "admin-loading",
+        "text": "Carregando cadastros...",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(26, 16, 53)",
+        "disabled": false,
+        "font": "28px",
+        "gradient": false,
+        "minimum": 3,
+        "ratio": 17.96,
+        "selector": "stat-value",
+        "text": "—",
+        "weight": "800"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(75, 85, 99)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 7.56,
+        "selector": "stat-label",
+        "text": "Cadastros pendentes",
+        "weight": "400"
+      },
+      {
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "color": "rgb(107, 114, 128)",
+        "disabled": false,
+        "font": "13px",
+        "gradient": false,
+        "minimum": 4.5,
+        "ratio": 4.83,
+        "selector": "dash-muted",
+        "text": "Carregando...",
+        "weight": "400"
+      }
+    ]
+  }
+]

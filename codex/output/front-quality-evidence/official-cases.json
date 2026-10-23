@@ -1,0 +1,856 @@
+[
+  {
+    "id": "CT-RF01-01",
+    "page": 2,
+    "scenario": "Cadastro completo com\ndados válidos",
+    "procedure": "Todos os campos obrigatórios preenchidos\ncorretamente",
+    "expected": "Cadastro criado com sucesso e armazenado com\nstatus “Pendente”"
+  },
+  {
+    "id": "CT-RF01-02",
+    "page": 2,
+    "scenario": "Cadastro sem intervenção\nadministrativa",
+    "procedure": "Artista realiza todo o fluxo sozinho",
+    "expected": "Cadastro concluído sem necessidade de\nadministrador"
+  },
+  {
+    "id": "CT-RF01-03",
+    "page": 3,
+    "scenario": "Verificação da\npersistência dos dados",
+    "procedure": "Cadastro válido enviado",
+    "expected": "Dados informados existem corretamente no banco"
+  },
+  {
+    "id": "CT-RF01-04",
+    "page": 3,
+    "scenario": "Confirmação após\ncadastro",
+    "procedure": "Cadastro concluído",
+    "expected": "Sistema informa que o cadastro foi enviado para\nanálise"
+  },
+  {
+    "id": "CT-RF02-01",
+    "page": 3,
+    "scenario": "Campos obrigatórios\npreenchidos\ncorretamente",
+    "procedure": "Dados válidos",
+    "expected": "Sistema permite avançar/enviar"
+  },
+  {
+    "id": "CT-RF02-02",
+    "page": 3,
+    "scenario": "Nome obrigatório vazio",
+    "procedure": "Nome = vazio",
+    "expected": "Sistema bloqueia avanço e informa erro no campo\nnome"
+  },
+  {
+    "id": "CT-RF02-03",
+    "page": 3,
+    "scenario": "E-mail vazio",
+    "procedure": "E-mail = vazio",
+    "expected": "Sistema bloqueia avanço"
+  },
+  {
+    "id": "CT-RF02-04",
+    "page": 3,
+    "scenario": "E-mail em formato\ninválido",
+    "procedure": "“teste@”",
+    "expected": "Sistema bloqueia avanço e informa e-mail inválido"
+  },
+  {
+    "id": "CT-RF02-05",
+    "page": 3,
+    "scenario": "Telefone inválido",
+    "procedure": "Valor fora do formato permitido",
+    "expected": "Sistema bloqueia avanço e informa erro"
+  },
+  {
+    "id": "CT-RF02-06",
+    "page": 3,
+    "scenario": "Link inválido",
+    "procedure": "“abc123” em campo de site",
+    "expected": "Sistema bloqueia ou sinaliza formato inválido,\nconforme implementação"
+  },
+  {
+    "id": "CT-RF02-07",
+    "page": 3,
+    "scenario": "Senha abaixo do mínimo",
+    "procedure": "Senha com menos de 6 caracteres",
+    "expected": "Sistema bloqueia avanço"
+  },
+  {
+    "id": "CT-RF02-08",
+    "page": 3,
+    "scenario": "Senha e confirmação\ndiferentes",
+    "procedure": "“abcdef” / “abcdeg”",
+    "expected": "Sistema bloqueia avanço"
+  },
+  {
+    "id": "CT-RF02-09",
+    "page": 3,
+    "scenario": "Descrição artística abaixo\ndo mínimo",
+    "procedure": "Texto com menos de 20 caracteres",
+    "expected": "Sistema bloqueia avanço"
+  },
+  {
+    "id": "CT-RF02-10",
+    "page": 3,
+    "scenario": "E-mail já cadastrado",
+    "procedure": "E-mail existente",
+    "expected": "Sistema impede novo cadastro e orienta acesso à\nÁrea do Artista"
+  },
+  {
+    "id": "CT-RF03-01",
+    "page": 3,
+    "scenario": "Upload de imagem válida",
+    "procedure": "Imagem em formato permitido e < 10 MB",
+    "expected": "Arquivo armazenado e vinculado ao artista"
+  },
+  {
+    "id": "CT-RF03-02",
+    "page": 3,
+    "scenario": "Upload no limite de\ntamanho",
+    "procedure": "Arquivo com 10 MB",
+    "expected": "Upload aceito"
+  },
+  {
+    "id": "CT-RF03-03",
+    "page": 3,
+    "scenario": "Upload acima do limite",
+    "procedure": "Arquivo > 10 MB",
+    "expected": "Upload rejeitado"
+  },
+  {
+    "id": "CT-RF03-04",
+    "page": 3,
+    "scenario": "Upload de vídeo dentro\ndo limite",
+    "procedure": "Vídeo ≤ 30 s",
+    "expected": "Upload aceito"
+  },
+  {
+    "id": "CT-RF03-05",
+    "page": 3,
+    "scenario": "Vídeo acima do limite",
+    "procedure": "Vídeo > 30 s",
+    "expected": "Upload rejeitado"
+  },
+  {
+    "id": "CT-RF03-06",
+    "page": 3,
+    "scenario": "Arquivo em formato não\npermitido",
+    "procedure": "Extensão inválida",
+    "expected": "Upload rejeitado"
+  },
+  {
+    "id": "CT-RF03-07",
+    "page": 3,
+    "scenario": "Exibição após aprovação",
+    "procedure": "Artista aprovado com mídia cadastrada",
+    "expected": "Fotos/vídeos disponíveis no catálogo/perfil"
+  },
+  {
+    "id": "CT-RF03-08",
+    "page": 3,
+    "scenario": "Cadastro sem portfólio",
+    "procedure": "Nenhuma foto/site/Instagram",
+    "expected": "Cadastro continua permitido (RN-09)"
+  },
+  {
+    "id": "CT-RF04-01",
+    "page": 4,
+    "scenario": "Exibição de artista\naprovado",
+    "procedure": "Status = Aprovado",
+    "expected": "Artista aparece no mural"
+  },
+  {
+    "id": "CT-RF04-02",
+    "page": 4,
+    "scenario": "Artista pendente",
+    "procedure": "Status = Pendente",
+    "expected": "Artista não aparece"
+  },
+  {
+    "id": "CT-RF04-03",
+    "page": 4,
+    "scenario": "Artista rejeitado",
+    "procedure": "Status = Rejeitado",
+    "expected": "Artista não aparece"
+  },
+  {
+    "id": "CT-RF04-04",
+    "page": 4,
+    "scenario": "Artista desaprovado",
+    "procedure": "Cadastro anteriormente aprovado e\ndepois rejeitado",
+    "expected": "Artista deixa de aparecer"
+  },
+  {
+    "id": "CT-RF04-05",
+    "page": 4,
+    "scenario": "Acesso sem autenticação",
+    "procedure": "Visitante não logado",
+    "expected": "Catálogo permanece acessível"
+  },
+  {
+    "id": "CT-RF04-06",
+    "page": 4,
+    "scenario": "Aprovação administrativa",
+    "procedure": "Cadastro muda de Pendente para\nAprovado",
+    "expected": "Artista passa a aparecer sem intervenção adicional"
+  },
+  {
+    "id": "CT-RF05-01",
+    "page": 4,
+    "scenario": "Abrir perfil pelo catálogo",
+    "procedure": "Selecionar artista",
+    "expected": "Página de detalhes é aberta"
+  },
+  {
+    "id": "CT-RF05-02",
+    "page": 4,
+    "scenario": "Conferir nome",
+    "procedure": "Comparar perfil com cadastro",
+    "expected": "Nome corresponde ao registrado"
+  },
+  {
+    "id": "CT-RF05-03",
+    "page": 4,
+    "scenario": "Conferir categoria",
+    "procedure": "Comparar perfil com cadastro",
+    "expected": "Categoria corresponde"
+  },
+  {
+    "id": "CT-RF05-04",
+    "page": 4,
+    "scenario": "Conferir contato",
+    "procedure": "Comparar perfil com cadastro",
+    "expected": "Dados públicos correspondem"
+  },
+  {
+    "id": "CT-RF05-05",
+    "page": 4,
+    "scenario": "Conferir mídia",
+    "procedure": "Artista possui fotos/vídeos",
+    "expected": "Arquivos corretos são apresentados"
+  },
+  {
+    "id": "CT-RF05-06",
+    "page": 4,
+    "scenario": "Campos opcionais\nausentes",
+    "procedure": "Artista sem site/Instagram",
+    "expected": "Página funciona sem erro e sem informação\ninventada"
+  },
+  {
+    "id": "CT-RF06-01",
+    "page": 4,
+    "scenario": "Busca por nome exato",
+    "procedure": "Nome completo",
+    "expected": "Artista correspondente aparece"
+  },
+  {
+    "id": "CT-RF06-02",
+    "page": 4,
+    "scenario": "Busca textual parcial",
+    "procedure": "Parte do nome",
+    "expected": "Registros compatíveis aparecem"
+  },
+  {
+    "id": "CT-RF06-03",
+    "page": 4,
+    "scenario": "Busca por categoria",
+    "procedure": "“Música”",
+    "expected": "Apenas artistas da categoria"
+  },
+  {
+    "id": "CT-RF06-04",
+    "page": 4,
+    "scenario": "Nome + categoria",
+    "procedure": "“João” + Música",
+    "expected": "Apenas registros que atendam aos dois filtros"
+  },
+  {
+    "id": "CT-RF06-05",
+    "page": 4,
+    "scenario": "Busca por palavra-\nchave/tag",
+    "procedure": "Tag existente",
+    "expected": "Artistas relacionados aparecem"
+  },
+  {
+    "id": "CT-RF06-06",
+    "page": 4,
+    "scenario": "Busca inexistente",
+    "procedure": "Texto sem correspondência",
+    "expected": "Sistema informa que nenhum artista foi encontrado"
+  },
+  {
+    "id": "CT-RF06-07",
+    "page": 4,
+    "scenario": "Busca sem texto e com\ncategoria",
+    "procedure": "Texto vazio + “Teatro”",
+    "expected": "Apenas o filtro de categoria é aplicado"
+  },
+  {
+    "id": "CT-RF06-08",
+    "page": 4,
+    "scenario": "Tempo de resposta",
+    "procedure": "Busca em base preparada",
+    "expected": "Resultado retorna em até 10 segundos"
+  },
+  {
+    "id": "CT-RF06-09",
+    "page": 4,
+    "scenario": "Cadastro não aprovado",
+    "procedure": "Busca por artista pendente",
+    "expected": "Artista não aparece"
+  },
+  {
+    "id": "CT-RF08-01",
+    "page": 5,
+    "scenario": "Aprovar cadastro\npendente",
+    "procedure": "Status inicial: Pendente",
+    "expected": "Status muda para Aprovado"
+  },
+  {
+    "id": "CT-RF08-02",
+    "page": 5,
+    "scenario": "Exibição pública após\naprovação",
+    "procedure": "Pendente → Aprovado",
+    "expected": "Registro aparece no catálogo"
+  },
+  {
+    "id": "CT-RF08-03",
+    "page": 5,
+    "scenario": "Busca após aprovação",
+    "procedure": "Pendente → Aprovado",
+    "expected": "Artista passa a aparecer na busca"
+  },
+  {
+    "id": "CT-RF08-04",
+    "page": 5,
+    "scenario": "Verificar persistência",
+    "procedure": "Cadastro aprovado",
+    "expected": "Novo status fica salvo no banco"
+  },
+  {
+    "id": "CT-RF08-05",
+    "page": 5,
+    "scenario": "Usuário não autorizado\ntenta aprovar",
+    "procedure": "Visitante ou artista",
+    "expected": "Operação é negada"
+  },
+  {
+    "id": "CT-RF10-01",
+    "page": 5,
+    "scenario": "Excluir artista aprovado",
+    "procedure": "Administrador confirma exclusão",
+    "expected": "Artista desaparece do catálogo"
+  },
+  {
+    "id": "CT-RF10-02",
+    "page": 5,
+    "scenario": "Consultar pela busca após\nexclusão",
+    "procedure": "Pesquisar artista excluído",
+    "expected": "Nenhum resultado"
+  },
+  {
+    "id": "CT-RF10-03",
+    "page": 5,
+    "scenario": "Cancelar exclusão",
+    "procedure": "Cancelar ação antes de confirmar",
+    "expected": "Cadastro permanece"
+  },
+  {
+    "id": "CT-RF10-04",
+    "page": 5,
+    "scenario": "Diferenciar excluir de\ndesaprovar",
+    "procedure": "Desaprovar artista",
+    "expected": "Registro continua existente"
+  },
+  {
+    "id": "CT-RF10-05",
+    "page": 5,
+    "scenario": "Desaprovar artista\naprovado",
+    "procedure": "Alterar status para rejeitado",
+    "expected": "Artista sai do catálogo sem ser apagado"
+  },
+  {
+    "id": "CT-RF11-01",
+    "page": 5,
+    "scenario": "Feedback válido\nidentificado",
+    "procedure": "Nome, e-mail, nota, tipo e mensagem",
+    "expected": "Feedback salvo"
+  },
+  {
+    "id": "CT-RF11-02",
+    "page": 5,
+    "scenario": "Feedback anônimo",
+    "procedure": "Sem nome e e-mail",
+    "expected": "Envio permitido"
+  },
+  {
+    "id": "CT-RF11-03",
+    "page": 5,
+    "scenario": "Envio sem autenticação",
+    "procedure": "Visitante não logado",
+    "expected": "Feedback aceito"
+  },
+  {
+    "id": "CT-RF11-04",
+    "page": 5,
+    "scenario": "Mensagem abaixo do\nmínimo",
+    "procedure": "Texto insuficiente",
+    "expected": "Envio bloqueado"
+  },
+  {
+    "id": "CT-RF11-05",
+    "page": 5,
+    "scenario": "Consulta administrativa",
+    "procedure": "Feedback previamente enviado",
+    "expected": "Feedback aparece no painel"
+  },
+  {
+    "id": "CT-RF11-06",
+    "page": 5,
+    "scenario": "Consulta pública aos\nfeedbacks",
+    "procedure": "Visitante tenta visualizar",
+    "expected": "Dados não são apresentados publicamente"
+  },
+  {
+    "id": "CT-RF11-07",
+    "page": 5,
+    "scenario": "Remoção de feedback",
+    "procedure": "Administrador exclui avaliação",
+    "expected": "Registro é definitivamente removido"
+  },
+  {
+    "id": "CT-RF11-08",
+    "page": 5,
+    "scenario": "Cancelamento da\nremoção",
+    "procedure": "Administrador cancela confirmação",
+    "expected": "Feedback permanece"
+  },
+  {
+    "id": "CT-RF07-01",
+    "page": 5,
+    "scenario": "Login válido",
+    "procedure": "Credenciais administrativas válidas",
+    "expected": "Painel é liberado"
+  },
+  {
+    "id": "CT-RF07-02",
+    "page": 6,
+    "scenario": "Senha incorreta",
+    "procedure": "Usuário válido + senha errada",
+    "expected": "Acesso negado"
+  },
+  {
+    "id": "CT-RF07-03",
+    "page": 6,
+    "scenario": "Usuário inexistente",
+    "procedure": "Credenciais inexistentes",
+    "expected": "Acesso negado"
+  },
+  {
+    "id": "CT-RF07-04",
+    "page": 6,
+    "scenario": "Acesso direto à URL",
+    "procedure": "Usuário não autenticado abre rota do\npainel",
+    "expected": "Redirecionamento/login ou acesso negado"
+  },
+  {
+    "id": "CT-RF07-05",
+    "page": 6,
+    "scenario": "Sessão encerrada",
+    "procedure": "Logout seguido de tentativa de acesso ao\npainel",
+    "expected": "Acesso negado"
+  },
+  {
+    "id": "CT-RF07-06",
+    "page": 6,
+    "scenario": "Usuário autenticado sem\nautorização\nadministrativa",
+    "procedure": "Conta não administrativa",
+    "expected": "Funções administrativas não são liberadas"
+  },
+  {
+    "id": "CT-RF09-01",
+    "page": 6,
+    "scenario": "Administrador edita nome",
+    "procedure": "Alterar nome e salvar",
+    "expected": "Alteração persistida"
+  },
+  {
+    "id": "CT-RF09-02",
+    "page": 6,
+    "scenario": "Administrador edita\ncategoria",
+    "procedure": "Alterar categoria",
+    "expected": "Catálogo reflete a atualização"
+  },
+  {
+    "id": "CT-RF09-03",
+    "page": 6,
+    "scenario": "Artista edita cadastro",
+    "procedure": "Alterar informação própria",
+    "expected": "Alteração salva"
+  },
+  {
+    "id": "CT-RF09-04",
+    "page": 6,
+    "scenario": "Artista edita cadastro\naprovado",
+    "procedure": "Salvar alteração",
+    "expected": "Status retorna para Pendente"
+  },
+  {
+    "id": "CT-RF09-05",
+    "page": 6,
+    "scenario": "Artista tenta alterar e-\nmail",
+    "procedure": "Editar e-mail",
+    "expected": "Campo permanece bloqueado"
+  },
+  {
+    "id": "CT-RF09-06",
+    "page": 6,
+    "scenario": "Falha de conexão durante\nedição",
+    "procedure": "Interromper comunicação",
+    "expected": "Alteração não é persistida e erro é informado"
+  },
+  {
+    "id": "CT-RNF09-01",
+    "page": 6,
+    "scenario": "Exportação de cadastros\naprovados",
+    "procedure": "Administrador exporta os registros\naprovados",
+    "expected": "Arquivo é gerado"
+  },
+  {
+    "id": "CT-RNF09-02",
+    "page": 6,
+    "scenario": "Conferência dos dados\nexportados",
+    "procedure": "Comparar arquivo com os dados do\nsistema",
+    "expected": "Dados correspondem aos registros aprovados"
+  },
+  {
+    "id": "CT-RNF09-03",
+    "page": 6,
+    "scenario": "Exportação para\nplanejamento de eventos",
+    "procedure": "Utilizar o arquivo para o fim previsto",
+    "expected": "Arquivo é utilizável"
+  },
+  {
+    "id": "CT-RNF09-04",
+    "page": 6,
+    "scenario": "Exportação com múltiplos\nregistros",
+    "procedure": "Exportar base com vários artistas",
+    "expected": "Todos os registros aprovados são incluídos"
+  },
+  {
+    "id": "CT-RNF09-05",
+    "page": 6,
+    "scenario": "Exportação sem registros\naprovados",
+    "procedure": "Tentar exportar quando não há registros\naprovados",
+    "expected": "Sistema apresenta comportamento definido para\nesse cenário"
+  },
+  {
+    "id": "CT-RNF01-01",
+    "page": 7,
+    "scenario": "Catálogo em tela pequena",
+    "procedure": "Acessar o catálogo em resolução definida\npara teste",
+    "expected": "Cards, textos e controles permanecem legíveis e\nutilizáveis"
+  },
+  {
+    "id": "CT-RNF01-02",
+    "page": 7,
+    "scenario": "Formulário de cadastro\nem tela pequena",
+    "procedure": "Percorrer as etapas do cadastro",
+    "expected": "Campos e botões permanecem acessíveis, sem\nperda de conteúdo"
+  },
+  {
+    "id": "CT-RNF01-03",
+    "page": 7,
+    "scenario": "Painel administrativo em\ntela pequena",
+    "procedure": "Acessar e utilizar as funções principais",
+    "expected": "Interface permanece utilizável e legível"
+  },
+  {
+    "id": "CT-RNF01-04",
+    "page": 7,
+    "scenario": "Catálogo em tela ampla",
+    "procedure": "Acessar o mural em resolução maior",
+    "expected": "Layout se adapta sem comprometer a organização"
+  },
+  {
+    "id": "CT-RNF01-05",
+    "page": 7,
+    "scenario": "Navegação entre\nresoluções",
+    "procedure": "Repetir as tarefas em todas as resoluções\ndefinidas",
+    "expected": "Todas as telas avaliadas atendem aos critérios de\nusabilidade e legibilidade"
+  },
+  {
+    "id": "CT-RNF05-01",
+    "page": 7,
+    "scenario": "Organização dos módulos",
+    "procedure": "Revisar a estrutura dos módulos React e\nNestJS",
+    "expected": "Módulos seguem as convenções definidas"
+  },
+  {
+    "id": "CT-RNF05-02",
+    "page": 7,
+    "scenario": "Padronização do código",
+    "procedure": "Revisar componentes, serviços e arquivos",
+    "expected": "Código segue os padrões adotados pela equipe"
+  },
+  {
+    "id": "CT-RNF05-03",
+    "page": 7,
+    "scenario": "Uso de bibliotecas",
+    "procedure": "Verificar dependências utilizadas",
+    "expected": "Bibliotecas estão de acordo com as convenções\ndefinidas"
+  },
+  {
+    "id": "CT-RNF05-04",
+    "page": 7,
+    "scenario": "Facilidade de manutenção",
+    "procedure": "Selecionar módulos e verificar alterações\nisoladas",
+    "expected": "Estrutura favorece manutenção e evolução"
+  },
+  {
+    "id": "CT-RNF05-05",
+    "page": 7,
+    "scenario": "Revisão técnica",
+    "procedure": "Aplicar checklist de revisão em todos os\nmódulos definidos",
+    "expected": "Todos os módulos avaliados atendem aos critérios"
+  },
+  {
+    "id": "CT-RNF06-01",
+    "page": 7,
+    "scenario": "Instalação",
+    "procedure": "Consultar a documentação técnica",
+    "expected": "Procedimentos de instalação estão documentados"
+  },
+  {
+    "id": "CT-RNF06-02",
+    "page": 7,
+    "scenario": "Configuração",
+    "procedure": "Consultar a documentação técnica",
+    "expected": "Procedimentos de configuração estão\ndocumentados"
+  },
+  {
+    "id": "CT-RNF06-03",
+    "page": 7,
+    "scenario": "Fluxos principais",
+    "procedure": "Consultar o manual de uso",
+    "expected": "Fluxos principais estão documentados"
+  },
+  {
+    "id": "CT-RNF06-04",
+    "page": 7,
+    "scenario": "Funcionalidades\nadministrativas",
+    "procedure": "Consultar o manual",
+    "expected": "Funcionalidades do painel estão documentadas"
+  },
+  {
+    "id": "CT-RNF06-05",
+    "page": 7,
+    "scenario": "Verificação de cobertura",
+    "procedure": "Comparar documentação com os itens\nprevistos",
+    "expected": "Todos os itens previstos estão cobertos"
+  },
+  {
+    "id": "CT-RNF07-01",
+    "page": 8,
+    "scenario": "Documentação dos testes\nfuncionais",
+    "procedure": "Revisar este documento",
+    "expected": "Todos os testes funcionais previstos estão\ndocumentados"
+  },
+  {
+    "id": "CT-RNF07-02",
+    "page": 8,
+    "scenario": "Documentação dos testes\nde integridade",
+    "procedure": "Revisar os registros de testes de banco",
+    "expected": "Todos os testes de integridade previstos estão\ndocumentados"
+  },
+  {
+    "id": "CT-RNF07-03",
+    "page": 8,
+    "scenario": "Documentação dos testes\nde LGPD",
+    "procedure": "Revisar os registros de segurança",
+    "expected": "Todos os testes de conformidade previstos estão\ndocumentados"
+  },
+  {
+    "id": "CT-RNF07-04",
+    "page": 8,
+    "scenario": "Verificação da integridade\ndos dados",
+    "procedure": "Executar os testes definidos para o banco",
+    "expected": "Dados permanecem consistentes"
+  },
+  {
+    "id": "CT-RNF07-05",
+    "page": 8,
+    "scenario": "Verificação da\nrastreabilidade",
+    "procedure": "Conferir se os testes possuem requisitos\nrelacionados",
+    "expected": "Todos os testes possuem rastreabilidade"
+  },
+  {
+    "id": "CT-RNF03-01",
+    "page": 8,
+    "scenario": "Carregamento do\ncatálogo",
+    "procedure": "Preparar base com 1000 registros e\nacessar o catálogo",
+    "expected": "Carregamento em até 5 segundos"
+  },
+  {
+    "id": "CT-RNF03-02",
+    "page": 8,
+    "scenario": "Busca por nome",
+    "procedure": "Executar busca em base com 1000\nregistros",
+    "expected": "Resultado em até 5 segundos"
+  },
+  {
+    "id": "CT-RNF03-03",
+    "page": 8,
+    "scenario": "Busca por categoria",
+    "procedure": "Executar filtro de categoria",
+    "expected": "Resultado em até 5 segundos"
+  },
+  {
+    "id": "CT-RNF03-04",
+    "page": 8,
+    "scenario": "Busca combinada",
+    "procedure": "Executar nome + categoria",
+    "expected": "Resultado em até 5 segundos"
+  },
+  {
+    "id": "CT-RNF03-05",
+    "page": 8,
+    "scenario": "Repetição de consultas",
+    "procedure": "Executar as buscas definidas\nrepetidamente",
+    "expected": "Tempo permanece dentro do limite"
+  },
+  {
+    "id": "CT-RNF03-06",
+    "page": 8,
+    "scenario": "Catálogo após aprovação",
+    "procedure": "Aprovar cadastro e consultar o catálogo",
+    "expected": "Catálogo continua carregando em até 5 segundos"
+  },
+  {
+    "id": "CT-RNF08-01",
+    "page": 8,
+    "scenario": "Volume de cadastros",
+    "procedure": "Preparar base com o volume definido para\nteste",
+    "expected": "Sistema mantém funcionamento adequado"
+  },
+  {
+    "id": "CT-RNF08-02",
+    "page": 9,
+    "scenario": "Acessos simultâneos",
+    "procedure": "Simular acessos simultâneos conforme\ncenário definido",
+    "expected": "Sistema suporta a carga sem degradação\nsignificativa"
+  },
+  {
+    "id": "CT-RNF08-03",
+    "page": 9,
+    "scenario": "Consulta ao catálogo sob\ncarga",
+    "procedure": "Executar consultas durante a simulação",
+    "expected": "Catálogo permanece funcional"
+  },
+  {
+    "id": "CT-RNF08-04",
+    "page": 9,
+    "scenario": "Busca sob carga",
+    "procedure": "Executar buscas durante a simulação",
+    "expected": "Resultados continuam sendo retornados"
+  },
+  {
+    "id": "CT-RNF08-05",
+    "page": 9,
+    "scenario": "Integridade após carga",
+    "procedure": "Verificar dados após a simulação",
+    "expected": "Dados permanecem consistentes"
+  },
+  {
+    "id": "CT-RNF02-01",
+    "page": 9,
+    "scenario": "Cadastro pendente não\naparece publicamente",
+    "procedure": "Criar cadastro com status Pendente e\nconsultar o catálogo",
+    "expected": "Cadastro não aparece"
+  },
+  {
+    "id": "CT-RNF02-02",
+    "page": 9,
+    "scenario": "Dados de cadastro\npendente não são\nexpostos",
+    "procedure": "Tentar consultar os dados públicos de um\ncadastro pendente",
+    "expected": "Dados não são disponibilizados publicamente"
+  },
+  {
+    "id": "CT-RNF02-03",
+    "page": 9,
+    "scenario": "Acesso não autenticado\nao painel",
+    "procedure": "Tentar acessar a rota administrativa sem\nlogin",
+    "expected": "Acesso negado"
+  },
+  {
+    "id": "CT-RNF02-04",
+    "page": 9,
+    "scenario": "Acesso indevido a dados\nadministrativos",
+    "procedure": "Usuário sem autorização tenta consultar\ndados administrativos",
+    "expected": "Acesso negado"
+  },
+  {
+    "id": "CT-RNF02-05",
+    "page": 9,
+    "scenario": "Consulta às políticas de\nacesso",
+    "procedure": "Revisar as regras de acesso do Supabase",
+    "expected": "Configurações de acordo com as permissões\ndefinidas"
+  },
+  {
+    "id": "CT-RNF02-06",
+    "page": 9,
+    "scenario": "Feedback não é público",
+    "procedure": "Enviar feedback e consultar a plataforma\ncomo visitante",
+    "expected": "Feedback não aparece publicamente"
+  },
+  {
+    "id": "CT-RNF02-07",
+    "page": 9,
+    "scenario": "Dados públicos após\naprovação",
+    "procedure": "Aprovar cadastro e consultar o catálogo",
+    "expected": "Apenas os dados previstos como públicos são\nexibidos"
+  },
+  {
+    "id": "CT-RNF04-01",
+    "page": 10,
+    "scenario": "Cadastro por artista",
+    "procedure": "Solicitar que um participante realize um\ncadastro completo",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  },
+  {
+    "id": "CT-RNF04-02",
+    "page": 10,
+    "scenario": "Edição de cadastro",
+    "procedure": "Solicitar que um artista altere seus dados",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  },
+  {
+    "id": "CT-RNF04-03",
+    "page": 10,
+    "scenario": "Aprovação administrativa",
+    "procedure": "Solicitar que um servidor aprove um\ncadastro",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  },
+  {
+    "id": "CT-RNF04-04",
+    "page": 10,
+    "scenario": "Busca no catálogo",
+    "procedure": "Solicitar que um visitante encontre um\nartista por nome",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  },
+  {
+    "id": "CT-RNF04-05",
+    "page": 10,
+    "scenario": "Busca por categoria",
+    "procedure": "Solicitar que um visitante encontre artistas\nde uma categoria",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  },
+  {
+    "id": "CT-RNF04-06",
+    "page": 10,
+    "scenario": "Envio de feedback",
+    "procedure": "Solicitar que um visitante envie uma\navaliação",
+    "expected": "Tarefa concluída sem dificuldade relevante"
+  }
+]

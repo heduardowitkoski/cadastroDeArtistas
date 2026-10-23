@@ -1,0 +1,17 @@
+{
+  "officialCases": 122,
+  "idsWithAutomatedAssertions": 70,
+  "results": {
+    "PARCIAL": 98,
+    "NÃO IMPLEMENTADO": 10,
+    "BLOQUEADO": 14
+  },
+  "testCounts": {
+    "frontend": 15,
+    "backendE2E": 76,
+    "backendUnit": 8,
+    "total": 99,
+    "new": 40
+  },
+  "responsiveCases": 40
+}

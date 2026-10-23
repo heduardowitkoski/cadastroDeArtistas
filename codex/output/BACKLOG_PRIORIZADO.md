@@ -1,5 +1,23 @@
 # Backlog priorizado — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — rodada de qualidade local de 23/10/2026
+
+Esta seção prevalece sobre fotografias históricas abaixo para as alterações desta rodada. Relatório: [FRONT_QUALITY_INTEGRATION_ROUND_REPORT.md](FRONT_QUALITY_INTEGRATION_ROUND_REPORT.md). **99 testes locais passam (76 E2E + 8 unit backend + 15 frontend), 40 novos; 122 CTs oficiais mapeados e 70 com asserções automatizadas relacionadas, sempre com limites explícitos.** Não há aceite integral de produção/WCAG.
+
+| Item | Estado atualizado | Pendência preservada |
+|---|---|---|
+| A-05/A-20 | Solicitação de confirmação após persistência implementada; requested/pending e mensagens amigáveis | SMTP/Confirm Email/URLs/template, caixa controlada e entrega real pendentes; sem fechamento |
+| A-06 | Bio20..2000 em front/back segundo CT-RF02-09; demais regras preservadas | Homologar clientes antigos/legados; C-04 não alterada |
+| A-10 | 99 testes e matriz integral de122 IDs; workflows em memória e dataset1000 | Persistência/contas reais e carga concorrente pendentes |
+| A-12/A-13 | Eye/EyeOff, Home, foco/menu/modal, upload por teclado e mensagens; auditoria local documentada | NVDA/VoiceOver e percurso integral pendentes |
+| A-14 | Busca agora inclui nome artístico, com testes de nome/categoria/tag/combinação | Cardinalidade/vocabulário C-03 permanecem abertos |
+| A-17 | 40 reflows320..1440 sem overflow; etapas2/3/4 a320; modais320; contraste e performance em memória | Zoom200% bloqueado pela ferramenta; hero/gradientes, leitores, dispositivos e carga real pendentes |
+| A-08 | Foto DataURL provada em memória até exibição; demais mídias explicitamente NÃO IMPLEMENTADAS; plano Storage separado | Sem bucket/policies/migration/limites10MB/30s nesta rodada |
+| A-03/A-01/A-02 | GET público remoto200/11 sem privados e DataAPIanon401/42501 reconfirmados por leitura | authenticated comum/admin real e metadados finais continuam bloqueados; A-03 parcial |
+| A-07/A-18/A-19 | Rascunho, controles demonstrativos e exportação mantêm pendências existentes | Não implementados como efeito colateral desta rodada |
+
+Home preservou sessão admin/artista em Auth simulado; Logout separado foi testado. Identidade roxa preservada; sem redesign/carrossel/favoritos novos. Nenhuma escrita remota nesta rodada de qualidade; testes de escrita ficaram exclusivamente no harness127.0.0.1:3207. Sem SQL/RLS/grants/schema, mudança remota ou commit/push. As fixtures e a limpeza de rodadas anteriores são histórico; não repetir exclusões nem alterar feedbackID6.
+
 ## Estado atual — smoke publicado de 23/10/2026
 
 **7 grupos PASSOU, 0 FALHOU, 10 BLOQUEADO.** Frontend oficial já publicado: bundle usa somente o novo Render e o navegador exibiu 11 cards sem erro. GET público 200 sem campos privados; GETs administrativos anônimos 401; SELECT direto anon nas duas tabelas 401/42501; POST de feedback fictício 201, ID **6**. Cadastro bloqueado por falta de e-mail controlado confirmada pelo usuário; credenciais de teste admin/comum não disponíveis. Relatório: `FINAL_SMOKE_SECURITY_TEST_REPORT.md`; prova sanitizada: `FINAL_SMOKE_SECURITY_EVIDENCE.json`.

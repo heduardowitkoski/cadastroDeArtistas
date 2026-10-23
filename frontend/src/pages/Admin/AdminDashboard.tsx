@@ -1,3 +1,4 @@
+import { HomeButton } from "../../components/HomeButton";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -292,7 +293,7 @@ export default function AdminDashboard() {
     <div className="admin-page">
       <div className="admin-mobile-bar">
         <button ref={menuButtonRef} className="btn btn-secondary" type="button" aria-label={sidebarOpen ? "Fechar menu do painel" : "Abrir menu do painel"} aria-expanded={sidebarOpen} aria-controls="admin-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={18} /> Menu</button>
-        <Link to="/" className="btn btn-secondary btn-sm">Ver catálogo</Link>
+        <HomeButton />
       </div>
       {sidebarOpen && <button className="admin-sidebar-scrim" aria-label="Fechar menu do painel" onClick={() => setSidebarOpen(false)} />}
       {/* ─── Sidebar ─── */}
@@ -305,7 +306,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" aria-label="Seções do painel administrativo">
           {sidebarNav.map(({ key, icon, label }) => (
             <button key={key} onClick={() => { setTab(key); setSidebarOpen(false); setActionError(""); }} aria-current={tab === key ? "page" : undefined} className={`sidebar-nav-item ${tab === key ? "active" : ""}`}>
               {icon}
@@ -328,6 +329,7 @@ export default function AdminDashboard() {
           <p className="sidebar-progress-sub">{loadingArtistas || artistasError ? "Dados indisponíveis" : `${counts.Aprovado} de ${artistas.length} artistas no catálogo`}</p>
         </div>
 
+        <HomeButton className="sidebar-home-button" />
         <div className="sidebar-user">
           <div className="sidebar-avatar"><User size={15} /></div>
           <div className="sidebar-user-info">
@@ -347,7 +349,7 @@ export default function AdminDashboard() {
           <>
             <div className="admin-dash-header">
               <div>
-                <h2>Olá, {adminName || "admin"}! <span className="dash-wave">👋</span></h2>
+                <h1>Olá, {adminName || "admin"}! <span className="dash-wave" aria-hidden="true">👋</span></h1>
                 <p className="dash-date"><CalendarDays size={13} /> {hoje}</p>
               </div>
               <Link to="/" className="btn btn-secondary admin-home-link">Ver catálogo público</Link>

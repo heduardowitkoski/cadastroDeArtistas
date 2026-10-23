@@ -1,3 +1,4 @@
+import { HomeButton } from "../../components/HomeButton";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -278,7 +279,7 @@ export default function EditarCadastro() {
             </div>
           </div>
           <div className="artista-header-actions">
-            <Link to="/" className="artista-sair">Ver catálogo</Link>
+            <HomeButton />
             <button onClick={handleLogout} className="btn btn-secondary btn-sm" aria-label="Sair da Área do Artista">
               <LogOut size={14} aria-hidden="true" /> Sair
             </button>
@@ -450,10 +451,10 @@ export default function EditarCadastro() {
                       <p className="upload-subtitle">Atualizar imagem do perfil</p>
                     </div>
                   </div>
-                  <label htmlFor="edit-upload-foto" className="upload-btn">
-                    <Upload size={14} aria-hidden="true" /> Selecionar imagem
-                    <input id="edit-upload-foto" type="file" accept="image/*" onChange={handleFotoUpload} style={{ display: "none" }} aria-label="Selecionar nova foto de perfil" />
-                  </label>
+                  <button type="button" className="upload-btn" onClick={() => document.getElementById("edit-upload-foto")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar imagem
+                      </button>
+                      <input id="edit-upload-foto" type="file" accept="image/*" onChange={handleFotoUpload} style={{ display: "none" }} aria-label="Selecionar nova foto de perfil" />
                   {form.foto_nome && (
                     <span className="upload-file-name" aria-live="polite">
                       <Check size={12} aria-hidden="true" /> {form.foto_nome}
@@ -469,10 +470,10 @@ export default function EditarCadastro() {
                       <p className="upload-subtitle">Fotos de trabalhos</p>
                     </div>
                   </div>
-                  <label htmlFor="edit-upload-galeria" className="upload-btn">
-                    <Upload size={14} aria-hidden="true" /> Carregar fotos
-                    <input id="edit-upload-galeria" type="file" accept="image/*" multiple onChange={(e) => handleGenericFileUpload("galeria_nome", e)} style={{ display: "none" }} aria-label="Selecionar fotos da galeria" />
-                  </label>
+                  <button type="button" className="upload-btn" onClick={() => document.getElementById("edit-upload-galeria")?.click()}>
+<Upload size={14} aria-hidden="true" /> Carregar fotos
+                      </button>
+                      <input id="edit-upload-galeria" type="file" accept="image/*" multiple onChange={(e) => handleGenericFileUpload("galeria_nome", e)} style={{ display: "none" }} aria-label="Selecionar fotos da galeria" />
                   {form.galeria_nome && (
                     <span className="upload-file-name" aria-live="polite">
                       <Check size={12} aria-hidden="true" /> {form.galeria_nome}
@@ -488,10 +489,10 @@ export default function EditarCadastro() {
                       <p className="upload-subtitle">PDF ou DOC</p>
                     </div>
                   </div>
-                  <label htmlFor="edit-upload-portfolio" className="upload-btn">
-                    <Upload size={14} aria-hidden="true" /> Enviar PDF
-                    <input id="edit-upload-portfolio" type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)} style={{ display: "none" }} aria-label="Selecionar documento de portfólio" />
-                  </label>
+                  <button type="button" className="upload-btn" onClick={() => document.getElementById("edit-upload-portfolio")?.click()}>
+<Upload size={14} aria-hidden="true" /> Enviar PDF
+                      </button>
+                      <input id="edit-upload-portfolio" type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleGenericFileUpload("portfolio_doc_nome", e)} style={{ display: "none" }} aria-label="Selecionar documento de portfólio" />
                   {form.portfolio_doc_nome && (
                     <span className="upload-file-name" aria-live="polite">
                       <Check size={12} aria-hidden="true" /> {form.portfolio_doc_nome}
@@ -507,10 +508,10 @@ export default function EditarCadastro() {
                       <p className="upload-subtitle">Vídeo MP4</p>
                     </div>
                   </div>
-                  <label htmlFor="edit-upload-video" className="upload-btn">
-                    <Upload size={14} aria-hidden="true" /> Selecionar vídeo
-                    <input id="edit-upload-video" type="file" accept="video/*" onChange={(e) => handleGenericFileUpload("video_nome", e)} style={{ display: "none" }} aria-label="Selecionar vídeo de apresentação" />
-                  </label>
+                  <button type="button" className="upload-btn" onClick={() => document.getElementById("edit-upload-video")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar vídeo
+                      </button>
+                      <input id="edit-upload-video" type="file" accept="video/*" onChange={(e) => handleGenericFileUpload("video_nome", e)} style={{ display: "none" }} aria-label="Selecionar vídeo de apresentação" />
                   {form.video_nome && (
                     <span className="upload-file-name" aria-live="polite">
                       <Check size={12} aria-hidden="true" /> {form.video_nome}
@@ -526,10 +527,10 @@ export default function EditarCadastro() {
                       <p className="upload-subtitle">Faixa de áudio MP3</p>
                     </div>
                   </div>
-                  <label htmlFor="edit-upload-audio" className="upload-btn">
-                    <Upload size={14} aria-hidden="true" /> Selecionar áudio
-                    <input id="edit-upload-audio" type="file" accept="audio/*" onChange={(e) => handleGenericFileUpload("audio_nome", e)} style={{ display: "none" }} aria-label="Selecionar faixa de áudio" />
-                  </label>
+                  <button type="button" className="upload-btn" onClick={() => document.getElementById("edit-upload-audio")?.click()}>
+<Upload size={14} aria-hidden="true" /> Selecionar áudio
+                      </button>
+                      <input id="edit-upload-audio" type="file" accept="audio/*" onChange={(e) => handleGenericFileUpload("audio_nome", e)} style={{ display: "none" }} aria-label="Selecionar faixa de áudio" />
                   {form.audio_nome && (
                     <span className="upload-file-name" aria-live="polite">
                       <Check size={12} aria-hidden="true" /> {form.audio_nome}

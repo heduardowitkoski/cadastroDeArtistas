@@ -1,5 +1,22 @@
 # Matriz de rastreabilidade — auditoria e contenção P0 de 06/10/2026
 
+## Estado atual — CTs oficiais e qualidade local de 23/10/2026
+
+Matriz completa com os **122 IDs originais**, cenários, arquivos de teste, evidências e pendências em [INTEGRATION_TEST_COVERAGE_REPORT.md](INTEGRATION_TEST_COVERAGE_REPORT.md). O PDF indicado pelo usuário está emcodex/docs. Atribuições RN/UC só foram feitas quando explicitadas; não se inventou numeração a partir dos diagramas históricos.
+
+| RF/RNF/CT | Evidência desta rodada | Resultado e limite |
+|---|---|---|
+| RF01/02; cadastro/validação | E2E Auth+ficha/compensação/duplicidade; bio19/20/2000; wizard local | PASSOU nas asserções; CTs parciais sem Supabase real |
+| RF03/05; mídias/perfil | Foto64×48 convertida aJPEG/DataURL1063 caracteres, aprovada e renderizada em memória | Foto parcial; demais arquivos e limites não implementados; detalhes em modal |
+| RF04/06/08/10 | Status/projeção/CRUD em memória; busca nome/nomeartístico/categoria/tag; cancelamento na UI | PASSOU local; homologação real pendente |
+| RF07/11; segurança/feedback | 401/403/admin, user_metadata forjado, feedback válido/limites/privacidade/exclusão; Home/Logout | Sessão e UI simuladas; contas reais indisponíveis |
+| RF09-03/04/05 | Autoedição não roteada, PUT admin preservado | BLOQUEADO porC-02/ownership, sem habilitação |
+| RNF01/03 | 40 reflows, wizard320 e modais; dataset1000 e400 filtros,20GETs locais<5s | Parcial; zoom200%, dispositivos/carga reais pendentes |
+| RNF02 | GET remoto200/11 público e DataAPIanon401/42501 em duas tabelas | Authenticated comum e inspeção completa de policies/metadados bloqueadas |
+| RNF04/08/09 |122 IDs rastreados, sem inventar aceite/carga/exportação | Usuários reais e concorrência bloqueados; exportação não implementada |
+
+**99 testes passam,40 novos. 70 IDs com asserções automatizadas relacionadas;98 CTs parciais,10 não implementados,14 bloqueados.** Essas contagens não significam98 CTs aprovados. Os outros52 IDs têm inspeção/manual ou bloqueio explícito. Logs/JSON/screenshots emfront-quality-evidence/. Relatórios históricos abaixo permanecem como fotografia de suas rodadas; nenhuma escrita remota/SQL/deploy nesta rodada.
+
 ## Estado atual — smoke publicado de 23/10/2026
 
 Relatório: `FINAL_SMOKE_SECURITY_TEST_REPORT.md`; evidência: `FINAL_SMOKE_SECURITY_EVIDENCE.json`. Resultado da matriz de 17 grupos: **7 PASSOU, 0 FALHOU, 10 BLOQUEADO**. Nenhuma alteração funcional nesta rodada; histórico abaixo preservado.

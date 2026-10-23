@@ -33,6 +33,8 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
   let dbReadFailure: 'artistas' | 'feedbacks' | null = null;
   let dbInsertThrows = false;
   let existingArtistEmail = false;
+  let emailFailure = false;
+  const confirmationRequests: Record<string, unknown>[] = [];
   let compensationFailure = false;
   const createdUsers: string[] = [];
   const createdUserOptions: Array<Record<string, unknown>> = [];
@@ -140,6 +142,13 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
 
   const fakeAuthClient = {
     auth: {
+      resend: (options: Record<string, unknown>) => {
+        confirmationRequests.push(options);
+        return Promise.resolve({
+          data: {},
+          error: emailFailure ? { message: 'mail fixture failed' } : null,
+        });
+      },
       getUser: (token: string) => {
         if (token === 'admin-token') {
           return Promise.resolve({
@@ -227,6 +236,8 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
 
   beforeEach(() => {
     insertedArtist = undefined;
+    emailFailure = false;
+    confirmationRequests.length = 0;
     selectedColumns.length = 0;
     databaseTables.length = 0;
     createdUsers.length = 0;
@@ -279,6 +290,7 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     contato: '(53) 99999-0000',
     area_atuacao: 'Música',
     senha: 'senha123',
+    bio: 'Biografia fictícia com mais de vinte caracteres.',
   };
 
   it.each(adminRoutes)('%s %s sem token retorna 401', async (method, path) => {
@@ -384,7 +396,11 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
       .post('/artistas')
       .send(validArtist)
       .expect(201);
-    expect(response.body).toEqual({ id: 99, status: 'Pendente' });
+    expect(response.body).toEqual({
+      id: 99,
+      status: 'Pendente',
+      email_verification: 'requested',
+    });
     expect(insertedArtist).toMatchObject({
       nome: 'Novo artista',
       contato: '53999990000',
@@ -534,5 +550,95 @@ describe('Proteção da API (integração local, Supabase substituído)', () => 
     expect(body.message).toMatch(/suporte/i);
     expect(JSON.stringify(response.body)).not.toContain(validArtist.senha);
     expect(deletedUsers).toEqual(['new-user-id']);
+  });
+  it('cadastro solicita confirmação com redirect oficial, sem enviar senha ao mailer', async () => {
+    await request(app.getHttpServer())
+      .post('/artistas')
+      .send(validArtist)
+      .expect(201);
+    expect(confirmationRequests).toEqual([
+      {
+        type: 'signup',
+        email: validArtist.email,
+        options: {
+          emailRedirectTo:
+            'https://cadastro-de-artistas.vercel.app/artista/login',
+        },
+      },
+    ]);
+    expect(JSON.stringify(confirmationRequests)).not.toContain(
+      validArtist.senha,
+    );
+  });
+
+  it('falha de e-mail preserva ficha confirmada e sinaliza pendência sem compensar', async () => {
+    emailFailure = true;
+    const response = await request(app.getHttpServer())
+      .post('/artistas')
+      .send(validArtist)
+      .expect(201);
+    expect(response.body).toMatchObject({
+      status: 'Pendente',
+      email_verification: 'pending',
+    });
+    expect(deletedUsers).toEqual([]);
+  });
+
+  it('falha de banco não envia confirmação para conta compensada', async () => {
+    dbInsertFailure = true;
+    await request(app.getHttpServer())
+      .post('/artistas')
+      .send(validArtist)
+      .expect(503);
+    expect(confirmationRequests).toEqual([]);
+    expect(deletedUsers).toEqual(['new-user-id']);
+  });
+
+  it.each(['', 'x'.repeat(19)])(
+    'CT-RF02-09 rejeita mini-bio abaixo do mínimo oficial',
+    async (bio) => {
+      await request(app.getHttpServer())
+        .post('/artistas')
+        .send({ ...validArtist, bio })
+        .expect(400);
+      expect(createdUsers).toEqual([]);
+    },
+  );
+
+  it.each([20, 2000])(
+    'CT-RF02-09 aceita fronteira válida de %i caracteres',
+    async (length) => {
+      await request(app.getHttpServer())
+        .post('/artistas')
+        .send({ ...validArtist, bio: 'a'.repeat(length) })
+        .expect(201);
+    },
+  );
+
+  it.each([5, 129])(
+    'CT-RF02-07 rejeita tamanho inválido de senha %i',
+    async (length) => {
+      await request(app.getHttpServer())
+        .post('/artistas')
+        .send({ ...validArtist, senha: 'a'.repeat(length) })
+        .expect(400);
+    },
+  );
+
+  it.each([10, 2000])(
+    'CT-RF11-01/02 permite limites válidos de mensagem %i',
+    async (length) => {
+      await request(app.getHttpServer())
+        .post('/feedbacks')
+        .send({ mensagem: 'a'.repeat(length), tipo: 'Outro', nota: 1 })
+        .expect(201);
+    },
+  );
+
+  it('CT-RF11-04 bloqueia mensagem acima do máximo', async () => {
+    await request(app.getHttpServer())
+      .post('/feedbacks')
+      .send({ mensagem: 'a'.repeat(2001), tipo: 'Outro', nota: 5 })
+      .expect(400);
   });
 });

@@ -1,6 +1,6 @@
 # Documentação de Acessibilidade (WCAG 2.1 AA)
 
-> **Revisão documental de 23/10/2026:** WCAG 2.1 AA é a baseline/alvo, não uma conformidade integral comprovada. As melhorias abaixo registram implementação; a rodada UX de 07/10 corrigiu também modais/labels administrativos e retorno de foco. Zoom real, leitor de tela, contraste completo e percurso integral continuam pendentes no `codex/output/FRONTEND_MANUAL_TEST_CHECKLIST.md`. A migração de URL desta rodada não reexecutou auditoria de acessibilidade nem alterou layout.
+> **Rodada de qualidade de 23/10/2026:** WCAG 2.1 AA permanece alvo, sem declaração de conformidade integral. Foram executadas 40 combinações de rota/largura, teclado em logins/menus/modais, wizard a 320px e contraste computado de texto. Home preserva sessão e os dois logins têm mostrar/ocultar senha. Zoom real de 200%, leitor de tela, hero/gradientes e homologação com usuários continuam pendentes. Evidências e limites em [FRONT_QUALITY_A11Y_RESPONSIVE_REPORT.md](codex/output/FRONT_QUALITY_A11Y_RESPONSIVE_REPORT.md). O histórico de migração e testes anteriores não substitui essa auditoria.
 
 Este documento descreve as melhorias de acessibilidade implementadas na aplicação **Cadastro Municipal de Artistas**, tendo como alvo as **Diretrizes de Acessibilidade para Conteúdo Web (WCAG 2.1 Nível AA)**.
 
@@ -16,24 +16,27 @@ Garantir que a plataforma seja totalmente acessível a todas as pessoas, incluin
 
 ### 1. ⌨️ Navegação por Teclado e Foco Visível
 - **Estilo de Foco Global (`:focus-visible`):** Adicionado anel de foco destacado (roxo `#7C3AED` com sombra externa) em botões, links, cards interativos e elementos acionáveis.
-- **Interatividade em Elementos Personalizados:** Cards de artistas no catálogo, botões de filtro e opções de tag foram atualizados com `tabIndex={0}` e suporte a gatilhos via teclas <kbd>Enter</kbd> e <kbd>Espaço</kbd>.
+- **Interatividade:** O card usa `article` e um botão nativo de abrir perfil, separado do favorito. Filtros e tags usam botões nativos. Enter e Espaço acionam esses controles sem depender de um `role="button"` contendo outros controles interativos.
 
 ### 2. 🪟 Modais e Diálogos Interativos (Portal)
 - **Atributos de Diálogo:** O modal de detalhes do artista conta com `role="dialog"`, `aria-modal="true"` e `aria-labelledby`.
 - **Trap de Foco (Focus Trap):** A navegação por <kbd>Tab</kbd> permanece contida no modal enquanto ele estiver aberto.
 - **Fechamento via Teclado:** Suporte para fechar o modal pressionando a tecla <kbd>Escape</kbd>.
 - **Gerenciamento de Foco:** O foco é movido automaticamente para o botão de fechar ao abrir o modal.
+- **Retorno e rolagem:** Escape devolve foco ao acionador; o hook comum bloqueia a rolagem de fundo e restaura seu estado ao fechar. Perfil e editor administrativo foram percorridos por Tab/Shift+Tab e conferidos a 320px.
 
 ### 3. 📝 Formulários Acessíveis e Autocompletar
-- **Associação de Rótulos:** Todos os inputs possuem `label` vinculado via `htmlFor` e `id`.
+- **Associação de Rótulos:** Formulários auditados usam `label` vinculado por `htmlFor`/`id`; isso não equivale a uma verificação completa por leitor de tela de todos os estados.
 - **Preenchimento Automático (`autocomplete`):** Atributos adicionados em campos padrão (`name`, `email`, `tel`, `address-level2`, `new-password`, etc.).
-- **Mensagens de Erro Sonoras (`role="alert"` / `aria-live`):** Alertas de erro e mensagens de validação são anunciados imediatamente para usuários de leitores de tela.
+- **Mensagens de Erro (`role="alert"` / `aria-live`):** Estão marcadas para anúncio; anúncio sonoro real ainda depende de teste com leitor de tela. Bio exige 20..2000 caracteres e recebe foco quando inválida.
 - **Campos Obrigatórios:** Marcados explicitamente com `required` e `aria-required="true"`.
 - **Barra de Progresso (Wizard Steps):** Etapas do cadastro utilizam `role="progressbar"`, `aria-valuenow`, `aria-current="step"` e suporte completo via teclado.
 
 ### 4. 🎨 Contraste de Cores e Tipografia
-- **Texto Secundário (`--text-secondary`):** Ajustado de `#6B7280` para `#4B5563` (razão de contraste 6.1:1 sobre fundo claro).
-- **Texto Suavizado (`--text-muted`):** Ajustado de `#9CA3AF` para `#6B7280` (razão de contraste 4.5:1).
+- **Texto Secundário (`--text-secondary`):** `#4B5563`, com razão de contraste 7,56:1 sobre branco.
+- **Texto Suavizado (`--text-muted`):** Atualizado para `#626B7A`: 4,74:1 sobre `#F1EFFE`. O valor anterior `#6B7280` atingia apenas 4,26:1 nesse fundo.
+- **Cores semânticas:** Verde `#047857` com branco 5,48:1; vermelho `#B91C1C` sobre branco 6,47:1; CTA laranja `#C2410C` com branco 5,18:1. Roxo principal preservado. Borda de input `#8B7AA9` atinge 3,39:1 sobre fundo secundário.
+- **Tipografia:** Inventário de todos os nove CSS; body/inputs 16px, labels/ações principais 14px e auxiliares prioritários 13px. Selos compactos menores permanecem sujeitos à revisão com zoom.
 - **Badges de Categoria:** Ajustados para tom roxo escuro (`#5B21B6`) aumentando a legibilidade.
 
 ### 5. 🔊 Semântica HTML e Leitores de Tela

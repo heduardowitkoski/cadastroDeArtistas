@@ -19,7 +19,7 @@
 }
 .artista-header .header-content { height: 64px; }
 .artista-header-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--purple-primary);
   font-weight: 600;
 }
@@ -71,7 +71,7 @@
   flex-shrink: 0;
 }
 .artista-status-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
-.artista-status-sub { font-size: 12px; color: var(--text-secondary); }
+.artista-status-sub { font-size: 13px; color: var(--text-secondary); }
 .artista-status-pct {
   margin-left: auto;
   font-size: 13px;
@@ -136,10 +136,10 @@
 }
 .artista-step-label.active { color: var(--purple-primary); }
 .artista-step-line {
-  flex: 0 0 40px;
+  flex: 1; min-width: 8px;
   height: 2px;
   background: var(--border);
-  margin: 0 12px;
+  margin: 0 8px;
 }
 .artista-step-line.done { background: var(--teal); }
 
@@ -166,7 +166,7 @@
 }
 
 /* Categorias Sedac/RS */
-.categoria-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.categoria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px,100%), 1fr)); gap: 12px; }
 .categoria-btn {
   display: flex;
   flex-direction: column;
@@ -177,7 +177,7 @@
   border: 1px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -204,7 +204,7 @@
   border: 1px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -223,7 +223,7 @@
 .artista-section textarea {
   width: 100%;
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid #8B7AA9;
   border-radius: var(--radius-lg);
   padding: 16px;
   color: var(--text-primary);
@@ -253,7 +253,7 @@
   border: 1px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -269,7 +269,7 @@
 }
 
 .cpf-cnpj-hint {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--purple-primary);
   font-weight: 600;
   margin-top: 4px;
@@ -280,7 +280,7 @@
   display: block;
   margin-top: 4px;
   color: var(--rose);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -290,7 +290,7 @@
 }
 
 /* Uploads de mídia interativos */
-.upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+.upload-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px,100%), 1fr)); gap: 16px; margin-top: 16px; }
 .upload-card {
   display: flex;
   flex-direction: column;
@@ -316,7 +316,7 @@
   flex-shrink: 0;
 }
 .upload-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
-.upload-subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+.upload-subtitle { font-size: 13px; color: var(--text-muted); line-height: 1.3; }
 .upload-btn {
   display: inline-flex;
   align-items: center;
@@ -327,7 +327,7 @@
   border: 1px solid var(--purple-primary);
   background: var(--purple-glow);
   color: var(--purple-primary);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
@@ -338,7 +338,7 @@
 }
 .upload-btn:focus-visible { outline: 3px solid var(--purple-primary); outline-offset: 2px; }
 .upload-file-name {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--teal);
   font-weight: 600;
   word-break: break-all;
@@ -379,7 +379,7 @@
   margin: 16px 0;
 }
 .artista-lgpd {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   line-height: 1.7;
   border-top: 1px solid var(--border);
@@ -401,10 +401,10 @@
   padding: 10px 14px;
   margin-bottom: 14px;
 }
-.senha-hint { font-size: 12px; color: var(--rose); margin-top: 6px; display: block; }
+.senha-hint { font-size: 13px; color: var(--rose); margin-top: 6px; display: block; }
 .cadastro-login-aviso {
   margin-top: 18px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   border-top: 1px solid var(--border);
   padding-top: 14px;
@@ -426,7 +426,7 @@
 
 /* ─── Preview ─── */
 .artista-preview { width: 300px; flex-shrink: 0; position: sticky; top: 88px; }
-.preview-label { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+.preview-label { font-size: 13px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
 .preview-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -454,8 +454,8 @@
 }
 .preview-body { padding: 16px; }
 .preview-name { font-size: 18px; font-weight: 700; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 2px; }
-.preview-city { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
-.preview-bio { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.preview-city { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+.preview-bio { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .preview-avail { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
 .preview-avail span {
   font-size: 11px;
@@ -474,7 +474,7 @@
   background: var(--purple-primary);
   color: white;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
@@ -482,7 +482,7 @@
 .preview-cta:hover { background: var(--purple-dark); }
 .preview-dica {
   margin-top: 16px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   background: var(--purple-glow);
   border: 1px solid rgba(124,58,237,0.2);
@@ -516,9 +516,12 @@
 @media (max-width: 640px) {
   .artista-status-pct { display: none; }
   .form-grid-2 { grid-template-columns: 1fr; }
-  .artista-step-line { flex-basis: 24px; }
+  .artista-step-line { flex-basis: auto; }
   .artista-step-label { display: none; }
   .artista-card, .artista-card .artista-container { padding: 20px; }
   .artista-nav-actions { width: 100%; flex-wrap: wrap; }
   .artista-nav-actions .btn { flex: 1 1 100%; justify-content: center; }
 }
+
+@media (max-width: 768px) { .artista-header .header-content { height: auto; min-height: 76px; } .artista-header .brand-title { font-size: 14px; line-height: 1.4; } }
+@media (max-width: 640px) { .artista-header .artista-avatar { display: none; } }

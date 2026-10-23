@@ -156,7 +156,7 @@
   gap: 6px;
   padding: 8px 16px;
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   border: 1px solid var(--border);
   background: var(--bg-card);
@@ -274,7 +274,7 @@
   color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.artist-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.artist-card-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
 .artist-cat-badge {
   display: inline-flex;
   align-items: center;
@@ -290,7 +290,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 .artist-card-bio {
@@ -309,12 +309,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 36px;
+  min-height: 40px;
   background: var(--purple-primary);
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -324,7 +324,7 @@
 .artist-card-cta:focus-visible { outline: 3px solid var(--purple-dark); outline-offset: 2px; }
 
 /* ─── Sidebar ─── */
-.catalog-sidebar { width: 288px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+.catalog-sidebar { width: 288px; min-width: 0; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
 
 .featured-card {
   background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
@@ -348,7 +348,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #F97316;
+  background: #C2410C;
   color: white;
   font-size: 11px;
   font-weight: 700;
@@ -367,20 +367,20 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   line-height: 1.2;
 }
-.featured-sub { font-size: 12px; color: #DDD6FE; margin-top: 2px; }
+.featured-sub { font-size: 13px; color: #DDD6FE; margin-top: 2px; }
 .featured-body { padding: 16px; }
-.featured-bio { font-size: 12px; color: #E9D5FF; line-height: 1.6; margin-bottom: 12px; }
+.featured-bio { font-size: 13px; color: #E9D5FF; line-height: 1.6; margin-bottom: 12px; }
 .featured-stats { display: flex; gap: 32px; margin-bottom: 14px; }
 .featured-stat-value { font-size: 18px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; }
-.featured-stat-label { font-size: 11px; color: #C4B5FD; }
+.featured-stat-label { font-size: 13px; color: #C4B5FD; }
 .featured-cta {
   width: 100%;
-  height: 36px;
+  min-height: 40px;
   background: var(--bg-card);
   color: var(--purple-primary);
   border: none;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -423,26 +423,26 @@
 }
 .cta-card > svg { color: #F97316; margin-bottom: 8px; }
 .cta-card h4 { font-size: 14px; font-weight: 700; color: #7C2D12; margin-bottom: 4px; }
-.cta-card p { font-size: 12px; color: #C2410C; line-height: 1.6; margin-bottom: 14px; }
+.cta-card p { font-size: 14px; color: #C2410C; line-height: 1.6; margin-bottom: 14px; }
 .cta-card-btn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 36px;
-  background: #F97316;
+  min-height: 40px;
+  background: #C2410C;
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
   font-family: 'Inter', sans-serif;
   transition: var(--transition);
 }
-.cta-card-btn:hover { background: #EA580C; }
+.cta-card-btn:hover { background: #9A3412; }
 
 /* ─── Modal ─── */
 .modal-overlay {
@@ -457,12 +457,14 @@
   padding: 24px;
 }
 .modal-card {
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   max-width: 560px;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden; overflow-y: auto;
   position: relative;
   animation: slideUp 0.25s ease;
   box-shadow: 0 20px 60px rgba(26,16,53,0.25);

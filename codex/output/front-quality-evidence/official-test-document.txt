@@ -1,0 +1,525 @@
+
+--- PAGINA 1 ---
+Documento de Testes e Validação
+Cadastro Municipal de Artistas
+Entidade Demandante Conselho Municipal de Políticas Públicas (Bagé/RS)
+Equipe Eduardo Ritta Martins
+Heduardo Witskoski Barcelos da Rocha
+Matheus Fagundes de Oliveira
+Thálys Lemos Correa
+Coordenadores Carlos Michel Betemps
+Leonardo Bidese de Pinho
+1. Introdução
+Este documento define a estratégia, o planejamento e os casos de teste que verificam e validam o sistema Cadastro
+Municipal de Artistas frente aos requisitos, às regras de negócio e aos casos de uso especificados no Documento de
+Requisitos do Sistema. Ele operacionaliza, em casos de teste executáveis, a Estratégia de Verificação e Validação já definida
+naquele documento.
+O Cadastro Municipal de Artistas é um sistema web que permite o cadastro autônomo de artistas do município de Bagé, no
+Rio Grande do Sul. O sistema proposto diferencia-se por permitir que o próprio artista realize seu cadastro de forma
+autônoma, informando dados de contato e portfólio, disponibilizando para consulta pública por meio de um catálogo. A
+solução será desenvolvida com front-end em React e TypeScript, back-end em NestJS e banco de dados Supabase, seguindo
+as diretrizes da Lei Geral de Proteção de Dados (LGPD). O desenvolvimento seguirá métodos ágeis, com ajustes conforme o
+feedback dos gestores e demandantes, utilizando o Trello para organização de tarefas.
+A seguir são apresentadas a fundamentação e estratégia de testes que serão utilizados para avaliar o sistema, considerando
+que os casos de teste deste documento cobrem tanto a verificação validade conforme a especificação quanto a validação
+conforme a necessidade real do usuário. A primeira dimensão é coberta por meio de testes funcionais e estruturais,
+enquanto a segunda é por meio de testes de aceitação e de usabilidade com participantes reais. Como é inviável obter um
+sistema livre de qualquer erro é inviável testar exaustivamente todas as combinações de entrada, adota-se a política de que
+toda função que recebe uma entrada do usuário deve ser testada tanto com entradas corretas quanto incorreção,
+priorizando os requisitos de prioridade superior na hierarquia de requisitos.
+2. Planejamento dos Testes
+O ambiente de testes reproduz as quatro camadas hospedadas separadamente na arquitetura de produção, exigindo testes
+de integração entre camadas além de testes funcionais isolados por camada.
+Figura 1 — Ambiente de testes.
+Será utilizado uma base de homologação com 1000 registros fictícios de artistas (distribuídos entre os status Pendente,
+Aprovado e Reprovado) para os testes de desempenho e busca, e conjuntos de dados representando cada classe de
+equivalência identificada nos casos de teste.
+
+--- PAGINA 2 ---
+- Critério de entrada: A funcionalidade correspondente ao requisito está implementada e revisada tecnicamente,
+com o respectivo caso de uso do Documento de Requisitos já especificado.
+- Critério de saída: 100% dos registros que buscam atender um requisito de prioridade alta possuem casos de testes
+executados e sem falhas críticas abertas; a conformidade com a LGPD foi verificada e os resultados estão
+documentados.
+Um caso de testes é aprovado quando o resultado obtido corresponde integralmente ao resultado esperado, é reprovado
+quando o resultado esperado e o resultado obtido divergem e é bloqueado quando sua pré-condição não pôde ser satisfeita
+ou quando a sua execução não pode prosseguir devido a um fator externo ou impedimento. Casos reprovados em requisitos
+de prioridade alta impedem a promoção da funcionalidade para o ambiente de produção até nova correção e reteste.
+Cada caso de teste é identificado por um ID no formato CT-RFxx-nn (requisitos funcionais) ou CT-RNFxx-nn (requisitos não
+funcionais). A execução de cada caso é registrada segunda a ficha de execução a seguir:
+Campo O que registrar
+ID Identificador do caso de teste, ex.: CT-RF02-04.
+Requisito
+Requisito funcional ou não funcional associado, ex.: RF-02.
+relacionado
+Caso de uso Caso de uso do Documento de Requisitos exercitado pelo teste, ex.: UC-01.
+Tipo de teste Ex.: Funcional — Caixa Preta / Partição; Usabilidade; Desempenho; Inspeção.
+Objetivo O que o teste pretende verificar.
+Pré-condição Ambiente, dados ou configuração necessários antes da execução.
+Entrada /
+Dados utilizados e passos executados.
+Procedimento
+Resultado
+Critério que deve ser atendido, conforme o requisito.
+esperado
+Resultado obtido Preenchido durante a execução.
+Situação Aprovado, Reprovado ou Bloqueado.
+Evidência Screenshot, log, relatório ou outro registro da execução.
+Defeito
+ID da ocorrência registrada, se houver.
+relacionado
+3. Casos de Teste Funcionais e Não Funcionais
+Essa seção apresenta os casos de teste derivados dos critérios de aceitação de cada requisito, organizados pelas mesmas
+áreas funcionais do sistema. Requisitos não funcionais verificáveis por execução direta (RNF-01, RNF-05, RNF-06, RNF-07 e
+RNF-09) também são detalhados aqui; os demais RNFs, por exigirem ambiente de carga, usuários reais ou verificação
+jurídico-técnica de LGPD, são tratados nas seções posteriores.
+3.1 Formulário de cadastro autônomo (RF-01, RF-02, RF-03)
+3.1.1 RF-01 — Cadastro autônomo de artistas
+O requisito determina que o artista consiga realizar seu próprio cadastro com nome, área artística, contato, fotos e portfólio,
+e que o cadastro seja salvo com status “Pendente” no banco de dados.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Cadastro completo com Todos os campos obrigatórios preenchidos Cadastro criado com sucesso e armazenado com
+CT-RF01-01
+dados válidos corretamente status “Pendente”
+Cadastro sem intervenção Cadastro concluído sem necessidade de
+CT-RF01-02 Artista realiza todo o fluxo sozinho
+administrativa administrador
+
+--- PAGINA 3 ---
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Verificação da
+CT-RF01-03 Cadastro válido enviado Dados informados existem corretamente no banco
+persistência dos dados
+Confirmação após Sistema informa que o cadastro foi enviado para
+CT-RF01-04 Cadastro concluído
+cadastro análise
+3.1.2 RF-02 — Validação de dados de cadastro
+O critério exige bloqueio das submissões inválidas e mensagem específica por campo. Cada classe de erro (obrigatoriedade,
+e-mail, telefone, links, senha e descrição/minibio) é considerada um caso de teste distinto. Para a definição das entradas,
+aplica-se a técnica de particionamento de equivalência, especialmente ao campo de e-mail, cujas entradas são divididas nas
+classes: válido, inválido e já cadastrado. Também são considerados os valores-limite definidos nos requisitos, sendo de 6
+caracteres o tamanho mínimo da senha e de 20 caracteres o tamanho mínimo da descrição.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Campos obrigatórios
+CT-RF02-01 preenchidos Dados válidos Sistema permite avançar/enviar
+corretamente
+Sistema bloqueia avanço e informa erro no campo
+CT-RF02-02 Nome obrigatório vazio Nome = vazio
+nome
+CT-RF02-03 E-mail vazio E-mail = vazio Sistema bloqueia avanço
+E-mail em formato
+CT-RF02-04 “teste@” Sistema bloqueia avanço e informa e-mail inválido
+inválido
+CT-RF02-05 Telefone inválido Valor fora do formato permitido Sistema bloqueia avanço e informa erro
+Sistema bloqueia ou sinaliza formato inválido,
+CT-RF02-06 Link inválido “abc123” em campo de site
+conforme implementação
+CT-RF02-07 Senha abaixo do mínimo Senha com menos de 6 caracteres Sistema bloqueia avanço
+Senha e confirmação
+CT-RF02-08 “abcdef” / “abcdeg” Sistema bloqueia avanço
+diferentes
+Descrição artística abaixo
+CT-RF02-09 Texto com menos de 20 caracteres Sistema bloqueia avanço
+do mínimo
+Sistema impede novo cadastro e orienta acesso à
+CT-RF02-10 E-mail já cadastrado E-mail existente
+Área do Artista
+3.1.3 RF-03 — Upload de fotos e vídeos
+O requisito estabelece vínculo do arquivo ao cadastro, armazenamento no Supabase, limite máximo de 10 MB e vídeo de
+até 30 segundos.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF03-01 Upload de imagem válida Imagem em formato permitido e < 10 MB Arquivo armazenado e vinculado ao artista
+Upload no limite de
+CT-RF03-02 Arquivo com 10 MB Upload aceito
+tamanho
+CT-RF03-03 Upload acima do limite Arquivo > 10 MB Upload rejeitado
+Upload de vídeo dentro
+CT-RF03-04 Vídeo ≤ 30 s Upload aceito
+do limite
+CT-RF03-05 Vídeo acima do limite Vídeo > 30 s Upload rejeitado
+Arquivo em formato não
+CT-RF03-06 Extensão inválida Upload rejeitado
+permitido
+CT-RF03-07 Exibição após aprovação Artista aprovado com mídia cadastrada Fotos/vídeos disponíveis no catálogo/perfil
+CT-RF03-08 Cadastro sem portfólio Nenhuma foto/site/Instagram Cadastro continua permitido (RN-09)
+
+--- PAGINA 4 ---
+3.2 Catálogo público (RF-04, RF-05)
+3.2.1 RF-04 — Catálogo público em formato de mural
+O requisito determina que apenas artistas aprovados apareçam publicamente, validando também a RN-01.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Exibição de artista
+CT-RF04-01 Status = Aprovado Artista aparece no mural
+aprovado
+CT-RF04-02 Artista pendente Status = Pendente Artista não aparece
+CT-RF04-03 Artista rejeitado Status = Rejeitado Artista não aparece
+Cadastro anteriormente aprovado e
+CT-RF04-04 Artista desaprovado Artista deixa de aparecer
+depois rejeitado
+CT-RF04-05 Acesso sem autenticação Visitante não logado Catálogo permanece acessível
+Cadastro muda de Pendente para
+CT-RF04-06 Aprovação administrativa Artista passa a aparecer sem intervenção adicional
+Aprovado
+3.2.2 RF-05 — Página de detalhes do artista
+O requisito exige que a página apresente integralmente os dados públicos do cadastro aprovado.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF05-01 Abrir perfil pelo catálogo Selecionar artista Página de detalhes é aberta
+CT-RF05-02 Conferir nome Comparar perfil com cadastro Nome corresponde ao registrado
+CT-RF05-03 Conferir categoria Comparar perfil com cadastro Categoria corresponde
+CT-RF05-04 Conferir contato Comparar perfil com cadastro Dados públicos correspondem
+CT-RF05-05 Conferir mídia Artista possui fotos/vídeos Arquivos corretos são apresentados
+Campos opcionais Página funciona sem erro e sem informação
+CT-RF05-06 Artista sem site/Instagram
+ausentes inventada
+3.3 Ferramenta de busca (RF-06)
+O requisito permite busca por nome e/ou categoria, inclusive de forma combinada, e estabelece tempo de até 10 segundos
+para os resultados. A RN-02 esclarece que busca textual e categoria devem ser combinadas e que, na ausência de texto,
+apenas a categoria é utilizada.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF06-01 Busca por nome exato Nome completo Artista correspondente aparece
+CT-RF06-02 Busca textual parcial Parte do nome Registros compatíveis aparecem
+CT-RF06-03 Busca por categoria “Música” Apenas artistas da categoria
+CT-RF06-04 Nome + categoria “João” + Música Apenas registros que atendam aos dois filtros
+Busca por palavra-
+CT-RF06-05 Tag existente Artistas relacionados aparecem
+chave/tag
+CT-RF06-06 Busca inexistente Texto sem correspondência Sistema informa que nenhum artista foi encontrado
+Busca sem texto e com
+CT-RF06-07 Texto vazio + “Teatro” Apenas o filtro de categoria é aplicado
+categoria
+CT-RF06-08 Tempo de resposta Busca em base preparada Resultado retorna em até 10 segundos
+CT-RF06-09 Cadastro não aprovado Busca por artista pendente Artista não aparece
+3.4 Painel administrativo (RF-08, RF-10, RF-11)
+
+--- PAGINA 5 ---
+3.4.1 RF-08 — Aprovação de cadastro
+O critério formal é que todos os cadastros aprovados tenham o status alterado e apareçam imediatamente no catálogo.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Aprovar cadastro
+CT-RF08-01 Status inicial: Pendente Status muda para Aprovado
+pendente
+Exibição pública após
+CT-RF08-02 Pendente → Aprovado Registro aparece no catálogo
+aprovação
+CT-RF08-03 Busca após aprovação Pendente → Aprovado Artista passa a aparecer na busca
+CT-RF08-04 Verificar persistência Cadastro aprovado Novo status fica salvo no banco
+Usuário não autorizado
+CT-RF08-05 Visitante ou artista Operação é negada
+tenta aprovar
+3.4.2 RF-10 — Exclusão / inativação
+A distinção entre as ações “Desaprovar” e “Excluir” está no efeito sobre o cadastro. A desaprovação retira o artista do
+catálogo público, mas mantém seu registro no sistema, enquanto a exclusão remove o cadastro de forma definitiva.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF10-01 Excluir artista aprovado Administrador confirma exclusão Artista desaparece do catálogo
+Consultar pela busca após
+CT-RF10-02 Pesquisar artista excluído Nenhum resultado
+exclusão
+CT-RF10-03 Cancelar exclusão Cancelar ação antes de confirmar Cadastro permanece
+Diferenciar excluir de
+CT-RF10-04 Desaprovar artista Registro continua existente
+desaprovar
+Desaprovar artista
+CT-RF10-05 Alterar status para rejeitado Artista sai do catálogo sem ser apagado
+aprovado
+3.4.3 RF-11 — Formulário de feedback público
+O documento especifica que nome e e-mail são opcionais e que feedbacks não devem ser exibidos publicamente.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+Feedback válido
+CT-RF11-01 Nome, e-mail, nota, tipo e mensagem Feedback salvo
+identificado
+CT-RF11-02 Feedback anônimo Sem nome e e-mail Envio permitido
+CT-RF11-03 Envio sem autenticação Visitante não logado Feedback aceito
+Mensagem abaixo do
+CT-RF11-04 Texto insuficiente Envio bloqueado
+mínimo
+CT-RF11-05 Consulta administrativa Feedback previamente enviado Feedback aparece no painel
+Consulta pública aos
+CT-RF11-06 Visitante tenta visualizar Dados não são apresentados publicamente
+feedbacks
+CT-RF11-07 Remoção de feedback Administrador exclui avaliação Registro é definitivamente removido
+Cancelamento da
+CT-RF11-08 Administrador cancela confirmação Feedback permanece
+remoção
+3.5 Autenticação e controle de acesso (RF-07)
+Decorre diretamente da exigência de que todos os acessos não autenticados sejam negados.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF07-01 Login válido Credenciais administrativas válidas Painel é liberado
+
+--- PAGINA 6 ---
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF07-02 Senha incorreta Usuário válido + senha errada Acesso negado
+CT-RF07-03 Usuário inexistente Credenciais inexistentes Acesso negado
+Usuário não autenticado abre rota do
+CT-RF07-04 Acesso direto à URL Redirecionamento/login ou acesso negado
+painel
+Logout seguido de tentativa de acesso ao
+CT-RF07-05 Sessão encerrada Acesso negado
+painel
+Usuário autenticado sem
+CT-RF07-06 autorização Conta não administrativa Funções administrativas não são liberadas
+administrativa
+3.6 Edição de cadastros — administrativa e pelo artista (RF-09)
+O documento contempla dois grupos: edição administrativa e autoedição pelo artista. A volta do status para “Pendente” e
+o bloqueio da edição do e-mail estão formalizados nas RN-06 e RN-07.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RF09-01 Administrador edita nome Alterar nome e salvar Alteração persistida
+Administrador edita
+CT-RF09-02 Alterar categoria Catálogo reflete a atualização
+categoria
+CT-RF09-03 Artista edita cadastro Alterar informação própria Alteração salva
+Artista edita cadastro
+CT-RF09-04 Salvar alteração Status retorna para Pendente
+aprovado
+Artista tenta alterar e-
+CT-RF09-05 Editar e-mail Campo permanece bloqueado
+mail
+Falha de conexão durante
+CT-RF09-06 Interromper comunicação Alteração não é persistida e erro é informado
+edição
+3.7 Exportação de dados (RNF-09)
+O requisito determina que administradores possam exportar dados dos artistas para planejamento de eventos,
+chamamentos públicos e relatórios. Critério: 100% das exportações de cadastros aprovados geram arquivos utilizáveis.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF09- Exportação de cadastros Administrador exporta os registros
+Arquivo é gerado
+01 aprovados aprovados
+CT-RNF09- Conferência dos dados Comparar arquivo com os dados do
+Dados correspondem aos registros aprovados
+02 exportados sistema
+CT-RNF09- Exportação para
+Utilizar o arquivo para o fim previsto Arquivo é utilizável
+03 planejamento de eventos
+CT-RNF09- Exportação com múltiplos
+Exportar base com vários artistas Todos os registros aprovados são incluídos
+04 registros
+CT-RNF09- Exportação sem registros Tentar exportar quando não há registros Sistema apresenta comportamento definido para
+05 aprovados aprovados esse cenário
+Métrica: taxa de exportações válidas = (exportações utilizáveis ÷ total de exportações avaliadas) × 100.
+Critério de aprovação: 100% das exportações avaliadas geram arquivos utilizáveis.
+3.8 Responsividade (RNF-01)
+O requisito determina que catálogo, formulário de cadastro e painel administrativo se adaptem a diferentes tamanhos de
+tela.
+
+--- PAGINA 7 ---
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF01- Acessar o catálogo em resolução definida Cards, textos e controles permanecem legíveis e
+Catálogo em tela pequena
+01 para teste utilizáveis
+CT-RNF01- Formulário de cadastro Campos e botões permanecem acessíveis, sem
+Percorrer as etapas do cadastro
+02 em tela pequena perda de conteúdo
+CT-RNF01- Painel administrativo em
+Acessar e utilizar as funções principais Interface permanece utilizável e legível
+03 tela pequena
+CT-RNF01-
+Catálogo em tela ampla Acessar o mural em resolução maior Layout se adapta sem comprometer a organização
+04
+CT-RNF01- Navegação entre Repetir as tarefas em todas as resoluções Todas as telas avaliadas atendem aos critérios de
+05 resoluções definidas usabilidade e legibilidade
+Métrica: cobertura de responsividade = (telas aprovadas nas resoluções avaliadas ÷ total de telas avaliadas) × 100.
+Critério de aprovação: 100% das telas avaliadas mantêm usabilidade e legibilidade nas resoluções definidas.
+3.9 Manutenibilidade (RNF-05)
+O requisito determina que o sistema siga boas práticas de engenharia de software.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF05- Revisar a estrutura dos módulos React e
+Organização dos módulos Módulos seguem as convenções definidas
+01 NestJS
+CT-RNF05-
+Padronização do código Revisar componentes, serviços e arquivos Código segue os padrões adotados pela equipe
+02
+CT-RNF05- Bibliotecas estão de acordo com as convenções
+Uso de bibliotecas Verificar dependências utilizadas
+03 definidas
+CT-RNF05- Selecionar módulos e verificar alterações
+Facilidade de manutenção Estrutura favorece manutenção e evolução
+04 isoladas
+CT-RNF05- Aplicar checklist de revisão em todos os
+Revisão técnica Todos os módulos avaliados atendem aos critérios
+05 módulos definidos
+Métrica: cobertura de manutenibilidade = (módulos aprovados ÷ total de módulos avaliados) × 100.
+Critério de aprovação: 100% dos módulos avaliados aprovados conforme as convenções da equipe.
+3.10 Documentação do sistema (RNF-06)
+O requisito exige documentação técnica e manual de uso para os servidores do painel administrativo.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF06-
+Instalação Consultar a documentação técnica Procedimentos de instalação estão documentados
+01
+CT-RNF06- Procedimentos de configuração estão
+Configuração Consultar a documentação técnica
+02 documentados
+CT-RNF06-
+Fluxos principais Consultar o manual de uso Fluxos principais estão documentados
+03
+CT-RNF06- Funcionalidades
+Consultar o manual Funcionalidades do painel estão documentadas
+04 administrativas
+CT-RNF06- Comparar documentação com os itens
+Verificação de cobertura Todos os itens previstos estão cobertos
+05 previstos
+Métrica: cobertura da documentação = (itens documentados ÷ total de itens previstos) × 100.
+Critério de aprovação: 100% dos itens previstos cobertos.
+3.11 Testabilidade (RNF-07)
+
+--- PAGINA 8 ---
+O requisito exige que as funcionalidades sejam cobertas por testes funcionais e de segurança, com verificação de integridade
+dos dados antes da implantação piloto.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF07- Documentação dos testes Todos os testes funcionais previstos estão
+Revisar este documento
+01 funcionais documentados
+CT-RNF07- Documentação dos testes Todos os testes de integridade previstos estão
+Revisar os registros de testes de banco
+02 de integridade documentados
+CT-RNF07- Documentação dos testes Todos os testes de conformidade previstos estão
+Revisar os registros de segurança
+03 de LGPD documentados
+CT-RNF07- Verificação da integridade
+Executar os testes definidos para o banco Dados permanecem consistentes
+04 dos dados
+CT-RNF07- Verificação da Conferir se os testes possuem requisitos
+Todos os testes possuem rastreabilidade
+05 rastreabilidade relacionados
+Métrica: cobertura de documentação de testes = (testes documentados ÷ total de testes previstos) × 100.
+Critério de aprovação: 100% dos testes funcionais, de integridade e de conformidade com a LGPD documentados.
+4. Testes de Integração e de Sistema
+A validação do sistema contempla a integração entre o front-end, desenvolvido como uma SPA em React e hospedado na
+Vercel, e o back-end, implementado em NestJS e hospedado na Render.com, verificando a correta comunicação dos
+parâmetros da API REST, especialmente nos requisitos RF-03, RF-06 e RF-07; a integração com o Supabase, incluindo a
+comunicação com o PostgreSQL e o Supabase Auth e a persistência de artistas e avaliações; os fluxos de ponta a ponta de
+cadastro, aprovação, edição e desaprovação, abrangendo os UC-01, UC-02 e UC-03 e garantindo o cumprimento das regras
+RN-01, RN-07 e RN-15, como a criação da conta, o registro inicial com status “Pendente”, a disponibilização no catálogo
+após aprovação, o retorno ao status “Pendente” após edição pelo artista e a retirada do catálogo em caso de desaprovação,
+sem exclusão do registro; e, por fim, o desempenho e a escalabilidade, assegurando que o catálogo público e as buscas
+sejam carregados em até 5 segundos mesmo diante de um volume considerável de cadastros, além de suportar
+aproximadamente 1.000 usuários e 100 artistas sem degradação significativa, conforme os requisitos RNF-03 e RNF-08.
+4.1 RNF-03 — Desempenho do catálogo e da busca
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF03- Carregamento do Preparar base com 1000 registros e
+Carregamento em até 5 segundos
+01 catálogo acessar o catálogo
+CT-RNF03- Executar busca em base com 1000
+Busca por nome Resultado em até 5 segundos
+02 registros
+CT-RNF03-
+Busca por categoria Executar filtro de categoria Resultado em até 5 segundos
+03
+CT-RNF03-
+Busca combinada Executar nome + categoria Resultado em até 5 segundos
+04
+CT-RNF03- Executar as buscas definidas
+Repetição de consultas Tempo permanece dentro do limite
+05 repetidamente
+CT-RNF03-
+Catálogo após aprovação Aprovar cadastro e consultar o catálogo Catálogo continua carregando em até 5 segundos
+06
+Métrica: taxa de conformidade = (execuções dentro de 5 s ÷ total de execuções) × 100.
+Critério de aprovação: catálogo e resultados de busca carregam em até 5 segundos sob a carga definida.
+4.2 RNF-08 — Escalabilidade
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF08- Preparar base com o volume definido para
+Volume de cadastros Sistema mantém funcionamento adequado
+01 teste
+
+--- PAGINA 9 ---
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF08- Simular acessos simultâneos conforme Sistema suporta a carga sem degradação
+Acessos simultâneos
+02 cenário definido significativa
+CT-RNF08- Consulta ao catálogo sob
+Executar consultas durante a simulação Catálogo permanece funcional
+03 carga
+CT-RNF08-
+Busca sob carga Executar buscas durante a simulação Resultados continuam sendo retornados
+04
+CT-RNF08-
+Integridade após carga Verificar dados após a simulação Dados permanecem consistentes
+05
+Métricas: número de usuários simultâneos suportados; tempo de resposta; taxa de erros; integridade dos dados após o
+teste.
+Critério de aprovação: suportar o público-alvo estimado sem degradação significativa.
+5. Testes de Integridade e Segurança
+Verificação da consistência do esquema Supabase (tabelas de artistas e feedbacks) e das regras de integridade referencial,
+incluindo os testes CT-RNF07-04. A validação de entradas reforça os testes de RF-02: toda entrada do usuário deve ser
+validada tanto no front-end quanto no back-end, impedindo a persistência de dados incompletos ou incorretos mesmo em
+caso de contorno da validação da interface. O controle de acesso reforça os testes de RF-07: nenhuma funcionalidade
+administrativa deve ser acessível sem autenticação válida, e a autorização deve ser verificada no back-end, não apenas
+ocultada na interface.
+O requisito exige tratamento adequado dos dados pessoais e controle de acesso ao banco. Critério: nenhum dado pessoal
+deve ser exposto publicamente antes da aprovação. Tipo de teste: segurança / integração / auditoria de configuração.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF02- Cadastro pendente não Criar cadastro com status Pendente e
+Cadastro não aparece
+01 aparece publicamente consultar o catálogo
+Dados de cadastro
+CT-RNF02- Tentar consultar os dados públicos de um
+pendente não são Dados não são disponibilizados publicamente
+02 cadastro pendente
+expostos
+CT-RNF02- Acesso não autenticado Tentar acessar a rota administrativa sem
+Acesso negado
+03 ao painel login
+CT-RNF02- Acesso indevido a dados Usuário sem autorização tenta consultar
+Acesso negado
+04 administrativos dados administrativos
+CT-RNF02- Consulta às políticas de Configurações de acordo com as permissões
+Revisar as regras de acesso do Supabase
+05 acesso definidas
+CT-RNF02- Enviar feedback e consultar a plataforma
+Feedback não é público Feedback não aparece publicamente
+06 como visitante
+CT-RNF02- Dados públicos após Apenas os dados previstos como públicos são
+Aprovar cadastro e consultar o catálogo
+07 aprovação exibidos
+Métrica: exposições indevidas de dados = 0.
+Critério de aprovação: nenhuma exposição indevida identificada.
+Importante: este teste verifica o comportamento e as configurações técnicas do sistema. A conformidade jurídica integral
+com a LGPD exige também avaliação das práticas de tratamento de dados, não apenas testes técnicos. Consolida os
+resultados da seção anterior frente às disposições da Lei nº 13.709/2018, incluindo a verificação de que o Termo de Ciência
+e Autorização para Tratamento de Dados Pessoais é apresentado e registrado no momento do cadastro (RN-08).
+6. Execução e Registro dos Testes
+Cada caso de teste das seções anteriores é executado no ambiente de testes definido na Seção 2 na ordem de prioridade
+dos requisitos associados (Alta, Média, Baixa). O registro de falhas será preenchido durante a execução: resultado obtido
+
+--- PAGINA 10 ---
+de cada caso de teste, registrado na ficha de execução correspondente. Toda divergência entre resultado esperado e
+resultado obtido é registrada como defeito, com ID próprio, severidade (crítica, alta, média, baixa) e o caso de teste que a
+revelou. Defeitos corrigidos são reexecutados no mesmo caso de teste que os revelou antes de serem considerados
+encerrados, mantendo o vínculo de rastreabilidade entre defeito, caso de teste e requisito. Cada execução é acompanhada
+de evidência (screenshot, log ou relatório) permitindo auditoria posterior da cobertura de testes exigida pela RNF-07.
+7. Validação com Usuários
+Avaliar, com participantes reais, se a interface do sistema é clara, intuitiva e acessível para usuários com diferentes níveis
+de familiaridade tecnológica — operacionalizando o requisito RNF-04 (Consistência visual e usabilidade).
+• Artistas — realizam cadastro e edição do próprio perfil.
+• Servidores do Conselho Municipal de Políticas Públicas — realizam aprovação de cadastros no painel administrativo.
+• Público em geral — realiza busca no catálogo e envio de feedback.
+ID Cenário de Teste Entrada / Procedimento Resultado Esperado
+CT-RNF04- Solicitar que um participante realize um
+Cadastro por artista Tarefa concluída sem dificuldade relevante
+01 cadastro completo
+CT-RNF04-
+Edição de cadastro Solicitar que um artista altere seus dados Tarefa concluída sem dificuldade relevante
+02
+CT-RNF04- Solicitar que um servidor aprove um
+Aprovação administrativa Tarefa concluída sem dificuldade relevante
+03 cadastro
+CT-RNF04- Solicitar que um visitante encontre um
+Busca no catálogo Tarefa concluída sem dificuldade relevante
+04 artista por nome
+CT-RNF04- Solicitar que um visitante encontre artistas
+Busca por categoria Tarefa concluída sem dificuldade relevante
+05 de uma categoria
+CT-RNF04- Solicitar que um visitante envie uma
+Envio de feedback Tarefa concluída sem dificuldade relevante
+06 avaliação
+Métrica: taxa de conclusão = (tarefas concluídas sem dificuldade relevante ÷ total de tarefas avaliadas) × 100.
+Critério de aprovação: 100% das tarefas definidas concluídas sem dificuldades relevantes relatadas.
+Observação direta da execução das tarefas pelo participante, complementada por um breve questionário pós-tarefa
+(dificuldade percebida, sugestões de melhoria), registrado na ficha de execução de cada CT-RNF04. A análise das sugestões
+e melhorias serão preenchidas a partir do questionário pós-tarefa e das observações registradas durante a validação,
+consolidando sugestões para ajustes de interface antes da implantação piloto.
+8. Análise dos Resultados
+Os requisitos atendidos serão preenchidos ao final da execução, consolidando quais requisitos (RF e RNF) tiveram todos os
+seus casos de teste aprovados, assim como a lista de funcionalidades cujos casos de teste associados foram integralmente
+aprovados. Dessa mesma forma, serão registradas as falhas identificadas, defeitos e limitações já conhecidas da
+implementação atual ou aquelas desconhecidas. Por fim, as melhorias futuras também serão preenchidas ao final da
+execução do testes a partir da análise dos resultados, incluindo aquelas levantadas na validação com usuários.

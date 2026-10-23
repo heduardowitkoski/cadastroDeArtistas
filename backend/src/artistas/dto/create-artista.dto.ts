@@ -63,11 +63,11 @@ export class CreateArtistaDto {
   @MaxLength(500)
   area_atuacao: string;
 
-  @Transform(trimOptional)
-  @IsOptional()
+  @Transform(trimRequired)
   @IsString()
+  @MinLength(20)
   @MaxLength(2000)
-  bio?: string | null;
+  bio: string;
 
   @Transform(trimStringArray)
   @IsOptional()

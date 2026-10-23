@@ -1,7 +1,7 @@
+import { HomeButton } from "../../components/HomeButton";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { API_URL } from "../../lib/apiConfig";
-import { ChevronLeft, Palette, Star, Check, Loader, MessageSquareHeart } from "lucide-react";
+import { Palette, Star, Check, Loader, MessageSquareHeart } from "lucide-react";
 import "./Feedback.css";
 
 const TIPOS = ["Elogio", "Sugestão", "Crítica", "Outro"];
@@ -67,24 +67,22 @@ export default function Feedback() {
 
   if (success) {
     return (
-      <div className="feedback-page">
+      <main className="feedback-page">
         <div className="feedback-success">
           <div className="success-icon"><Check size={36} /></div>
           <h1>Obrigado pelo seu feedback!</h1>
           <p>Sua opinião é muito importante para que possamos melhorar cada vez mais a plataforma para a comunidade cultural de Bagé.</p>
-          <Link to="/" className="btn btn-primary">Voltar ao catálogo</Link>
+          <HomeButton />
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="feedback-page">
+    <main className="feedback-page">
       <div className="feedback-wrapper">
         <div className="cadastro-header">
-          <Link to="/" className="btn btn-secondary btn-sm">
-            <ChevronLeft size={15} /> Voltar ao catálogo
-          </Link>
+          <HomeButton />
           <div className="brand-icon-sm"><Palette size={18} /></div>
         </div>
 
@@ -186,6 +184,6 @@ export default function Feedback() {
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
