@@ -1,7 +1,7 @@
 import { HomeButton } from "../../components/HomeButton";
 import { useState } from "react";
 import { API_URL } from "../../lib/apiConfig";
-import { Palette, Star, Check, Loader, MessageSquareHeart } from "lucide-react";
+import { Star, Check, Loader, MessageSquareHeart } from "lucide-react";
 import "./Feedback.css";
 
 const TIPOS = ["Elogio", "Sugestão", "Crítica", "Outro"];

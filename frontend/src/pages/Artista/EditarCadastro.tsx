@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { API_URL } from "../../lib/apiConfig";
 import {
-  Star, Check, Loader, User, Save, LogOut, CheckCircle, AlertCircle,
+  Check, Loader, User, Save, LogOut, CheckCircle, AlertCircle,
   Upload, Image, FileText, Video, Headphones
 } from "lucide-react";
 import "../Cadastro/Cadastro.css";

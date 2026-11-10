@@ -10,7 +10,7 @@ import {
   validateCadastro,
 } from "../../lib/cadastroValidation";
 import {
-  ChevronRight, Star, Clock, CheckCircle, AlertCircle,
+  ChevronRight, Clock, CheckCircle, AlertCircle,
   Image, Upload, MapPin, Check,
   Loader, ArrowLeft, User, Sparkles, FileText
 } from "lucide-react";
