@@ -67,6 +67,18 @@ function formatAge(createdAt: string) {
   return `Há ${days} dias`;
 }
 
+function formatNotificationAge(createdAt: string) {
+  const timestamp = new Date(createdAt).getTime();
+  if (!Number.isFinite(timestamp)) return "Data indisponível";
+  const minutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60_000));
+  if (minutes === 0) return "Agora";
+  if (minutes < 60) return `há ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `há ${hours} ${hours === 1 ? "hora" : "horas"}`;
+  const days = Math.floor(hours / 24);
+  return `há ${days} ${days === 1 ? "dia" : "dias"}`;
+}
+
 type Tab = "Visão geral" | "Pendente" | "Aprovado" | "Rejeitado" | "Feedbacks";
 
 export default function AdminDashboard() {
@@ -84,8 +96,10 @@ export default function AdminDashboard() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const globalSearchRef = useRef<HTMLInputElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
   const didAutoSelectPending = useRef(false);
   const [pendingSearch, setPendingSearch] = useState("");
   const [pendingCategory, setPendingCategory] = useState("");
@@ -183,6 +197,22 @@ export default function AdminDashboard() {
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [profileMenuOpen]);
+
+  useEffect(() => {
+    if (!notificationsOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!notificationsRef.current?.contains(event.target as Node)) setNotificationsOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNotificationsOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [notificationsOpen]);
 
   useDialogFocus(Boolean(editingArtista), editDialogRef, () => { if (!submittingModal) setEditingArtista(null); });
   useDialogFocus(Boolean(deletingArtista), deleteArtistaRef, () => { if (!submittingModal) setDeletingArtista(null); });
@@ -329,6 +359,9 @@ export default function AdminDashboard() {
     Rejeitado: artistas.filter((a) => a.status === "Rejeitado").length,
     Feedbacks: feedbacks.length,
   };
+  const pendingNotifications = artistas
+    .filter((artist) => artist.status === "Pendente")
+    .sort((first, second) => new Date(first.created_at).getTime() - new Date(second.created_at).getTime());
 
   const normalizedGlobalSearch = globalSearch.trim().toLocaleLowerCase("pt-BR");
   const matchesArtistSearch = (artist: Artista) => !normalizedGlobalSearch ||
@@ -366,6 +399,10 @@ export default function AdminDashboard() {
   }, [artistas]);
 
   const pendentesRecentes = artistas.filter((a) => a.status === "Pendente").slice(0, 3);
+  const selectedArtistHasPhoto = Boolean(
+    selectedArtista?.foto_url &&
+    !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado"),
+  );
   const hoje = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
   const sidebarNav: { key: Tab; icon: React.ReactNode; label: string }[] = [
@@ -394,7 +431,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="admin-page">
+    <div className={`admin-page${tab === "Visão geral" ? " admin-page--overview" : ""}`}>
       <header className="admin-topbar">
         <button ref={menuButtonRef} className="admin-menu-toggle" type="button" aria-label={sidebarOpen ? "Fechar menu do painel" : "Abrir menu do painel"} aria-expanded={sidebarOpen} aria-controls="admin-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={20} aria-hidden="true" /></button>
         <form className={`admin-global-search${mobileSearchOpen ? " is-open" : ""}`} role="search" onSubmit={runGlobalSearch}>
@@ -405,12 +442,45 @@ export default function AdminDashboard() {
         </form>
         <div className="admin-topbar-actions">
           <button type="button" className="admin-mobile-search-toggle" aria-label="Abrir busca administrativa" aria-expanded={mobileSearchOpen} onClick={() => { setMobileSearchOpen((open) => !open); requestAnimationFrame(() => globalSearchRef.current?.focus()); }}><Search size={19} aria-hidden="true" /></button>
-          <button type="button" className="admin-notifications" aria-label={`${counts.Pendente} cadastros pendentes para analisar`} onClick={() => { setTab("Pendente"); setSelectedArtista(artistas.find((artist) => artist.status === "Pendente") || null); setSidebarOpen(false); }}>
-            <Bell size={19} aria-hidden="true" />
-            {counts.Pendente > 0 && <span className="notification-badge" aria-hidden="true" />}
-          </button>
+          <div className="admin-notifications-menu" ref={notificationsRef}>
+            <button type="button" className="admin-notifications" aria-label={`Notificações: ${counts.Pendente} cadastros pendentes`} aria-haspopup="dialog" aria-expanded={notificationsOpen} aria-controls="admin-notifications-popover" onClick={() => { setNotificationsOpen((open) => !open); setProfileMenuOpen(false); }}>
+              <Bell size={19} aria-hidden="true" />
+              {counts.Pendente > 0 && <span className="notification-badge" aria-hidden="true" />}
+            </button>
+            {notificationsOpen && <div id="admin-notifications-popover" className="admin-notifications-popover" role="dialog" aria-label="Notificações de cadastros pendentes">
+              <div className="notifications-popover-heading"><strong>Notificações ({counts.Pendente})</strong></div>
+              {pendingNotifications.length === 0 ? <p className="notifications-empty">Nenhum cadastro aguardando análise.</p> : <ul className="notifications-list">
+                {pendingNotifications.map((artist) => {
+                  const hasVisiblePhoto = artist.foto_url && !(artist.foto_url.startsWith("/artistas/") && artist.status !== "Aprovado");
+                  return <li key={artist.id}><button type="button" className="notification-item" onClick={() => {
+                    setTab("Pendente");
+                    setSelectedArtista(artist);
+                    setSelectedDrawerTab("overview");
+                    setGlobalSearch("");
+                    setPendingSearch("");
+                    setPendingCategory("");
+                    setPendingCity("");
+                    setPendingAvailabilityOnly(false);
+                    setNotificationsOpen(false);
+                    setSidebarOpen(false);
+                  }}>
+                    <span className="notification-avatar">{hasVisiblePhoto ? <img src={assetUrl(artist.foto_url!)} alt="" /> : <User size={16} aria-hidden="true" />}</span>
+                    <span className="notification-copy"><strong>Novo cadastro aguardando análise: {artist.nome_artistico || artist.nome}</strong><time dateTime={artist.created_at}>{formatNotificationAge(artist.created_at)}</time></span>
+                  </button></li>;
+                })}
+              </ul>}
+              <button type="button" className="notifications-view-all" onClick={() => {
+                setTab("Pendente");
+                setSelectedArtista(null);
+                setGlobalSearch("");
+                setPendingSearch("");
+                setNotificationsOpen(false);
+                setSidebarOpen(false);
+              }}>Ver todas as pendências</button>
+            </div>}
+          </div>
           <div className="admin-profile-menu" ref={profileMenuRef}>
-            <button type="button" className="admin-profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen((open) => !open)}>
+            <button type="button" className="admin-profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => { setProfileMenuOpen((open) => !open); setNotificationsOpen(false); }}>
               <span className="admin-avatar" aria-hidden="true">{(adminName || "AD").slice(0, 2).toLocaleUpperCase("pt-BR")}</span>
               <span className="admin-profile-label"><strong>{adminName || "Administrador"}</strong><small>Administrador</small></span>
               <ChevronDown size={16} aria-hidden="true" />
@@ -444,14 +514,14 @@ export default function AdminDashboard() {
           ))}
           </nav>
           <div className="sidebar-city-card">
-            <img src="/bage-catalog-hero.webp" alt="Vista da arquitetura histórica de Bagé ao entardecer" />
+            <img src="/admin-sidebar-bage.png" alt="Prédio histórico da Prefeitura de Bagé ao entardecer" />
             <span className="sidebar-city-overlay" aria-hidden="true" />
             <div><strong>Arte que movimenta Bagé</strong><p>Cultura, pessoas e oportunidades para uma cidade mais viva.</p></div>
           </div>
         </aside>
 
       {/* ─── Main ─── */}
-      <main className={`admin-main${tab === "Pendente" ? " admin-main--pending" : ""}`}>
+      <main className={`admin-main${tab === "Pendente" ? " admin-main--pending" : tab === "Visão geral" ? " admin-main--overview" : ""}`}>
         {actionError && !editingArtista && !deletingArtista && !deletingFeedback && <div className="admin-error" role="alert">{actionError}</div>}
         {tab === "Visão geral" ? (
           <>
@@ -460,7 +530,7 @@ export default function AdminDashboard() {
                 <h1>Olá, {adminName || "admin"}! <span className="dash-wave" aria-hidden="true">👋</span></h1>
                 <p className="dash-date"><CalendarDays size={13} /> {hoje}</p>
               </div>
-              <Link to="/" className="btn btn-secondary admin-home-link">Ver catálogo público</Link>
+              <Link to="/" className="btn btn-secondary admin-home-link">Ver catálogo público <ExternalLink size={15} aria-hidden="true" /></Link>
             </div>
 
             {loadingArtistas && <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando cadastros...</div>}
@@ -589,7 +659,7 @@ export default function AdminDashboard() {
                 ) : artistasError ? (
                   <div className="admin-error" role="alert">{artistasError} <button className="btn btn-secondary btn-sm" onClick={fetchArtistas}>Tentar novamente</button></div>
                 ) : pendingFiltered.length === 0 ? (
-                  <div className="admin-empty pending-empty"><Clock size={36} aria-hidden="true" /><h3>{counts.Pendente ? "Nenhum cadastro corresponde aos filtros" : "Nenhum cadastro aguardando análise"}</h3><p>{counts.Pendente ? "Ajuste a busca ou os filtros para ver outros resultados." : "Quando um novo artista se cadastrar, ele aparecerá aqui."}</p></div>
+                  <div className="admin-empty pending-empty"><Clock size={36} aria-hidden="true" /><h3>{globalSearch.trim() || pendingSearch.trim() ? "Nenhum cadastro pendente encontrado para esta busca." : counts.Pendente ? "Nenhum cadastro corresponde aos filtros" : "Nenhum cadastro aguardando análise"}</h3><p>{globalSearch.trim() || pendingSearch.trim() ? "Confira o termo digitado ou tente outra busca." : counts.Pendente ? "Ajuste a busca ou os filtros para ver outros resultados." : "Quando um novo artista se cadastrar, ele aparecerá aqui."}</p></div>
                 ) : (
                   <div className="pending-cards">
                     {pendingFiltered.map((artist) => (
@@ -622,9 +692,9 @@ export default function AdminDashboard() {
               {selectedArtista && (
                 <aside className="pending-detail" aria-label={`Detalhes de ${selectedArtista.nome_artistico || selectedArtista.nome}`}>
                   <button type="button" className="pending-detail-close" onClick={() => setSelectedArtista(null)} aria-label="Fechar detalhes"><X size={20} aria-hidden="true" /></button>
-                  <div className="pending-detail-cover"><img src={selectedArtista.foto_url && !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado") ? assetUrl(selectedArtista.foto_url) : "/bage-catalog-hero.webp"} alt="" /></div>
-                  <div className="pending-detail-title">
-                    <span className="pending-detail-avatar">{selectedArtista.foto_url && !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado") ? <img src={assetUrl(selectedArtista.foto_url)} alt="" /> : <User size={20} aria-hidden="true" />}</span>
+                  {selectedArtistHasPhoto && <div className="pending-detail-cover"><img src={assetUrl(selectedArtista.foto_url!)} alt="" /></div>}
+                  <div className={`pending-detail-title${selectedArtistHasPhoto ? "" : " pending-detail-title--no-cover"}`}>
+                    <span className="pending-detail-avatar">{selectedArtistHasPhoto ? <img src={assetUrl(selectedArtista.foto_url!)} alt="" /> : <User size={20} aria-hidden="true" />}</span>
                     <div><h2>{selectedArtista.nome_artistico || selectedArtista.nome}</h2><span>Artista</span></div>
                   </div>
                   <div className="pending-detail-tabs" role="group" aria-label="Seções dos detalhes">
@@ -730,32 +800,41 @@ export default function AdminDashboard() {
             ) : (
               <div className="artistas-list">
                 {filtered.map((artista) => (
-                  <div key={artista.id} className="artista-row card">
-                    <div className="artista-row-photo">
-                      {artista.foto_url && !(artista.foto_url.startsWith("/artistas/") && artista.status!=="Aprovado") ? (
-                        <img src={assetUrl(artista.foto_url)} alt={artista.nome} />
-                      ) : (
-                        <div className="artista-row-placeholder"><User size={24} /></div>
-                      )}
-                    </div>
-                    <div className="artista-row-info">
-                      <div className="artista-row-top">
-                        <h3>{artista.nome}</h3>
-                        <span className={`badge ${STATUS_BADGE[artista.status]}`}>{artista.status}</span>
-                        {(artista.tags || []).length > 0 && (
-                          <span className="artista-tags-mini">{artista.tags!.slice(0, 2).join(" · ")}</span>
+                  <div key={artista.id} className={`artista-row card${artista.status === "Aprovado" ? " artista-row--approved" : artista.status === "Rejeitado" ? " artista-row--rejected" : ""}`}>
+                    <div className="artista-row-summary">
+                      <div className="artista-row-photo">
+                        {artista.foto_url && !(artista.foto_url.startsWith("/artistas/") && artista.status!=="Aprovado") ? (
+                          <img src={assetUrl(artista.foto_url)} alt={artista.nome} />
+                        ) : (
+                          <div className="artista-row-placeholder"><User size={24} /></div>
                         )}
                       </div>
-                      <p className="artista-area">{artista.area_atuacao}</p>
-                      <p className="artista-bio-preview">{artista.bio}</p>
-                      <div className="artista-contacts">
-                        <span>{artista.email}</span>
-                        {artista.instagram && <span>• {artista.instagram}</span>}
-                        {artista.contato && <span>• {artista.contato}</span>}
+                      <div className="artista-row-info">
+                        <div className="artista-row-top">
+                          <h3>{artista.nome}</h3>
+                          <span className={`badge ${STATUS_BADGE[artista.status]}`}>{artista.status}</span>
+                          {(artista.tags || []).length > 0 && (
+                            <span className="artista-tags-mini">{artista.tags!.slice(0, 2).join(" · ")}</span>
+                          )}
+                        </div>
+                        <p className="artista-area">{artista.status === "Rejeitado" && <LayoutGrid size={14} aria-hidden="true" />}{artista.area_atuacao}</p>
+                        {artista.status !== "Aprovado" && artista.status !== "Rejeitado" && <p className="artista-bio-preview">{artista.bio}</p>}
+                        <div className={`artista-contacts${artista.status === "Rejeitado" ? " rejected-artist-contacts" : ""}`}>
+                          {artista.status === "Rejeitado" ? <>
+                            <span><Mail size={14} aria-hidden="true" />{artista.email}</span>
+                            {artista.contato && <span><Phone size={14} aria-hidden="true" />{artista.contato}</span>}
+                            {artista.instagram && <span><Globe size={14} aria-hidden="true" />{artista.instagram}</span>}
+                          </> : <>
+                            <span>{artista.email}</span>
+                            {artista.instagram && <span>• {artista.instagram}</span>}
+                            {artista.contato && <span>• {artista.contato}</span>}
+                          </>}
+                        </div>
                       </div>
                     </div>
+                    {(artista.status === "Aprovado" || artista.status === "Rejeitado") && <p className="artista-bio-preview approved-artista-bio">{artista.bio}</p>}
                     <div className="artista-row-actions">
-                      <div className="actions-status">
+                      {artista.status === "Pendente" && <div className="actions-status">
                         {artista.status === "Pendente" && (
                           <>
                             <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading !== null}>
@@ -766,26 +845,22 @@ export default function AdminDashboard() {
                             </button>
                           </>
                         )}
-                        {artista.status === "Aprovado" && (
-                          <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading !== null}>
-                            <X size={14} /> Desaprovar
-                          </button>
-                        )}
-                        {artista.status === "Rejeitado" && (
-                          <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading !== null}>
-                            <Check size={14} /> Aprovar
-                          </button>
-                        )}
-                      </div>
+                      </div>}
                       <div className="actions-crud">
-                        <button className="btn btn-secondary btn-sm" data-artist-tools-id={artista.id} onClick={()=>setToolsArtist(artista)} aria-label={`Mídias e agenda de ${artista.nome}`}>Mídias e agenda</button>
+                        {artista.status !== "Rejeitado" && <button className="btn btn-secondary btn-sm" data-artist-tools-id={artista.id} onClick={()=>setToolsArtist(artista)} aria-label={`Mídias e agenda de ${artista.nome}`}>Mídias e agenda</button>}
                         {artista.status==="Aprovado"&&<Link className="btn btn-secondary btn-sm" to={`/artistas/${artista.id}`}>Ver perfil</Link>}
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleOpenEdit(artista)} title="Editar dados">
+                        {artista.status !== "Rejeitado" && <button className="btn btn-secondary btn-sm" onClick={() => handleOpenEdit(artista)} title="Editar dados">
                           <Pencil size={14} /> Editar
-                        </button>
-                        <button className="btn btn-danger btn-sm" onClick={() => handleOpenDelete(artista)} title="Excluir permanentemente">
+                        </button>}
+                        {artista.status === "Rejeitado" && <button className="btn btn-sm btn-approve" onClick={() => handleStatus(artista, "Aprovado")} disabled={actionLoading !== null}>
+                          <Check size={14} /> Aprovar
+                        </button>}
+                        {artista.status === "Aprovado" && <button className="btn btn-danger btn-sm" onClick={() => handleStatus(artista, "Rejeitado")} disabled={actionLoading !== null} title="Mover para rejeitados">
+                          <X size={14} /> Rejeitar
+                        </button>}
+                        {artista.status === "Rejeitado" && <button className="btn btn-danger btn-sm" onClick={() => handleOpenDelete(artista)} title="Excluir permanentemente">
                           <Trash2 size={14} /> Excluir
-                        </button>
+                        </button>}
                       </div>
                     </div>
                   </div>
