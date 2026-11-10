@@ -11,7 +11,7 @@ import {
 } from "../../lib/cadastroValidation";
 import {
   ChevronRight, Clock, CheckCircle, AlertCircle,
-  Image, Upload, MapPin, Check,
+  Image, Upload, MapPin, Check, ShieldCheck,
   Loader, ArrowLeft, User, Sparkles, FileText
 } from "lucide-react";
 import "./Cadastro.css";
@@ -89,6 +89,7 @@ export default function CadastroArtista() {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [showErrors, setShowErrors] = useState(false);
+  const [lgpdAccepted, setLgpdAccepted] = useState(false);
 
   useEffect(() => {
     if (!showErrors) return;
@@ -188,6 +189,11 @@ export default function CadastroArtista() {
   });
 
   const handleSubmit = async () => {
+    if (!lgpdAccepted) {
+      setStep(3);
+      setError("Para enviar o cadastro, confirme o tratamento dos dados conforme a LGPD.");
+      return;
+    }
     if (uploadError) { setStep(2); setError(uploadError); return; }
     const invalidStep = firstInvalidStep(fieldErrors);
     if (invalidStep >= 0) {
@@ -770,9 +776,26 @@ export default function CadastroArtista() {
                   {error && (
                     <div className="form-error" role="alert" aria-live="assertive">{error}</div>
                   )}
-                  <p className="artista-lgpd">
-                    Ao enviar, você concorda que seus dados serão tratados conforme a LGPD para fins de divulgação cultural no município de Bagé.
-                  </p>
+                  <div className="artista-lgpd">
+                    <input
+                      id="artista-lgpd-aceite"
+                      type="checkbox"
+                      checked={lgpdAccepted}
+                      onChange={(event) => {
+                        setLgpdAccepted(event.target.checked);
+                        if (event.target.checked && error.startsWith("Para enviar o cadastro")) setError("");
+                      }}
+                      required
+                      aria-describedby="artista-lgpd-copy artista-lgpd-hint"
+                    />
+                    <label htmlFor="artista-lgpd-aceite" className="artista-lgpd-content">
+                      <strong className="artista-lgpd-title"><ShieldCheck size={21} aria-hidden="true" /> Proteção de dados e privacidade (LGPD)</strong>
+                      <span id="artista-lgpd-copy" className="artista-lgpd-copy">
+                        Ao enviar, você concorda que seus dados serão tratados conforme a LGPD para fins de divulgação cultural no município de Bagé.
+                      </span>
+                      <span id="artista-lgpd-hint" className="artista-lgpd-hint">Obrigatório para enviar o cadastro para análise.</span>
+                    </label>
+                  </div>
                 </div>
               )}
             </div>
@@ -807,7 +830,7 @@ export default function CadastroArtista() {
                     type="button"
                     className="btn btn-primary"
                     onClick={handleSubmit}
-                    disabled={loading}
+                    disabled={loading || !lgpdAccepted}
                     aria-label="Enviar cadastro para análise"
                   >
                     {loading ? <><Loader size={16} className="spin" aria-hidden="true" /> Enviando...</> : <><CheckCircle size={16} aria-hidden="true" /> Enviar para análise</>}

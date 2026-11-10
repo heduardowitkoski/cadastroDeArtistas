@@ -25,7 +25,7 @@ export function Navbar({ activePage, onCatalogSearch, showPublicLinks = true, sh
   };
 
   return (
-    <header className={onCatalogSearch ? "portal-header portal-header--catalog" : "portal-header"} onKeyDown={(event) => { if (event.key === "Escape" && mobileMenuOpen) { setMobileMenuOpen(false); menuButton.current?.focus(); } }}>
+    <header className={`portal-header${onCatalogSearch ? " portal-header--catalog" : ""}${activePage === "cadastro" ? " portal-header--registration" : ""}`} onKeyDown={(event) => { if (event.key === "Escape" && mobileMenuOpen) { setMobileMenuOpen(false); menuButton.current?.focus(); } }}>
       <div className="container header-content">
         {/* Marca / Logo */}
         <Link to="/" className="header-brand" style={{ textDecoration: "none" }} aria-label="Cadastro Municipal de Artistas — Página inicial">
