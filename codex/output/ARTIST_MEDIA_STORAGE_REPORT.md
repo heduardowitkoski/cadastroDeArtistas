@@ -45,6 +45,10 @@ A fila durável `artist_media_cleanup` nasce **antes** de upload/exclusão. Em a
 
 Novos uploads de foto são Storage; `foto_url` guarda endpoint relativo, não Base64 novo. DataURLs JPEG/PNG/WebP antigos e URL externa válida continuam renderizando; nenhum backfill automático. Registros sem mídia/eventos têm estados vazios. Catálogo busca thumbs; galeria usa thumbs/lazy e só abre imagem maior no lightbox. PDF.js é lazy: chunk 433,30 kB / gzip 130,36 kB, worker separado; não entra na carga inicial do perfil. Chunk inicial existente passou a 559,73 kB / gzip 158,29 kB, mantendo warning >500 kB. Medição é build local, sem promessa de Core Web Vitals remoto.
 
+### Prévia da foto na fila administrativa — 10/11/2026
+
+A fila e o painel de detalhes do Admin carregam a mídia `photo` pelas rotas administrativas autenticadas (`GET /artistas/:id/midias` e `GET /artistas/:id/midias/:mediaId/conteudo?thumbnail=1`). Os bytes continuam privados e são convertidos em URL temporária no navegador, revogada quando a lista muda ou o componente é desmontado. A foto principal enviada pelo artista é usada no avatar do card e no banner do drawer. O contrato atual não possui um tipo separado de mídia `cover`; galeria e portfólio continuam acessíveis na área de mídias.
+
 ## Evidência
 
 39 novos cenários E2E no arquivo de perfil, integrados aos 115 E2E totais: bytes válidos, MIME falso, extensão inválida, vazio, PDF exatamente 10 MB e acima, PDF ativo, dimensões/formato, quantidade, UUID/path traversal, acesso de artista errado/privado, falha de upload, falha/retry de cleanup, cascata, preservação de outros artistas e guards. Store é fake em memória; asserções não executam SQL/Storage remoto.

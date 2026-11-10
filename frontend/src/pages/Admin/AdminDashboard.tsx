@@ -32,6 +32,12 @@ interface Artista {
   created_at: string;
 }
 
+interface ArtistMedia {
+  id: string;
+  kind: "photo" | "gallery" | "portfolio";
+  thumbnail_url?: string | null;
+}
+
 interface Feedback {
   id: number;
   nome?: string;
@@ -83,6 +89,7 @@ type Tab = "Visão geral" | "Pendente" | "Aprovado" | "Rejeitado" | "Feedbacks";
 
 export default function AdminDashboard() {
   const [artistas, setArtistas] = useState<Artista[]>([]);
+  const [adminArtistPhotos, setAdminArtistPhotos] = useState<Record<number, string>>({});
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loadingArtistas, setLoadingArtistas] = useState(true);
   const [loadingFeedbacks, setLoadingFeedbacks] = useState(true);
@@ -164,6 +171,44 @@ export default function AdminDashboard() {
       setAdminName(typeof metadataName === "string" && metadataName.trim() ? metadataName.trim() : email.split("@")[0]);
     }).catch(() => setAdminName(""));
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const objectUrls: string[] = [];
+
+    const loadPendingPhotos = async () => {
+      const pendingArtists = artistas.filter((artist) => artist.status === "Pendente");
+      const photos = await Promise.all(pendingArtists.map(async (artist) => {
+        try {
+          const mediaResponse = await adminFetch(`/artistas/${artist.id}/midias`);
+          if (!mediaResponse.ok) return null;
+          const media = await mediaResponse.json() as ArtistMedia[];
+          const photo = media.find((item) => item.kind === "photo");
+          if (!photo) return null;
+
+          const fileResponse = await adminFetch(`/artistas/${artist.id}/midias/${photo.id}/conteudo?thumbnail=1`);
+          if (!fileResponse.ok) return null;
+          const objectUrl = URL.createObjectURL(await fileResponse.blob());
+          objectUrls.push(objectUrl);
+          return [artist.id, objectUrl] as const;
+        } catch {
+          return null;
+        }
+      }));
+
+      if (cancelled) {
+        objectUrls.forEach((url) => URL.revokeObjectURL(url));
+        return;
+      }
+      setAdminArtistPhotos(Object.fromEntries(photos.filter((photo): photo is readonly [number, string] => photo !== null)));
+    };
+
+    void loadPendingPhotos();
+    return () => {
+      cancelled = true;
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [artistas]);
 
   useEffect(() => {
     const onShortcut = (event: KeyboardEvent) => {
@@ -359,6 +404,13 @@ export default function AdminDashboard() {
     Rejeitado: artistas.filter((a) => a.status === "Rejeitado").length,
     Feedbacks: feedbacks.length,
   };
+  const getArtistPhotoUrl = (artist: Artista) => {
+    const uploadedPhoto = adminArtistPhotos[artist.id];
+    if (uploadedPhoto) return uploadedPhoto;
+    const legacyPhotoIsVisible = artist.foto_url &&
+      !(artist.foto_url.startsWith("/artistas/") && artist.status !== "Aprovado");
+    return legacyPhotoIsVisible ? assetUrl(artist.foto_url) : "";
+  };
   const pendingNotifications = artistas
     .filter((artist) => artist.status === "Pendente")
     .sort((first, second) => new Date(first.created_at).getTime() - new Date(second.created_at).getTime());
@@ -399,10 +451,8 @@ export default function AdminDashboard() {
   }, [artistas]);
 
   const pendentesRecentes = artistas.filter((a) => a.status === "Pendente").slice(0, 3);
-  const selectedArtistHasPhoto = Boolean(
-    selectedArtista?.foto_url &&
-    !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado"),
-  );
+  const selectedArtistPhotoUrl = selectedArtista ? getArtistPhotoUrl(selectedArtista) : "";
+  const selectedArtistHasPhoto = Boolean(selectedArtistPhotoUrl);
   const hoje = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
   const sidebarNav: { key: Tab; icon: React.ReactNode; label: string }[] = [
@@ -451,7 +501,7 @@ export default function AdminDashboard() {
               <div className="notifications-popover-heading"><strong>Notificações ({counts.Pendente})</strong></div>
               {pendingNotifications.length === 0 ? <p className="notifications-empty">Nenhum cadastro aguardando análise.</p> : <ul className="notifications-list">
                 {pendingNotifications.map((artist) => {
-                  const hasVisiblePhoto = artist.foto_url && !(artist.foto_url.startsWith("/artistas/") && artist.status !== "Aprovado");
+                  const photoUrl = getArtistPhotoUrl(artist);
                   return <li key={artist.id}><button type="button" className="notification-item" onClick={() => {
                     setTab("Pendente");
                     setSelectedArtista(artist);
@@ -464,7 +514,7 @@ export default function AdminDashboard() {
                     setNotificationsOpen(false);
                     setSidebarOpen(false);
                   }}>
-                    <span className="notification-avatar">{hasVisiblePhoto ? <img src={assetUrl(artist.foto_url!)} alt="" /> : <User size={16} aria-hidden="true" />}</span>
+                    <span className="notification-avatar">{photoUrl ? <img src={photoUrl} alt="" /> : <User size={16} aria-hidden="true" />}</span>
                     <span className="notification-copy"><strong>Novo cadastro aguardando análise: {artist.nome_artistico || artist.nome}</strong><time dateTime={artist.created_at}>{formatNotificationAge(artist.created_at)}</time></span>
                   </button></li>;
                 })}
@@ -598,7 +648,7 @@ export default function AdminDashboard() {
                     {pendentesRecentes.map((a) => (
                       <div key={a.id} className="pending-item">
                         <div className="pending-photo">
-                          {a.foto_url ? <img src={a.foto_url} alt="" /> : <User size={18} />}
+                          {getArtistPhotoUrl(a) ? <img src={getArtistPhotoUrl(a)} alt="" /> : <User size={18} />}
                         </div>
                         <div className="pending-info">
                           <span className="pending-name">{a.nome_artistico || a.nome}</span>
@@ -665,7 +715,7 @@ export default function AdminDashboard() {
                     {pendingFiltered.map((artist) => (
                       <article key={artist.id} className={`pending-card${selectedArtista?.id === artist.id ? " is-selected" : ""}`}>
                         <button type="button" className="pending-card-open" onClick={() => { setSelectedArtista(artist); setSelectedDrawerTab("overview"); }} aria-label={`Ver detalhes de ${artist.nome_artistico || artist.nome}`}>
-                          <span className="pending-card-photo">{artist.foto_url && !(artist.foto_url.startsWith("/artistas/") && artist.status !== "Aprovado") ? <img src={assetUrl(artist.foto_url)} alt="" /> : <User size={24} aria-hidden="true" />}</span>
+                          <span className="pending-card-photo">{getArtistPhotoUrl(artist) ? <img src={getArtistPhotoUrl(artist)} alt="" /> : <User size={24} aria-hidden="true" />}</span>
                           <span className="pending-card-identity">
                             <span className="pending-card-name">{artist.nome_artistico || artist.nome} <em>Novo</em></span>
                             <span className="pending-card-meta"><LayoutGrid size={12} aria-hidden="true" />{artist.area_atuacao || "Categoria não informada"}</span>
@@ -692,9 +742,9 @@ export default function AdminDashboard() {
               {selectedArtista && (
                 <aside className="pending-detail" aria-label={`Detalhes de ${selectedArtista.nome_artistico || selectedArtista.nome}`}>
                   <button type="button" className="pending-detail-close" onClick={() => setSelectedArtista(null)} aria-label="Fechar detalhes"><X size={20} aria-hidden="true" /></button>
-                  {selectedArtistHasPhoto && <div className="pending-detail-cover"><img src={assetUrl(selectedArtista.foto_url!)} alt="" /></div>}
+                  {selectedArtistHasPhoto && <div className="pending-detail-cover"><img src={selectedArtistPhotoUrl} alt="" /></div>}
                   <div className={`pending-detail-title${selectedArtistHasPhoto ? "" : " pending-detail-title--no-cover"}`}>
-                    <span className="pending-detail-avatar">{selectedArtistHasPhoto ? <img src={assetUrl(selectedArtista.foto_url!)} alt="" /> : <User size={20} aria-hidden="true" />}</span>
+                    <span className="pending-detail-avatar">{selectedArtistHasPhoto ? <img src={selectedArtistPhotoUrl} alt="" /> : <User size={20} aria-hidden="true" />}</span>
                     <div><h2>{selectedArtista.nome_artistico || selectedArtista.nome}</h2><span>Artista</span></div>
                   </div>
                   <div className="pending-detail-tabs" role="group" aria-label="Seções dos detalhes">

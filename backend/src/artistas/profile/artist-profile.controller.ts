@@ -177,11 +177,12 @@ export class ArtistProfileController {
   async adminFile(
     @Param('id', ParseIntPipe) id: number,
     @Param('mediaId', new ParseUUIDPipe({ version: '4' })) mediaId: string,
+    @Query('thumbnail') thumb: string,
     @Res() res: Response,
   ) {
     return this.send(
       res,
-      await this.profile.readFile(id, mediaId, false, true),
+      await this.profile.readFile(id, mediaId, thumb === '1', true),
       true,
     );
   }
