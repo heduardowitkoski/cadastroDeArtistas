@@ -10,6 +10,7 @@ import { Footer } from "../../components/Footer";
 import { useFavorites } from "../../lib/useFavorites";
 import { assetUrl } from "../../lib/mediaUrl";
 import { API_URL } from "../../lib/apiConfig";
+import { useLocation } from "react-router-dom";
 import "./Portal.css";
 import "./CatalogLanding.css";
 
@@ -67,6 +68,7 @@ interface Artista {
 }
 
 export default function Portal() {
+  const { hash } = useLocation();
   const [artistas, setArtistas] = useState<Artista[]>([]);
   const [busca, setBusca] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("all");
@@ -96,6 +98,12 @@ export default function Portal() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (hash !== "#busca-artistas") return;
+    searchInput.current?.focus({ preventScroll: true });
+    searchInput.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [hash]);
 
   const filtered = filterArtists(artistas, busca, categoriaFiltro);
 

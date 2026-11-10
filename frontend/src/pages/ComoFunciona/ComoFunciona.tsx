@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import {
-  Star, Award, UserPlus, FileCheck, Sparkles, Users, Building2,
+  Star, UserPlus, FileCheck, Sparkles, Users, Building2,
   Search, PencilLine, Mic, Palette
 } from "lucide-react";
+import { PortalPageHero } from "../../components/PortalPageHero";
 import "../Portal/Portal.css";
 import "./ComoFunciona.css";
 
@@ -14,28 +15,20 @@ const PASSOS = [
 ];
 
 const AUDIENCIAS = [
-  { icon: <Users size={26} />, titulo: "Para o artista", texto: "Ganhe visibilidade e seja encontrado por quem organiza eventos, festivais e ações culturais na região.", cor: "purple" },
+  { icon: <Users size={26} />, titulo: "Para o artista", texto: "Ganhe visibilidade e seja encontrado por quem organiza eventos, festivais e ações culturais na região.", cor: "blue" },
   { icon: <Search size={26} />, titulo: "Para o público e contratantes", texto: "Descubra talentos por categoria, cidade e disponibilidade para contratar e apoiar a cultura local.", cor: "amber" },
   { icon: <Building2 size={26} />, titulo: "Para os Gestores do Conselho Municipal de Políticas Culturais", texto: "Um painel organizado para conhecer os artistas da cidade e apoiar políticas culturais de verdade.", cor: "teal" },
 ];
 
 export default function ComoFunciona() {
   return (
-    <div className="portal-page">
+    <div className="portal-page cf-page">
       <main>
-      {/* ─── Hero ─── */}
-      <section className="cf-hero">
-        <div className="hero-badge">
-          <Award size={12} /> Entenda em poucos minutos
-        </div>
-        <h1 className="cf-hero-title">
-          Como funciona o<br />
-          <span className="hero-title-highlight">Cadastro de Artistas</span>
-        </h1>
-        <p className="cf-hero-text">
-          Uma vitrine simples e gratuita para quem faz cultura em Bagé.
-        </p>
-      </section>
+      <PortalPageHero
+        eyebrow="GUIA RÁPIDO"
+        title="Como funciona o Cadastro de Artistas"
+        description="Uma vitrine simples e gratuita para quem faz cultura em Bagé. Entenda o caminho do cadastro até o catálogo."
+      />
 
       {/* ─── O que é ─── */}
       <section className="cf-section">
@@ -45,7 +38,7 @@ export default function ComoFunciona() {
             <div>
               <h2>Qual é a ideia?</h2>
               <p>
-                O <strong>Cadastro Municipal de Artistas</strong> é um catálogo público dos Gestores do Conselho Municipal de Políticas Culturais
+                O <strong>Cadastro Municipal de Artistas</strong> é uma iniciativa dos Gestores do Conselho Municipal de Políticas Culturais de
                 Bagé. Ele reúne em um só lugar os artistas da cidade — músicos, pintores, atores,
                 fotógrafos, escritores, artesãos e muito mais — para que qualquer pessoa ou empresa
                 consiga encontrar um profissional para shows, eventos, exposições e projetos culturais.
@@ -97,11 +90,11 @@ export default function ComoFunciona() {
       <section className="cf-section cf-ctas-bg">
         <div className="container">
           <div className="cf-ctas">
-            <Link to="/cadastrar" className="btn btn-primary cf-cta-big">
+            <Link to="/cadastrar" className="btn btn-primary cf-cta-big cf-cta-primary">
               <Mic size={18} /> Quero me cadastrar
             </Link>
             <span className="cf-ou">ou</span>
-            <Link to="/artista/login" className="btn btn-outline cf-cta-big">
+            <Link to="/artista/login" className="btn btn-outline cf-cta-big cf-cta-secondary">
               Já sou cadastrado(a) — entrar
             </Link>
           </div>

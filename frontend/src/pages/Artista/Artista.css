@@ -1,7 +1,7 @@
 /* Área do Artista - login e edição de cadastro */
 .artista-login-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #F8F7FF 0%, #EDE9FE 100%);
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #f8fafd 0%, #eaf2ff 100%);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -17,18 +17,24 @@
   width: 100%;
   max-width: 420px;
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid #dce6f4;
   border-radius: var(--radius-xl);
-  box-shadow: 0 20px 50px rgba(124,58,237,0.12);
+  box-shadow: 0 20px 50px rgba(7,87,223,0.11);
   padding: 40px;
 }
 .artista-login-brand { text-align: center; margin-bottom: 28px; }
 .artista-login-brand-logo { display: block; width: 72px; height: 62px; object-fit: contain; margin: 0 auto 14px; }
-.artista-login-brand h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.artista-login-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #11163e; }
 .artista-login-brand p { font-size: 13px; color: var(--text-secondary); }
 .artista-login-form { display: flex; flex-direction: column; gap: 18px; }
 .artista-login-error { margin: 0; }
-.artista-login-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+.artista-login-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; background: #0757df !important; box-shadow: 0 6px 16px rgba(7,87,223,.18) !important; }
+.artista-login-btn:hover { background: #0346b8 !important; }
+.artista-login-page .input-group label { color: #263c72; }
+.artista-login-page input { border-color: #cbd9ee; background: #fff; }
+.artista-login-page input:focus { border-color: #0757df; box-shadow: 0 0 0 3px rgba(7,87,223,.14); }
+.artista-login-page .password-toggle { color: #0757df; }
+.artista-login-page .password-toggle:hover { background: #eaf2ff; }
 .artista-login-dica {
   margin-top: 20px;
   padding-top: 16px;
@@ -39,8 +45,9 @@
   font-size: 13px;
   color: var(--text-secondary);
 }
-.artista-login-dica svg { color: var(--purple-primary); flex-shrink: 0; }
-.artista-login-dica a { color: var(--purple-primary); font-weight: 600; text-decoration: none; }
+.artista-login-dica { border-top-color: #e1eaf5; }
+.artista-login-dica svg { color: #0757df; flex-shrink: 0; }
+.artista-login-dica a { color: #0757df; font-weight: 600; text-decoration: none; }
 .artista-login-dica a:hover { text-decoration: underline; }
 
 /* Editar cadastro */

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Portal from './pages/Portal/Portal'
 import CadastroArtista from './pages/Cadastro/CadastroArtista'
 import Feedback from './pages/Feedback/Feedback'
@@ -14,7 +14,10 @@ const ArtistProfile=lazy(()=>import('./pages/ArtistProfile/ArtistProfile'))
 
 function AppRoutes() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const isCatalog = pathname === "/"
+  const useCatalogHeader = isCatalog || pathname === "/como-funciona" || pathname === "/feedback"
+  const hideHeader = pathname === "/admin/login"
   const isMinimalHeader = ["/cadastrar", "/artista/login", "/artista/editar"].includes(pathname)
   const activePage = pathname === "/" ? "catalogo"
     : pathname === "/como-funciona" ? "como-funciona"
@@ -26,16 +29,20 @@ function AppRoutes() {
 
   return (
     <>
-      <Navbar
+      {!hideHeader && <Navbar
         activePage={activePage}
         showPublicLinks={!isMinimalHeader}
         showAccountActions={!isMinimalHeader}
-        onCatalogSearch={isCatalog ? () => {
+        onCatalogSearch={useCatalogHeader ? () => {
+          if (!isCatalog) {
+            navigate("/#busca-artistas")
+            return
+          }
           const search = document.getElementById("busca-artistas") as HTMLInputElement | null
           search?.focus({ preventScroll: true })
           search?.scrollIntoView({ block: "center" })
         } : undefined}
-      />
+      />}
       <Routes>
         <Route path="/" element={<Portal />} />
         <Route path="/artistas/:id" element={<Suspense fallback={<main className="container" role="status">Carregando perfil do artista…</main>}><ArtistProfile /></Suspense>} />

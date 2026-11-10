@@ -95,9 +95,9 @@ export function Navbar({ activePage, onCatalogSearch, showPublicLinks = true, sh
           </Link>
 
           {/* Botão de Acesso Administrativo do Conselho */}
-          {!onCatalogSearch && showPublicLinks && <Link
+          {showPublicLinks && <Link
             to="/admin/login"
-            className="btn btn-secondary btn-sm"
+            className={`btn btn-secondary btn-sm${onCatalogSearch ? " catalog-admin-cta" : ""}`}
             aria-label="Acesso administrativo — Gestores do Conselho Municipal de Políticas Culturais"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, opacity: 0.9 }}
           >

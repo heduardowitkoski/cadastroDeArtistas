@@ -1,4 +1,37 @@
 # QA visual — cartões de destaque do catálogo
+## Cores do menu móvel da home — 10/11/2026
+
+- **Fonte:** captura de referência anexada pelo usuário nesta conversa.
+- **Implementação:** home local `http://127.0.0.1:5174/`, viewport de 390×844, drawer aberto.
+- **Resultado observado:** ação de login com fundo azul claro e borda azul; cadastro com fundo azul sólido; links, hover e foco adotam azul da home. Navegação administrativa mantém o estilo secundário.
+- **Limite:** captura observada no browser, não arquivada em arquivo; sem teste de teclado, console, build ou envio de formulários.
+
+final result: blocked
+## Refino responsivo do login administrativo — 10/11/2026
+
+- **Fonte:** imagem de login em duas colunas anexada pelo usuário nesta conversa; arquivo de referência não arquivado no repositório.
+- **Implementação:** `/admin/login`, browser in-app em `http://127.0.0.1:5174/admin/login`.
+- **Evidência observada:** desktop 1440×900 com overlay azul, texto diretamente sobre a foto e recursos sem caixas; mobile 390×844 com painel esquerdo oculto e card centralizado; 1023 px ocultou a coluna e 1024 px preservou as duas colunas. Medidas computadas indicaram zero overflow horizontal nos quatro viewports.
+- **Interação:** sem envio de login ou recuperação de senha.
+- **Achados:** nenhuma diferença funcional/responsiva P0/P1/P2 identificada; teclado, leitor de tela e contraste automatizado não foram avaliados. Captura comparativa não foi persistida junto à referência.
+
+final result: blocked
+
+## Login administrativo em duas colunas — 10/11/2026
+
+- **Fonte:** imagem de referência anexada pelo usuário (codex-clipboard-d8dd2a68-9da5-4a83-bd1e-53b8292fc96e.png) e foto image.jpg enviada para o painel; a fonte de referência não está arquivada no repositório.
+- **Implementação:** /admin/login, browser in-app em http://127.0.0.1:5174/admin/login; capturas observadas em mobile (página inteira, largura 440 CSS px) e desktop (1440×900, DPR não exposto).
+- **Estado:** o navegador preencheu automaticamente credenciais salvas; não foram inspecionadas nem usadas. Nenhum login, redefinição de senha ou transmissão foi acionado.
+- **Comparação:** divisão 46/54, título e recursos à esquerda, card e link público à direita; em mobile as colunas empilham. Foto real tem luz diurna diferente da imagem dourada do mock e recebeu overlay para manter contraste. Imagem, tipografia, cores, espaçamento e texto foram comparados visualmente; não houve artefato comparativo persistido nem recorte focal arquivado.
+- **Achados:** nenhum P0/P1/P2 visível na conferência. Testes de teclado, leitor de tela, zoom, build e autenticação não executados. O fluxo de recuperação depende da allowlist de redirect no Supabase e não foi enviado.
+- **Resultado formal:** captura e comparação conjunta não puderam ser arquivadas neste relatório; aceite visual formal bloqueado por falta desses artefatos.
+
+final result: blocked
+
+
+**Simplificação do login administrativo — 10/11/2026.** A rota `/admin/login` agora não renderiza o cabeçalho global, o botão Home ou a imagem de Bagé. O cartão central mede 50vw até 920px e ocupa a largura útil em telas menores. A marca/wordmark está dentro do cartão como link para `/`. Na prévia local (~434px), o formulário, a nota e a marca ficaram visíveis e sem corte; a ação de autenticação não foi enviada. Não houve captura desktop, comparação formal ou build. Sem aceite visual completo.
+
+**Login artista/admin e CTA Admin — 10/11/2026.** A referência administrativa foi traduzida para o login do Conselho: contexto, recursos, foto existente de Bagé, formulário e aviso de acesso restrito. Login artista e controles de senha usam azul em vez de roxo, com Inter/Plus Jakarta Sans. O botão Admin foi recolocado nos cabeçalhos com navegação pública; `/admin/login` mantém a marca e não exibe ações de conta. Na conferência local, as duas telas foram abertas no navegador em largura móvel aproximada de 434px; ambas empilharam sem corte na área visível. O formulário não foi enviado. Não houve comparação lado a lado, captura persistida, inspeção desktop ou execução de build; esta nota não representa aceite visual completo.
 
 **Correção da marca e cabeçalho — 10/11/2026.** A entrada recebida era um JPG com padrão quadriculado incorporado (não alfa). A versão consumida no site é um PNG transparente salvo em `frontend/public/cmpcc-logo.png`, preparado pela ferramenta integrada ImageGen para remover somente o fundo quadriculado e manter o emblema. A caixa da imagem permanece nas dimensões CSS anteriores. O CTA “Sou artista” usa azul direto (`#0757df`): a variável do tema era escopada dentro do catálogo e não chegava ao cabeçalho global. Nas rotas de cadastro/login/edição, marca permanece e ações do header somem. O canal alfa foi inspecionado nos quatro cantos; a aplicação e as larguras responsivas não foram recapturadas, então não há aceite visual nesta atualização.
 
@@ -110,3 +143,4 @@ Reflow 320/375/768/1024/1440: scrollWidth igual a clientWidth. Nenhuma prova de 
 P3: reavaliar cortes do hero com diferentes proporções de fotos de artistas e imagens de portfólio variadas na homologação; não exige criação de fotos fictícias para produção.
 
 final result: passed
+

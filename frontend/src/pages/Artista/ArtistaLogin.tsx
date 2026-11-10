@@ -2,7 +2,7 @@ import { artistLoginError } from "../../lib/authMessages";
 import { PasswordInput } from "../../components/PasswordInput";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../../lib/supabase";
+import { setSupabaseSessionPersistence, supabase } from "../../lib/supabase";
 import { LogIn, Loader, Sparkles } from "lucide-react";
 import "./Artista.css";
 
@@ -17,6 +17,7 @@ export default function ArtistaLogin() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSupabaseSessionPersistence(true);
     const { error: loginError } = await supabase.auth.signInWithPassword({ email, password: senha });
     if (loginError) {
       setError(artistLoginError(loginError));

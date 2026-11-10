@@ -1,7 +1,8 @@
-import { HomeButton } from "../../components/HomeButton";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { API_URL } from "../../lib/apiConfig";
-import { Star, Check, Loader, MessageSquareHeart } from "lucide-react";
+import { ArrowLeft, Star, Check, Loader, MessageSquareHeart } from "lucide-react";
+import { PortalPageHero } from "../../components/PortalPageHero";
 import "./Feedback.css";
 
 const TIPOS = ["Elogio", "Sugestão", "Crítica", "Outro"];
@@ -26,6 +27,14 @@ export default function Feedback() {
     form.mensagem.trim().length >= 10 && form.mensagem.trim().length <= 2000 &&
     (!form.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) &&
     (!form.nome.trim() || form.nome.trim().length >= 2);
+
+  const pageHero = (
+    <PortalPageHero
+      eyebrow="SUA VOZ FAZ DIFERENÇA"
+      title="Ajude a cultura de Bagé a crescer"
+      description="Conte como foi sua experiência com o Cadastro Municipal de Artistas. Sua opinião orienta as próximas melhorias."
+    />
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,25 +76,30 @@ export default function Feedback() {
 
   if (success) {
     return (
-      <main className="feedback-page">
-        <div className="feedback-success">
-          <div className="success-icon"><Check size={36} /></div>
-          <h1>Obrigado pelo seu feedback!</h1>
-          <p>Sua opinião é muito importante para que possamos melhorar cada vez mais a plataforma para a comunidade cultural de Bagé.</p>
-          <HomeButton />
-        </div>
-      </main>
+      <div className="portal-page feedback-shell">
+        {pageHero}
+        <main className="feedback-page">
+          <div className="feedback-success card">
+            <div className="success-icon"><Check size={36} /></div>
+            <h2>Obrigado pelo seu feedback!</h2>
+            <p>Sua opinião é muito importante para que possamos melhorar cada vez mais a plataforma para a comunidade cultural de Bagé.</p>
+            <Link to="/" className="btn btn-outline feedback-return"><ArrowLeft size={16} aria-hidden="true" /> Voltar ao catálogo</Link>
+          </div>
+        </main>
+      </div>
     );
   }
 
   return (
-    <main className="feedback-page">
+    <div className="portal-page feedback-shell">
+      {pageHero}
+      <main className="feedback-page">
       <div className="feedback-wrapper">
         <div className="feedback-card card">
           <div className="feedback-card-header">
             <div className="feedback-icon"><MessageSquareHeart size={22} /></div>
             <div>
-              <h1>Avalie a Plataforma</h1>
+              <h2>Avalie a Plataforma</h2>
               <p>Conte-nos sua opinião e sugestões para melhorarmos o Cadastro Municipal de Artistas.</p>
             </div>
           </div>
@@ -179,6 +193,7 @@ export default function Feedback() {
           </form>
         </div>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

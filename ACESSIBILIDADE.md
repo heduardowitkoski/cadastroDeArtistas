@@ -1,4 +1,12 @@
 # Documentação de Acessibilidade (WCAG 2.1 AA)
+> **Menu móvel da home — 10/11/2026:** destaque de login, CTA de cadastro, hover e foco seguem o azul da home; o foco tem contorno azul explícito. Alteração conferida visualmente a 390 px, sem teste de teclado ou leitor de tela; sem declaração de conformidade integral WCAG.
+> **Refino responsivo do login administrativo — 10/11/2026:** itens de recursos não têm painéis translúcidos; texto branco e azul claro sobre overlay azul escuro, com ícones em círculos coloridos. Até 1023 px a apresentação é ocultada, mantendo formulário, link de retorno no topo e reflow sem overflow nas medidas conferidas. Contraste foi avaliado visualmente, sem cálculo automatizado ou teste de teclado/leitor de tela; WCAG 2.1 AA segue como alvo, sem declaração de conformidade integral.
+
+> **Login administrativo em duas colunas — 10/11/2026:** formulário e painel informativo têm landmarks e headings próprios, labels associados, checkbox nativo, campo de senha reutilizável, alerta com role="alert", status de recuperação e foco azul visível. O layout empilha em telas menores. Conferência visual feita em browser local; teclado, leitor de tela, zoom real e contraste automatizado não foram auditados. Alvo WCAG 2.1 AA preservado, sem declaração de conformidade integral.
+
+> **Login administrativo sem header — 10/11/2026:** a marca e o nome do produto dentro do cartão são um único link com nome acessível para voltar à página inicial. O cabeçalho e botão Home foram removidos para evitar links de retorno duplicados. Revisão visual local móvel, sem teste de teclado/leitor de tela ou verificação desktop; não representa declaração de conformidade WCAG integral.
+
+> **Telas de acesso — 10/11/2026:** as páginas de login usam novamente azul no foco de campos, ação principal e controle mostrar/ocultar senha; tipografia dos títulos é Plus Jakarta Sans e os textos usam Inter. O login admin usa títulos/landmarks separados para a apresentação e o formulário. Revisão visual local móvel realizada, mas não foram feitos testes com teclado ou leitor de tela nem conferência desktop; WCAG 2.1 AA segue como alvo, sem declaração de conformidade integral.
 
 > **Ajuste de cabeçalhos — 10/11/2026:** cadastro, login e edição do artista agora mostram somente a marca clicável no cabeçalho; seus botões de conta e menu são omitidos. O emblema segue com texto alternativo vazio, pois o link pai contém nome acessível. PNG transparente validado pelos quatro cantos com alfa zero. A cor de foco da ação azul da home não foi conferida no navegador nesta rodada; não implica declaração de conformidade integral WCAG 2.1 AA.
 
@@ -88,3 +96,4 @@ Garantir que a plataforma seja totalmente acessível a todas as pessoas, incluin
 
 3. **Auditoria Automatizada:**
    - Utilize a extensão **axe DevTools** ou a aba **Lighthouse > Accessibility** nas Ferramentas do Desenvolvedor do Chrome.
+
