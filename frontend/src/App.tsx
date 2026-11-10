@@ -17,7 +17,7 @@ function AppRoutes() {
   const navigate = useNavigate()
   const isCatalog = pathname === "/"
   const useCatalogHeader = isCatalog || pathname === "/como-funciona" || pathname === "/feedback"
-  const hideHeader = pathname === "/admin/login"
+  const hideHeader = pathname.startsWith("/admin")
   const isMinimalHeader = ["/cadastrar", "/artista/login", "/artista/editar"].includes(pathname)
   const activePage = pathname === "/" ? "catalogo"
     : pathname === "/como-funciona" ? "como-funciona"

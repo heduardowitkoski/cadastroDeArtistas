@@ -1,4 +1,3 @@
-import { HomeButton } from "../../components/HomeButton";
 import ArtistTools from './ArtistTools';
 import { assetUrl } from '../../lib/mediaUrl';
 import { useState, useEffect, useMemo, useRef } from "react";
@@ -9,7 +8,9 @@ import { useDialogFocus } from "../../lib/useDialogFocus";
 import {
   CheckCircle, Clock, XCircle, LogOut, Star, Check, X, User,
   Pencil, Trash2, Save, AlertTriangle, MessageSquareHeart, Sparkles,
-  LayoutGrid, BarChart3, CalendarDays, Menu
+  LayoutGrid, BarChart3, CalendarDays, Menu, Search, SlidersHorizontal,
+  MapPin, Mail, Phone, Globe, Link2 as LinkIcon, FileText, Image as ImageIcon,
+  ExternalLink, ArrowUpDown, Bell, ChevronDown
 } from "lucide-react";
 import "./AdminDashboard.css";
 
@@ -57,6 +58,15 @@ const TIPO_BADGE: Record<string, string> = {
   Outro: "badge-purple",
 };
 
+function formatAge(createdAt: string) {
+  const timestamp = new Date(createdAt).getTime();
+  if (!Number.isFinite(timestamp)) return "Data indisponível";
+  const days = Math.max(0, Math.floor((Date.now() - timestamp) / 86_400_000));
+  if (days === 0) return "Hoje";
+  if (days === 1) return "Há 1 dia";
+  return `Há ${days} dias`;
+}
+
 type Tab = "Visão geral" | "Pendente" | "Aprovado" | "Rejeitado" | "Feedbacks";
 
 export default function AdminDashboard() {
@@ -67,10 +77,24 @@ export default function AdminDashboard() {
   const [artistasError, setArtistasError] = useState("");
   const [feedbacksError, setFeedbacksError] = useState("");
   const [actionError, setActionError] = useState("");
-  const [tab, setTab] = useState<Tab>("Visão geral");
+  const [tab, setTab] = useState<Tab>("Pendente");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [adminName, setAdminName] = useState("");
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const globalSearchRef = useRef<HTMLInputElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const didAutoSelectPending = useRef(false);
+  const [pendingSearch, setPendingSearch] = useState("");
+  const [pendingCategory, setPendingCategory] = useState("");
+  const [pendingCity, setPendingCity] = useState("");
+  const [pendingSort, setPendingSort] = useState<"recent" | "oldest" | "name">("recent");
+  const [pendingAvailabilityOnly, setPendingAvailabilityOnly] = useState(false);
+  const [pendingMoreFilters, setPendingMoreFilters] = useState(false);
+  const [selectedArtista, setSelectedArtista] = useState<Artista | null>(null);
+  const [selectedDrawerTab, setSelectedDrawerTab] = useState<"overview" | "portfolio" | "documents">("overview");
 
   const [editingArtista, setEditingArtista] = useState<Artista | null>(null);
   const [toolsArtist, setToolsArtist] = useState<Artista | null>(null);
@@ -122,9 +146,43 @@ export default function AdminDashboard() {
     fetchFeedbacks();
     supabase.auth.getUser().then(({ data }) => {
       const email = data.user?.email || "";
-      setAdminName(email.split("@")[0]);
+      const metadataName = data.user?.user_metadata?.full_name;
+      setAdminName(typeof metadataName === "string" && metadataName.trim() ? metadataName.trim() : email.split("@")[0]);
     }).catch(() => setAdminName(""));
   }, []);
+
+  useEffect(() => {
+    const onShortcut = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        globalSearchRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onShortcut);
+    return () => window.removeEventListener("keydown", onShortcut);
+  }, []);
+
+  useEffect(() => {
+    if (tab !== "Pendente" || loadingArtistas || didAutoSelectPending.current) return;
+    didAutoSelectPending.current = true;
+    setSelectedArtista(artistas.find((artist) => artist.status === "Pendente") || null);
+  }, [artistas, loadingArtistas, tab]);
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!profileMenuRef.current?.contains(event.target as Node)) setProfileMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [profileMenuOpen]);
 
   useDialogFocus(Boolean(editingArtista), editDialogRef, () => { if (!submittingModal) setEditingArtista(null); });
   useDialogFocus(Boolean(deletingArtista), deleteArtistaRef, () => { if (!submittingModal) setDeletingArtista(null); });
@@ -156,6 +214,7 @@ export default function AdminDashboard() {
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       await fetchArtistas();
+      setSelectedArtista((current) => current?.id === artista.id ? null : current);
     } catch {
       setActionError(`Não foi possível alterar o status de ${artista.nome}. Tente novamente.`);
     } finally {
@@ -271,7 +330,32 @@ export default function AdminDashboard() {
     Feedbacks: feedbacks.length,
   };
 
-  const filtered = tab === "Visão geral" || tab === "Feedbacks" ? [] : artistas.filter((a) => a.status === tab);
+  const normalizedGlobalSearch = globalSearch.trim().toLocaleLowerCase("pt-BR");
+  const matchesArtistSearch = (artist: Artista) => !normalizedGlobalSearch ||
+    [artist.nome, artist.nome_artistico, artist.email, artist.area_atuacao, artist.cidade, artist.bio]
+      .some((value) => value?.toLocaleLowerCase("pt-BR").includes(normalizedGlobalSearch));
+  const filtered = tab === "Visão geral" || tab === "Feedbacks" ? [] : artistas
+    .filter((artist) => artist.status === tab)
+    .filter(matchesArtistSearch);
+  const visibleFeedbacks = feedbacks.filter((feedback) => !normalizedGlobalSearch ||
+    [feedback.nome, feedback.email, feedback.tipo, feedback.mensagem]
+      .some((value) => value?.toLocaleLowerCase("pt-BR").includes(normalizedGlobalSearch)));
+  const pendingCategories = Array.from(new Set(artistas.filter((a) => a.status === "Pendente").flatMap((a) => a.area_atuacao.split(",").map((category) => category.trim()).filter(Boolean)))).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const pendingCities = Array.from(new Set(artistas.filter((a) => a.status === "Pendente").map((a) => a.cidade.trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const pendingFiltered = filtered
+    .filter((artist) => {
+      const query = pendingSearch.trim().toLocaleLowerCase("pt-BR");
+      const matchesSearch = !query || [artist.nome, artist.nome_artistico, artist.email, artist.area_atuacao, artist.cidade, artist.bio].some((value) => value?.toLocaleLowerCase("pt-BR").includes(query));
+      const matchesCategory = !pendingCategory || artist.area_atuacao.split(",").some((category) => category.trim() === pendingCategory);
+      const matchesCity = !pendingCity || artist.cidade === pendingCity;
+      const matchesAvailability = !pendingAvailabilityOnly || Boolean(artist.disponibilidade?.length);
+      return matchesSearch && matchesCategory && matchesCity && matchesAvailability;
+    })
+    .sort((a, b) => pendingSort === "name"
+      ? (a.nome_artistico || a.nome).localeCompare(b.nome_artistico || b.nome, "pt-BR")
+      : pendingSort === "oldest"
+        ? new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        : new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   const chartData = useMemo(() => {
     const map = new Map<string, number>();
@@ -291,27 +375,66 @@ export default function AdminDashboard() {
     { key: "Rejeitado", icon: <XCircle size={18} />, label: "Rejeitados" },
     { key: "Feedbacks", icon: <MessageSquareHeart size={18} />, label: "Feedbacks" },
   ];
+  const runGlobalSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!normalizedGlobalSearch) {
+      setTab("Pendente");
+      setSidebarOpen(false);
+      return;
+    }
+    const artistMatch = artistas.find(matchesArtistSearch);
+    const feedbackMatch = visibleFeedbacks[0];
+    if (feedbackMatch && (!artistMatch || new Date(feedbackMatch.created_at) > new Date(artistMatch.created_at))) {
+      setTab("Feedbacks");
+    } else {
+      setTab((artistMatch?.status as Tab) || "Pendente");
+      if (artistMatch?.status === "Pendente") setSelectedArtista(artistMatch);
+    }
+    setSidebarOpen(false);
+  };
 
   return (
     <div className="admin-page">
-      <div className="admin-mobile-bar">
-        <button ref={menuButtonRef} className="btn btn-secondary" type="button" aria-label={sidebarOpen ? "Fechar menu do painel" : "Abrir menu do painel"} aria-expanded={sidebarOpen} aria-controls="admin-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={18} /> Menu</button>
-        <HomeButton />
-      </div>
-      {sidebarOpen && <button className="admin-sidebar-scrim" aria-label="Fechar menu do painel" onClick={() => setSidebarOpen(false)} />}
-      {/* ─── Sidebar ─── */}
-      <aside id="admin-sidebar" className={`admin-sidebar ${sidebarOpen ? "is-open" : ""}`}>
-        <div className="sidebar-brand">
-          <img className="sidebar-brand-logo" src="/cmpcc-logo.png" alt="" width={48} height={42} />
-          <div>
-            <span className="brand-title">Gestores do Conselho Municipal de Políticas Culturais</span>
-            <span className="brand-sub">painel administrativo</span>
+      <header className="admin-topbar">
+        <button ref={menuButtonRef} className="admin-menu-toggle" type="button" aria-label={sidebarOpen ? "Fechar menu do painel" : "Abrir menu do painel"} aria-expanded={sidebarOpen} aria-controls="admin-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={20} aria-hidden="true" /></button>
+        <form className={`admin-global-search${mobileSearchOpen ? " is-open" : ""}`} role="search" onSubmit={runGlobalSearch}>
+          <Search size={18} aria-hidden="true" />
+          <label className="sr-only" htmlFor="admin-global-search">Buscar artista, e-mail, categoria ou palavra-chave</label>
+          <input id="admin-global-search" ref={globalSearchRef} value={globalSearch} onChange={(event) => setGlobalSearch(event.target.value)} placeholder="Buscar artista, e-mail, categoria ou palavra-chave..." />
+          <kbd>Ctrl + K</kbd>
+        </form>
+        <div className="admin-topbar-actions">
+          <button type="button" className="admin-mobile-search-toggle" aria-label="Abrir busca administrativa" aria-expanded={mobileSearchOpen} onClick={() => { setMobileSearchOpen((open) => !open); requestAnimationFrame(() => globalSearchRef.current?.focus()); }}><Search size={19} aria-hidden="true" /></button>
+          <button type="button" className="admin-notifications" aria-label={`${counts.Pendente} cadastros pendentes para analisar`} onClick={() => { setTab("Pendente"); setSelectedArtista(artistas.find((artist) => artist.status === "Pendente") || null); setSidebarOpen(false); }}>
+            <Bell size={19} aria-hidden="true" />
+            {counts.Pendente > 0 && <span className="notification-badge" aria-hidden="true" />}
+          </button>
+          <div className="admin-profile-menu" ref={profileMenuRef}>
+            <button type="button" className="admin-profile-trigger" aria-expanded={profileMenuOpen} aria-haspopup="menu" onClick={() => setProfileMenuOpen((open) => !open)}>
+              <span className="admin-avatar" aria-hidden="true">{(adminName || "AD").slice(0, 2).toLocaleUpperCase("pt-BR")}</span>
+              <span className="admin-profile-label"><strong>{adminName || "Administrador"}</strong><small>Administrador</small></span>
+              <ChevronDown size={16} aria-hidden="true" />
+            </button>
+            {profileMenuOpen && <div className="admin-profile-dropdown" role="menu"><span>{adminName || "Administrador"}</span><button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} aria-hidden="true" /> Sair do painel</button></div>}
           </div>
         </div>
+      </header>
+      {sidebarOpen && <button className="admin-sidebar-scrim" aria-label="Fechar menu do painel" onClick={() => setSidebarOpen(false)} />}
+      <div className="admin-layout">
+        <aside id="admin-sidebar" className={`admin-sidebar ${sidebarOpen ? "is-open" : ""}`}>
+          <div className="sidebar-identity">
+            <Link to="/" className="sidebar-logo-link" aria-label="Voltar para a página inicial do Cadastro Municipal de Artistas">
+              <img src="/cmpcc-logo.png" alt="" width={92} height={80} />
+            </Link>
+            <div className="sidebar-panel-title">
+              <strong>Painel Administrativo</strong>
+              <span>Cadastro Municipal de Artistas</span>
+            </div>
+          </div>
 
-        <nav className="sidebar-nav" aria-label="Seções do painel administrativo">
+          <nav className="sidebar-nav" aria-label="Seções do painel administrativo">
           {sidebarNav.map(({ key, icon, label }) => (
-            <button key={key} onClick={() => { setTab(key); setSidebarOpen(false); setActionError(""); }} aria-current={tab === key ? "page" : undefined} className={`sidebar-nav-item ${tab === key ? "active" : ""}`}>
+            <button key={key} onClick={() => { setTab(key); setSidebarOpen(false); setActionError(""); if (key === "Pendente") setSelectedArtista(artistas.find((artist) => artist.status === "Pendente") || null); }} aria-current={tab === key ? "page" : undefined} className={`sidebar-nav-item ${tab === key ? "active" : ""}`}>
               {icon}
               <span>{label}</span>
               {counts[key as keyof typeof counts] !== undefined && counts[key as keyof typeof counts] > 0 && (
@@ -319,34 +442,16 @@ export default function AdminDashboard() {
               )}
             </button>
           ))}
-        </nav>
-
-        <div className="sidebar-progress">
-          <div className="sidebar-progress-head">
-            <span>Cadastros aprovados</span>
-            <strong>{loadingArtistas || artistasError ? "—" : `${artistas.length ? Math.round((counts.Aprovado / artistas.length) * 100) : 0}%`}</strong>
+          </nav>
+          <div className="sidebar-city-card">
+            <img src="/bage-catalog-hero.webp" alt="Vista da arquitetura histórica de Bagé ao entardecer" />
+            <span className="sidebar-city-overlay" aria-hidden="true" />
+            <div><strong>Arte que movimenta Bagé</strong><p>Cultura, pessoas e oportunidades para uma cidade mais viva.</p></div>
           </div>
-          <div className="sidebar-progress-bar">
-            <div className="sidebar-progress-fill" style={{ width: `${artistas.length ? (counts.Aprovado / artistas.length) * 100 : 0}%` }} />
-          </div>
-          <p className="sidebar-progress-sub">{loadingArtistas || artistasError ? "Dados indisponíveis" : `${counts.Aprovado} de ${artistas.length} artistas no catálogo`}</p>
-        </div>
-
-        <HomeButton className="sidebar-home-button" />
-        <div className="sidebar-user">
-          <div className="sidebar-avatar"><User size={15} /></div>
-          <div className="sidebar-user-info">
-            <span className="sidebar-user-name">{adminName || "admin"}</span>
-            <span className="sidebar-user-role">Administrador</span>
-          </div>
-          <button onClick={handleLogout} className="sidebar-logout" title="Sair" aria-label="Sair do painel">
-            <LogOut size={16} />
-          </button>
-        </div>
-      </aside>
+        </aside>
 
       {/* ─── Main ─── */}
-      <main className="admin-main">
+      <main className={`admin-main${tab === "Pendente" ? " admin-main--pending" : ""}`}>
         {actionError && !editingArtista && !deletingArtista && !deletingFeedback && <div className="admin-error" role="alert">{actionError}</div>}
         {tab === "Visão geral" ? (
           <>
@@ -443,25 +548,138 @@ export default function AdminDashboard() {
               </div>
             </div>
           </>
+        ) : tab === "Pendente" ? (
+          <>
+            <section className={`pending-workspace${selectedArtista ? " has-selection" : ""}`} aria-label="Analisar cadastros pendentes">
+              <div className="pending-feed">
+                <section className="pending-heading">
+                  <div>
+                    <p className="admin-breadcrumb">Painel <span aria-hidden="true">›</span> Cadastros pendentes</p>
+                    <h1>Cadastros pendentes</h1>
+                    <p className="admin-header-sub">Analise os novos cadastros de artistas que aguardam aprovação.</p>
+                  </div>
+                  <label className="pending-sort">
+                    <ArrowUpDown size={16} aria-hidden="true" />
+                    <span className="sr-only">Ordenar cadastros</span>
+                    <select value={pendingSort} onChange={(event) => setPendingSort(event.target.value as typeof pendingSort)}>
+                      <option value="recent">Mais recentes</option>
+                      <option value="oldest">Mais antigos</option>
+                      <option value="name">Nome do artista</option>
+                    </select>
+                  </label>
+                </section>
+
+                <section className="pending-metrics" aria-label="Resumo dos cadastros">
+                  <article className="pending-metric metric-pending"><span><Clock size={19} aria-hidden="true" /></span><div><strong>{loadingArtistas || artistasError ? "—" : counts.Pendente}</strong><p>Pendentes</p><small>Aguardando análise</small></div></article>
+                  <article className="pending-metric metric-approved"><span><CheckCircle size={19} aria-hidden="true" /></span><div><strong>{loadingArtistas || artistasError ? "—" : counts.Aprovado}</strong><p>Aprovados</p><small>Artistas no catálogo</small></div></article>
+                  <article className="pending-metric metric-rejected"><span><XCircle size={19} aria-hidden="true" /></span><div><strong>{loadingArtistas || artistasError ? "—" : counts.Rejeitado}</strong><p>Rejeitados</p><small>Fora do catálogo</small></div></article>
+                  <article className="pending-metric metric-total"><span><User size={19} aria-hidden="true" /></span><div><strong>{loadingArtistas || artistasError ? "—" : artistas.length}</strong><p>Total no sistema</p><small>Total de artistas no sistema</small></div></article>
+                </section>
+
+                <div className="pending-filters">
+                  <label className="pending-search"><Search size={18} aria-hidden="true" /><span className="sr-only">Buscar pendentes</span><input value={pendingSearch} onChange={(event) => setPendingSearch(event.target.value)} placeholder="Buscar por nome, e-mail ou palavra-chave..." /></label>
+                  <label className="pending-select"><span className="sr-only">Filtrar por categoria</span><select value={pendingCategory} onChange={(event) => setPendingCategory(event.target.value)}><option value="">Todas as categorias</option>{pendingCategories.map((category) => <option key={category}>{category}</option>)}</select></label>
+                  <label className="pending-select"><span className="sr-only">Filtrar por cidade</span><select value={pendingCity} onChange={(event) => setPendingCity(event.target.value)}><option value="">Todas as cidades</option>{pendingCities.map((city) => <option key={city}>{city}</option>)}</select></label>
+                  <button className={`pending-filter-toggle${pendingMoreFilters ? " is-active" : ""}`} type="button" aria-expanded={pendingMoreFilters} onClick={() => setPendingMoreFilters((open) => !open)}><SlidersHorizontal size={16} aria-hidden="true" /> Mais filtros</button>
+                </div>
+                {pendingMoreFilters && <div className="pending-extra-filters"><label><input type="checkbox" checked={pendingAvailabilityOnly} onChange={(event) => setPendingAvailabilityOnly(event.target.checked)} /> Com disponibilidade informada</label></div>}
+                <div className="pending-results-heading"><h2>Fila de análise</h2><span>{loadingArtistas || artistasError ? "" : `${pendingFiltered.length} de ${counts.Pendente} cadastro(s)`}</span></div>
+                {loadingArtistas ? (
+                  <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando cadastros...</div>
+                ) : artistasError ? (
+                  <div className="admin-error" role="alert">{artistasError} <button className="btn btn-secondary btn-sm" onClick={fetchArtistas}>Tentar novamente</button></div>
+                ) : pendingFiltered.length === 0 ? (
+                  <div className="admin-empty pending-empty"><Clock size={36} aria-hidden="true" /><h3>{counts.Pendente ? "Nenhum cadastro corresponde aos filtros" : "Nenhum cadastro aguardando análise"}</h3><p>{counts.Pendente ? "Ajuste a busca ou os filtros para ver outros resultados." : "Quando um novo artista se cadastrar, ele aparecerá aqui."}</p></div>
+                ) : (
+                  <div className="pending-cards">
+                    {pendingFiltered.map((artist) => (
+                      <article key={artist.id} className={`pending-card${selectedArtista?.id === artist.id ? " is-selected" : ""}`}>
+                        <button type="button" className="pending-card-open" onClick={() => { setSelectedArtista(artist); setSelectedDrawerTab("overview"); }} aria-label={`Ver detalhes de ${artist.nome_artistico || artist.nome}`}>
+                          <span className="pending-card-photo">{artist.foto_url && !(artist.foto_url.startsWith("/artistas/") && artist.status !== "Aprovado") ? <img src={assetUrl(artist.foto_url)} alt="" /> : <User size={24} aria-hidden="true" />}</span>
+                          <span className="pending-card-identity">
+                            <span className="pending-card-name">{artist.nome_artistico || artist.nome} <em>Novo</em></span>
+                            <span className="pending-card-meta"><LayoutGrid size={12} aria-hidden="true" />{artist.area_atuacao || "Categoria não informada"}</span>
+                            <span className="pending-card-meta"><MapPin size={12} aria-hidden="true" />{artist.cidade || "Cidade não informada"}, RS</span>
+                            <span className="pending-card-email"><Mail size={12} aria-hidden="true" />{artist.email}</span>
+                          </span>
+                          <span className="pending-card-bio">{artist.bio}</span>
+                        </button>
+                        <div className="pending-card-actions">
+                          <time className="pending-card-age" dateTime={artist.created_at}>{formatAge(artist.created_at)}</time>
+                          <div className="pending-card-action-buttons">
+                            <button type="button" className="pending-approve-text" onClick={() => handleStatus(artist, "Aprovado")} disabled={actionLoading !== null}><Check size={15} aria-hidden="true" /> Aprovar</button>
+                            <button type="button" className="pending-reject-text" onClick={() => handleStatus(artist, "Rejeitado")} disabled={actionLoading !== null}><X size={15} aria-hidden="true" /> Rejeitar</button>
+                            <button type="button" className="pending-edit-text" onClick={() => handleOpenEdit(artist)}><Pencil size={15} aria-hidden="true" /> Editar</button>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {selectedArtista && <button type="button" className="pending-detail-scrim" onClick={() => setSelectedArtista(null)} aria-label="Fechar detalhes do cadastro" />}
+              {selectedArtista && (
+                <aside className="pending-detail" aria-label={`Detalhes de ${selectedArtista.nome_artistico || selectedArtista.nome}`}>
+                  <button type="button" className="pending-detail-close" onClick={() => setSelectedArtista(null)} aria-label="Fechar detalhes"><X size={20} aria-hidden="true" /></button>
+                  <div className="pending-detail-cover"><img src={selectedArtista.foto_url && !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado") ? assetUrl(selectedArtista.foto_url) : "/bage-catalog-hero.webp"} alt="" /></div>
+                  <div className="pending-detail-title">
+                    <span className="pending-detail-avatar">{selectedArtista.foto_url && !(selectedArtista.foto_url.startsWith("/artistas/") && selectedArtista.status !== "Aprovado") ? <img src={assetUrl(selectedArtista.foto_url)} alt="" /> : <User size={20} aria-hidden="true" />}</span>
+                    <div><h2>{selectedArtista.nome_artistico || selectedArtista.nome}</h2><span>Artista</span></div>
+                  </div>
+                  <div className="pending-detail-tabs" role="group" aria-label="Seções dos detalhes">
+                    <button type="button" aria-pressed={selectedDrawerTab === "overview"} className={selectedDrawerTab === "overview" ? "active" : ""} onClick={() => setSelectedDrawerTab("overview")}>Visão geral</button>
+                    <button type="button" aria-pressed={selectedDrawerTab === "portfolio"} className={selectedDrawerTab === "portfolio" ? "active" : ""} onClick={() => setSelectedDrawerTab("portfolio")}>Portfólio</button>
+                    <button type="button" aria-pressed={selectedDrawerTab === "documents"} className={selectedDrawerTab === "documents" ? "active" : ""} onClick={() => setSelectedDrawerTab("documents")}>Documentos</button>
+                  </div>
+                  <div className="pending-detail-content">
+                    {selectedDrawerTab === "overview" ? <>
+                      <h3>Informações principais</h3>
+                      <p><LayoutGrid size={16} aria-hidden="true" /> {selectedArtista.area_atuacao || "Categoria não informada"}</p>
+                      <p><MapPin size={16} aria-hidden="true" /> {selectedArtista.cidade || "Cidade não informada"}</p>
+                      <p><Mail size={16} aria-hidden="true" /> <a href={`mailto:${selectedArtista.email}`}>{selectedArtista.email}</a></p>
+                      <p><Phone size={16} aria-hidden="true" /> {selectedArtista.contato || "Telefone não informado"}</p>
+                      <p><CalendarDays size={16} aria-hidden="true" /> Disponibilidade <span className={selectedArtista.disponibilidade?.length ? "pending-availability-pill" : "pending-detail-muted"}>{selectedArtista.disponibilidade?.length ? "Sim" : "Não informada"}</span></p>
+                      <h3>Sobre o artista</h3><p className="pending-detail-bio">{selectedArtista.bio || "Biografia não informada."}</p>
+                      {(selectedArtista.tags?.length ?? 0) > 0 && <><h3>Tags</h3><div className="pending-detail-tags">{selectedArtista.tags?.map((tag) => <span key={tag}>{tag}</span>)}</div></>}
+                      <h3>Links</h3>
+                      {selectedArtista.instagram && <p><LinkIcon size={16} aria-hidden="true" /> {selectedArtista.instagram}</p>}
+                      {selectedArtista.site && <p><Globe size={16} aria-hidden="true" /> <a href={selectedArtista.site} target="_blank" rel="noreferrer">{selectedArtista.site}<ExternalLink size={12} aria-hidden="true" /></a></p>}
+                      {!selectedArtista.instagram && !selectedArtista.site && <p className="pending-detail-muted">Nenhum link informado.</p>}
+                    </> : <>
+                      <h3>{selectedDrawerTab === "portfolio" ? "Portfólio do artista" : "Documentos enviados"}</h3>
+                      <p>Os arquivos ficam em armazenamento privado. Abra a área de mídias para consultar e baixar os materiais com acesso administrativo.</p>
+                      <button type="button" className="btn btn-secondary pending-open-media" onClick={() => setToolsArtist(selectedArtista)}><ImageIcon size={16} aria-hidden="true" /><FileText size={16} aria-hidden="true" /> Abrir mídias e documentos</button>
+                    </>}
+                  </div>
+                  <div className="pending-detail-actions">
+                    <button type="button" className="pending-approve-text" onClick={() => handleStatus(selectedArtista, "Aprovado")} disabled={actionLoading !== null}><Check size={15} aria-hidden="true" /> Aprovar</button>
+                    <button type="button" className="pending-reject-text" onClick={() => handleStatus(selectedArtista, "Rejeitado")} disabled={actionLoading !== null}><X size={15} aria-hidden="true" /> Rejeitar</button>
+                    <button type="button" className="pending-edit-text" onClick={() => handleOpenEdit(selectedArtista)}><Pencil size={15} aria-hidden="true" /> Editar</button>
+                  </div>
+                </aside>
+              )}
+            </section>
+          </>
         ) : tab === "Feedbacks" ? (
           <>
             <div className="admin-header">
               <h1>Mensagens de <span className="badge badge-indigo">Feedback</span></h1>
-              <p className="admin-header-sub">{loadingFeedbacks || feedbacksError ? "" : `${feedbacks.length} feedback(s) recebido(s)`}</p>
+              <p className="admin-header-sub">{loadingFeedbacks || feedbacksError ? "" : `${visibleFeedbacks.length} feedback(s) encontrado(s)`}</p>
             </div>
             {loadingFeedbacks ? (
               <div className="admin-loading" role="status"><div className="spinner" aria-hidden="true" />Carregando feedbacks...</div>
             ) : feedbacksError ? (
               <div className="admin-error" role="alert">{feedbacksError} <button className="btn btn-secondary btn-sm" onClick={fetchFeedbacks}>Tentar novamente</button></div>
-            ) : feedbacks.length === 0 ? (
+            ) : visibleFeedbacks.length === 0 ? (
               <div className="admin-empty">
                 <MessageSquareHeart size={40} />
-                <h3>Nenhum feedback recebido ainda</h3>
-                <p>Quando o público enviar avaliações, elas aparecerão aqui.</p>
+                <h3>{feedbacks.length ? "Nenhum feedback corresponde à busca" : "Nenhum feedback recebido ainda"}</h3>
+                <p>{feedbacks.length ? "Tente outro termo na busca do painel." : "Quando o público enviar avaliações, elas aparecerão aqui."}</p>
               </div>
             ) : (
               <div className="artistas-list">
-                {feedbacks.map((fb) => (
+                {visibleFeedbacks.map((fb) => (
                   <div key={fb.id} className="artista-row card">
                     <div className="artista-row-placeholder feedback-avatar">
                       <MessageSquareHeart size={24} />
@@ -577,6 +795,7 @@ export default function AdminDashboard() {
           </>
         )}
       </main>
+      </div>
 
       {/* Modal de Edição */}
       {editingArtista && (

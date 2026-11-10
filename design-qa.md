@@ -1,4 +1,85 @@
 # QA visual — cartões de destaque do catálogo
+## Ajustes finais da fila administrativa — 10/11/2026
+
+- **Referência:** painel administrativo enviado anteriormente e solicitações de micro-ui desta rodada.
+- **Alterações:** sidebar limitada às áreas operacionais; KPIs compactos com valores reais e descrições sem tendência fabricada; drawer ampliado; avatar sobreposto à capa; status amarelo removido; destaque azul para aba ativa; cards mantidos em linha no desktop e responsivos em telas menores.
+- **Verificação técnica:** `npm run build` passou; `git diff --check` sem erros. Aviso existente de bundle >500 kB permanece.
+- **Comparação visual:** não capturada nesta rodada. A tela administrativa exige login e o preview disponível continua no fluxo de autenticação; tipografia, proporção das colunas e comportamento em viewport ainda aguardam conferência visual autenticada.
+
+final result: blocked
+
+## Polimento da fila administrativa — 10/11/2026
+
+- **Referência:** screenshot do painel enviado na rodada anterior (`codex-clipboard-3dcba51b-e1b6-4237-ab8e-97fc0f7c0e5f.png`) e defeitos descritos pelo usuário nesta rodada; não foi anexada uma nova captura do estado atual.
+- **Implementação:** utilitária `.sr-only` local; filtros de pendentes em linha; cards com ações horizontais, padding aumentado e biografia truncada em duas linhas com quebra de palavras; banner e avatar sobrepostos no drawer.
+- **Verificação técnica:** `npm run build` passou; `git diff --check` sem erros. O bundle continua emitindo o aviso de chunk >500 kB.
+- **Verificação visual:** sem captura renderizada nesta rodada. O painel ainda exige sessão administrativa e a prévia disponível redireciona a `/admin/login`; portanto não comparei o mesmo viewport/estado nem confirmei visualmente a ausência de sobreposições.
+- **Estado:** a correção de espaçamento foi aplicada no código, mas a validação visual final aguarda sessão administrativa autorizada.
+
+final result: blocked
+
+## Refação visual do painel administrativo — 10/11/2026
+
+- **Fonte visual:** `C:/Users/matheus/AppData/Local/Temp/codex-clipboard-3dcba51b-e1b6-4237-ab8e-97fc0f7c0e5f.png` (900 × 666 px; mockup com Pendentes ativo e drawer aberto).
+- **Implementação:** `frontend/src/pages/Admin/AdminDashboard.tsx` e `.css`; build passou. Screenshot da implementação: não capturado, pois `/admin` redirecionou para `/admin/login` no preview local e não havia sessão autenticada disponível.
+- **Viewport e estado:** referência desktop de 900 × 666 px; estado equivalente da implementação não pôde ser aberto. A comparação visual não foi feita porque os estados não correspondem.
+- **Fidelidade avaliada por evidência:** fonte analisada; implantação não acessível para comparar tipografia, ritmo/colunas, cores, recorte dos ativos ou cópia renderizada. Os arquivos reais de logo/cidade foram reutilizados, e dados de artistas são dinâmicos.
+- **Achados:** [P1] QA visual do painel bloqueado pela barreira de autenticação; requer sessão administrativa controlada para comparar layout e interação. Há também seções sem recurso/API existente no produto (categorias, visão geral de eventos, relatórios, configurações e notas internas), mantidas não funcionais/ausentes em vez de simular persistência.
+- **Próximo passo de QA:** abrir `/admin` com uma sessão autorizada e capturar o mesmo viewport/estado; revisar qualquer diferença P0/P1/P2, teclado e console antes de declarar fidelidade.
+
+final result: blocked
+
+## Painel administrativo — 10/11/2026
+
+- **Referência:** screenshots do admin atual e do conceito azul com fila de cadastros pendentes enviados pelo usuário.
+- **Implementação:** removido Navbar público em `/admin/*`; reaproveitada a sidebar com logo; tema azul/glass aplicado ao dashboard; aba Pendentes redesenhada com filtros, ordenação, métricas reais e drawer responsivo.
+- **Interações:** aprovação/rejeição/edição preservam handlers e API existentes; detalhes usam dados recebidos pelo endpoint administrativo; mídia/documentos continuam delegados à ferramenta de mídia já existente.
+- **Limites funcionais:** sem API de notas internas, nenhuma caixa de observações fictícia foi adicionada. A referência inclui seções administrativas que não existem no produto atual e não foram inventadas.
+- **Correção após erro reportado:** substituído o ícone `Instagram` não exportado por `Link2`; `npm run build` concluído com sucesso. O build ainda emite o aviso já configurado de bundle >500 kB.
+- **QA:** revisão estática do JSX/CSS e diff. Não houve captura em browser, testes automatizados, aprovação/rejeição real, auditoria de teclado/leitor de tela nem cálculo de contraste.
+
+final result: blocked
+
+## Confirmação LGPD no cadastro — 10/11/2026
+
+- **Referência:** solicitação do usuário para tornar obrigatório o aceite na etapa de revisão.
+- **Implementação:** `/cadastrar`, checkbox controlado e verificação no handler antes de qualquer POST; texto legal permanece igual.
+- **Resultado:** revisão estática do JSX/CSS. O botão final depende do checkbox e os dois caminhos que chamam `handleSubmit` são bloqueados sem aceite.
+- **Limite importante:** a confirmação é somente de interface; o campo não integra o payload e o backend não registra nem exige o aceite. Nenhum cadastro foi enviado.
+- **QA:** sem captura em navegador, build, testes automatizados, teclado ou leitor de tela. Aceite visual formal bloqueado.
+
+final result: blocked
+
+## Cadastro do artista: identidade visual e LGPD — 10/11/2026
+
+- **Referência:** capturas de etapas Materiais e Mídias e Revisão anexadas pelo usuário.
+- **Implementação:** rota `/cadastrar`; tema azul escopado a `.cadastro-page`, tipografia de títulos ajustada e aviso de privacidade com título, negrito, ícone e texto legal preservado.
+- **Evidência:** browser local, etapa Dados básicos, viewport móvel aproximado de 435 px. A imagem observada mostra fundo, progresso, etapa ativa e campos em azul, sem corte lateral aparente. Arquivo de captura não foi arquivado.
+- **Etapas restantes:** Materiais e Mídias e Revisão foram revisadas no código/CSS, mas não renderizadas nesta rodada; o bloco LGPD maior não foi observado em navegador.
+- **Limites:** desktop, build, testes automatizados, teclado, leitor de tela e cálculo de contraste não verificados. Aceite visual formal bloqueado até conferir as outras etapas e a LGPD renderizada.
+
+final result: blocked
+
+## Paleta azul no cadastro do artista — 10/11/2026
+
+- **Referência:** captura anexada pelo usuário nesta conversa.
+- **Implementação:** `/cadastrar`; tokens de cor escopados a `.cadastro-page` e subtítulo do header compacto em azul.
+- **Resultado:** revisão estática do CSS; não foi feita nova captura visual nesta rodada.
+- **Interação e fluxo:** nenhuma lógica, validação ou payload do cadastro foi alterado; nenhum cadastro foi enviado.
+- **Limites:** viewport desktop/mobile, build, testes automatizados, teclado, leitor de tela e contraste calculado não foram verificados. Aceite visual formal pendente.
+
+final result: blocked
+
+## Páginas Como Funciona e Feedback — 10/11/2026
+
+- **Referência:** capturas anexadas pelo usuário nesta conversa.
+- **Implementação:** rotas `/como-funciona` e `/feedback`; componente compartilhado `PortalPageHero` usa `bage-catalog-hero.webp` e o cabeçalho da home.
+- **Resultado:** páginas inspecionadas no browser local em viewport móvel de aproximadamente 435×872 CSS px; o screenshot foi observado, mas não arquivado. Hero/cidade, cabeçalho compacto, sobreposição do cartão e formulário aparecem sem corte lateral visível nesse viewport.
+- **Interação:** lupa do cabeçalho navegou de `/feedback` para `/#busca-artistas` e deixou o campo de busca focado. O formulário preserva o POST e as validações existentes; nenhum feedback foi enviado.
+- **Limites:** viewport desktop não foi conferido; screenshot não foi arquivado; build, testes automatizados, teclado e leitor de tela não foram verificados. Comparação formal de fidelidade permanece bloqueada por falta de evidência persistida.
+
+final result: blocked
+
 ## Cores do menu móvel da home — 10/11/2026
 
 - **Fonte:** captura de referência anexada pelo usuário nesta conversa.
