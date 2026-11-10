@@ -1,4 +1,3 @@
-import { HomeButton } from "../../components/HomeButton";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -268,30 +267,15 @@ export default function EditarCadastro() {
 
   return (
     <div className="cadastro-page">
-      {/* ─── Header ─── */}
-      <header className="artista-header">
-        <div className="container header-content">
-          <div className="header-brand">
-            <div className="brand-icon" aria-hidden="true"><Star size={16} aria-hidden="true" /></div>
-            <div>
-              <span className="brand-title block">Cadastro Municipal de Artistas</span>
-              <span className="artista-header-sub">Área do Artista</span>
-            </div>
-          </div>
-          <div className="artista-header-actions">
-            <HomeButton />
-            <button onClick={handleLogout} className="btn btn-secondary btn-sm" aria-label="Sair da Área do Artista">
-              <LogOut size={14} aria-hidden="true" /> Sair
-            </button>
-            <div className="artista-avatar" aria-hidden="true"><User size={16} aria-hidden="true" /></div>
-          </div>
-        </div>
-      </header>
-
       <div className="container artista-container">
-        <div className="artista-title-wrap">
-          <h1>Editar meu cadastro</h1>
-          <p>Mantenha seus dados atualizados. Ao salvar, o cadastro volta para análise dos Gestores do Conselho Municipal de Políticas Culturais.</p>
+        <div className="artista-title-wrap editar-cadastro-title">
+          <div>
+            <h1>Editar meu cadastro</h1>
+            <p>Mantenha seus dados atualizados. Ao salvar, o cadastro volta para análise dos Gestores do Conselho Municipal de Políticas Culturais.</p>
+          </div>
+          <button onClick={handleLogout} className="btn btn-secondary btn-sm" aria-label="Sair da Área do Artista">
+            <LogOut size={14} aria-hidden="true" /> Sair
+          </button>
         </div>
 
         {loading ? (

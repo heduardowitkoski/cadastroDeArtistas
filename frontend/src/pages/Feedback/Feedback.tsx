@@ -81,11 +81,6 @@ export default function Feedback() {
   return (
     <main className="feedback-page">
       <div className="feedback-wrapper">
-        <div className="cadastro-header">
-          <HomeButton />
-          <div className="brand-icon-sm"><Palette size={18} /></div>
-        </div>
-
         <div className="feedback-card card">
           <div className="feedback-card-header">
             <div className="feedback-icon"><MessageSquareHeart size={22} /></div>

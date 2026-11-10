@@ -19,6 +19,7 @@
   height: 64px;
 }
 .header-brand { display: flex; align-items: center; gap: 12px; }
+.header-brand-logo { display: block; flex: none; width: 46px; height: 40px; object-fit: contain; }
 .brand-icon {
   width: 32px;
   height: 32px;
@@ -535,6 +536,7 @@
   flex-wrap: wrap;
 }
 .footer-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #EDE9FE; }
+.footer-brand-logo { display: block; width: 42px; height: 36px; object-fit: contain; flex: none; }
 .portal-footer p { font-size: 13px; color: #A78BFA; }
 .footer-links { display: flex; align-items: center; gap: 20px; font-size: 13px; }
 .footer-links button,

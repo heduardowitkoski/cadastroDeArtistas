@@ -1,4 +1,64 @@
-# QA visual — perfil público do artista
+# QA visual — cartões de destaque do catálogo
+
+**Correção da marca e cabeçalho — 10/11/2026.** A entrada recebida era um JPG com padrão quadriculado incorporado (não alfa). A versão consumida no site é um PNG transparente salvo em `frontend/public/cmpcc-logo.png`, preparado pela ferramenta integrada ImageGen para remover somente o fundo quadriculado e manter o emblema. A caixa da imagem permanece nas dimensões CSS anteriores. O CTA “Sou artista” usa azul direto (`#0757df`): a variável do tema era escopada dentro do catálogo e não chegava ao cabeçalho global. Nas rotas de cadastro/login/edição, marca permanece e ações do header somem. O canal alfa foi inspecionado nos quatro cantos; a aplicação e as larguras responsivas não foram recapturadas, então não há aceite visual nesta atualização.
+
+**Atualização de marca/cabeçalho global — 10/11/2026.** O novo arquivo institucional `frontend/public/cmpcc-logo.png` substitui os ícones antigos nos usos de cabeçalho, rodapé, login de artista, login administrativo e painel administrativo. Uma `Navbar` compartilhada foi movida para o nível das rotas, com o link de marca apontando para `/`; a configuração inicial das telas compactas foi refinada na nota “Correção da marca e cabeçalho” acima. A ação “Sair” da edição continua disponível no conteúdo da página. O código foi inspecionado, mas a alteração não foi aberta/recapturada em navegador, e lint/build não foram executados. Portanto, esta nota documenta implementação, não aceite visual.
+
+10/11/2026. Atualização da seção de artistas em destaque conforme as duas referências enviadas. Sem publicação.
+
+**Fonte visual.** Primeira referência: `C:/Users/matheus/AppData/Local/Temp/codex-clipboard-85b56a01-9b2a-4558-b709-473376b121e9.png` (893×381); segunda referência do estado anterior: `C:/Users/matheus/AppData/Local/Temp/codex-clipboard-724657a6-cd76-4444-8766-6e3e572fc018.png` (1168×718).
+
+**Implementação inspecionada.** Home em `http://127.0.0.1:5187/`, navegador in-app, viewport CSS 918×413, DPR 1. Captura emitida na sessão visual desta rodada, mas não persistida em arquivo. A tentativa de abrir a captura como `data:` para salvá-la foi bloqueada pela política do navegador; não foi tentada via outro navegador ou ferramenta. Assim, não há arquivo de comparação conjunta arquivado e este QA fica **bloqueado para aceite visual formal**.
+
+**Estado e resultado observado.** Home no modo inicial, tema claro; captura posicionada na transição do hero para filtros e cartões. Foram observados três registros na fixture local. A grade aceita até cinco cartões e exibiu os três existentes; os dois espaços restantes foram preservados em vez de receber dados/fotos fabricados. “Ver todos os artistas” foi acionado: o título mudou para “Artistas do catálogo”, o contador mostrou três resultados e os cards da grade completa apareceram. Links de perfil mantêm as rotas existentes; favorito mantém a ação existente.
+
+**Iteração da grade completa — 10/11/2026.** Após a primeira captura, o estado “Artistas do catálogo” foi atualizado com os mesmos tons azuis da home. Nova captura visual no navegador in-app (1274×717 pixels): cards com borda/sombra azulada, fundo claro, botões “Ver perfil” azuis claros e badges de categoria distintos por família de cor (Artes Visuais verde, Teatro coral, Música azul no conjunto visível). Os chips de filtro já usavam o azul. O contador, favorito, selo verde e links permaneceram. Não foi salva captura para arquivo; nenhum breakpoint adicional foi inspecionado.
+
+**Ajuste final do rodapé.** Depois da captura acima, apliquei o tom navy/azul e links claros somente ao rodapé da home do catálogo; os demais usos de `Footer` preservam o tema anterior. Esta última alteração foi revisada no código, mas não foi recapturada no navegador nesta rodada.
+
+| Superfície | Avaliação observada |
+|---|---|
+| Fontes/tipografia | Plus Jakarta Sans nos nomes e Inter na interface, preservadas do site. Hierarquia do título, nomes e textos curtos corresponde à referência; screenshot não arquivado para medição lado a lado. |
+| Espaçamento/layout | Cards com foto ~116px e corpo compacto, cinco colunas no desktop e duas até 700px; botões alinhados ao rodapé do cartão. Em viewport 918×413, três registros deixam dois espaços vazios porque a fixture retorna só três artistas. |
+| Cores/tokens | Fundo claro azulado, texto navy, ações azul, status verde e badges de categoria por família de cor. Favorito pode aparecer preenchido conforme preferência local persistida. |
+| Imagens/assets | Cada card usa a foto pública efetivamente recebida; registros sem foto mantêm o fallback existente. A referência tem cinco fotos, mas a fixture visual contém uma foto e duas ausências. Não foram criadas fotos para artistas. |
+| Copy/conteúdo | Nome, área, cidade, bio e rota vêm do catálogo aprovado. “Disponível” continua sendo selo demonstrativo herdado. Métricas fictícias de eventos/avaliação da antiga sidebar foram removidas. |
+
+**Achados.** Na visualização expandida capturada, os componentes roxos apontados foram substituídos: badges de categoria coloridos, cartões com bordas/sombras frias e botão de perfil em azul. O rodapé também recebeu tema navy/azul por escopo, mas essa parte não foi recapturada. A diferença de densidade (3 registros locais contra 12 no screenshot atual do usuário) vem do conteúdo da fixture e não autoriza duplicar artistas. A falta de captura/comparação persistida impede registrar ausência formal de divergências P0/P1/P2; por isso o aceite visual formal continua bloqueado. Console e breakpoint mobile desta atualização não foram conferidos.
+
+**Arquivos e rastreabilidade.** `frontend/src/pages/Portal/Portal.tsx` e `frontend/src/pages/Portal/CatalogLanding.css`. Documentação atualizada em `DOCUMENTACAO_PROJETO.md` e `ACESSIBILIDADE.md`. Requisitos relacionados: RF-04 (apenas aprovados no catálogo), RF-05 (link ao perfil público), RF-06 (busca e filtros preservados) e RNF-01 (layout responsivo). Nenhuma mudança em API, banco, dependências ou testes automatizados; lint/build não foram executados.
+
+final result: blocked
+
+---
+
+# Histórico QA visual — topo do catálogo
+
+10/11/2026. Página inicial do Cadastro Municipal de Artistas, em ambiente local com catálogo fictício. Escopo da referência: navegação, marca, hero, filtros e entrada da seção de resultados. Nenhuma publicação.
+
+**Evidência.** Fonte: `C:/Users/matheus/AppData/Local/Temp/codex-clipboard-05fabbe2-470e-481d-85ba-f1720baf0f57.png` (918×413). Excluída a moldura escura do print (recorte x13, y11, 887×402). Navegador: viewport CSS 893×700, 887px úteis, DPR 1, topo sem interação, tema claro. Implementação recortada em 887×402 sem reescala. Comparações abertas lado a lado com referência à esquerda em [iteração 1](codex/output/catalog-header-evidence/comparison-v1.png) e [comparação final](codex/output/catalog-header-evidence/comparison-final.png). A comparação tem 1774×402 e mantém rótulos e curvas em escala 1:1. Os recortes [desktop amplo](codex/output/catalog-header-evidence/wide-top.png) e [celular](codex/output/catalog-header-evidence/mobile-top.png) complementam a revisão.
+
+**Achados e correções.** Na iteração 1, os filtros quebravam “Mais categorias” para uma segunda linha (P2) e atrasavam o título de resultados para y398. Densidade de texto, largura dos pills e espaçamento corrigidos: faixa única, título em y362 (referência ~y360). A curva superior esquerda perdia definição no clareamento (P2); um véu azul suave restaurou o contraste da borda sem prejudicar o texto. A recaptura confirma a barra, busca e indicadores alinhados e as faixas coloridas legíveis. Não ficou P0/P1/P2 visual no recorte definido.
+
+| Superfície | Avaliação final |
+|---|---|
+| Tipografia | Plus Jakarta Sans em marca/títulos e Inter na interface, mesmas famílias já usadas no projeto. Peso 800, título navy em duas linhas, segunda com destaque azul. A fonte exata do print não foi fornecida. |
+| Espaçamento | Margens de 35px, navegação ~63px, banner de ~238px, campo com ~416px e painel lateral de ~175px no viewport equivalente. A ordem e densidade correspondem à referência. Em celular o conteúdo empilha. |
+| Cores | Fundo branco azulado, título navy, ações azuis, vidro claro e círculos azul/verde/laranja/vermelho. Contorno de foco visível. `clip-path: shape()` recorta apenas a imagem; raio simples faz o fallback. |
+| Imagens | [Panorama WebP](frontend/public/bage-catalog-hero.webp) e [emblema WebP](frontend/public/brand-bage.webp), produzidos com ImageGen integrado a partir do print e otimizados para o repositório (168 KB e 15,5 KB). Recriações, com diferenças de detalhes arquitetônicos e do traço da marca; não são foto original nem arquivo institucional. |
+| Conteúdo | Frase, título, ações e início da seção acompanham o print. Contagens reais da resposta pública; cidades representadas ocupam a linha de eventos do mock, pois o catálogo não expõe total de eventos realizados. Os números da prévia são dados de teste. |
+
+**Prompts de arte.** Panorama: recriar somente a área panorâmica do print, em luz dourada, com arquitetura terracota e creme, torre à direita, palmeiras e telhados, céu azul suave, névoa clara à esquerda e fitas translúcidas amarelas, verdes e azuis no extremo direito; sem texto, logo, UI ou moldura. Emblema: recriar apenas o símbolo circular superior esquerdo, arco multicolorido, interior branco com coroa mural laranja e colinas verdes, acabamento plano, sem texto, exterior transparente.
+
+**Verificação.** [Resultados no navegador](codex/output/catalog-header-evidence/browser-results.json): lupa focou a busca; Enter levou foco ao título de resultados; Artes Cênicas mostrou Teatro na fixture; “Mais categorias” mostrou filtros adicionais e sinalizou Teatro ainda ativo após fechar; “Ver todos” limpou busca e filtro; login/cadastro abriram as rotas corretas. Menu móvel aberto com Enter e fechado com Escape, retornando foco e mantendo acesso admin. Sem overflow horizontal a 320, 390, 768, 1024 e 1440px; imagens carregadas nas cinco larguras; console final sem erros ou avisos. Desktop admin segue disponível no rodapé. Não houve auditoria integral de leitor de tela ou produção.
+
+**Arquivos e testes.** Implementação em `frontend/src/components/Navbar.tsx`, `frontend/src/pages/Portal/Portal.tsx`, `frontend/src/pages/Portal/CatalogLanding.css` e `frontend/src/lib/catalogFilter.ts`. Assets e evidências acima; documentação atualizada em `DOCUMENTACAO_PROJETO.md` e `ACESSIBILIDADE.md`. O novo caso de categoria agregada está em `frontend/test/quality.test.mjs` (RF-06, CT-RF06-03/05); catálogo público (RF-04) e reflow (RNF-01) conferidos em navegador com API local. Lint, typecheck, 26 testes frontend, build e `git diff --check` passaram. Build conserva aviso do chunk inicial acima de 500 kB. Sem alteração de API, banco ou dependências.
+
+final result: passed
+
+---
+
+## Histórico — perfil público do artista (23/10/2026)
 
 23/10/2026. Escopo: composição da imagem indicada pelo usuário, preservando identidade e header atuais conforme o prompt. Nenhuma alteração remota.
 

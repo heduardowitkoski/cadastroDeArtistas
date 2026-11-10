@@ -23,15 +23,7 @@
   padding: 40px;
 }
 .artista-login-brand { text-align: center; margin-bottom: 28px; }
-.artista-login-brand .brand-icon {
-  width: 52px; height: 52px;
-  background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  color: white;
-  margin: 0 auto 14px;
-  box-shadow: 0 8px 20px var(--purple-glow);
-}
+.artista-login-brand-logo { display: block; width: 72px; height: 62px; object-fit: contain; margin: 0 auto 14px; }
 .artista-login-brand h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .artista-login-brand p { font-size: 13px; color: var(--text-secondary); }
 .artista-login-form { display: flex; flex-direction: column; gap: 18px; }

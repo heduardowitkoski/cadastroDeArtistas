@@ -7,11 +7,14 @@ export interface SearchableArtist {
 
 /** Aplica busca textual e categoria em conjunto sobre a resposta pública. */
 export function filterArtists<T extends SearchableArtist>(artists: T[], query: string, category = 'all'): T[] {
-  const term = query.toLowerCase();
+  const term = query.trim().toLowerCase();
   const categoryTerm = category.toLowerCase();
   return artists.filter((artist) => {
     const area = (artist.area_atuacao || '').toLowerCase();
     const textMatch = !term || artist.nome.toLowerCase().includes(term) || (artist.nome_artistico || '').toLowerCase().includes(term) || area.includes(term) || (artist.tags || []).some((tag) => tag.toLowerCase().includes(term));
-    return textMatch && (category === 'all' || area.includes(categoryTerm));
+    const categoryMatch = category === 'Artes Cênicas'
+      ? ['artes cênicas', 'teatro', 'dança', 'circo'].some((item) => area.includes(item))
+      : category === 'all' || area.includes(categoryTerm);
+    return textMatch && categoryMatch;
   });
 }

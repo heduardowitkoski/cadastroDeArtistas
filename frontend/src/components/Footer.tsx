@@ -1,18 +1,16 @@
 import { Link } from "react-router-dom";
-import { Star, User, Sparkles, Building2, MessageSquareHeart, Grid, HelpCircle } from "lucide-react";
+import { User, Sparkles, Building2, MessageSquareHeart, Grid, HelpCircle } from "lucide-react";
 import "../pages/Portal/Portal.css";
 
-export function Footer() {
+export function Footer({ catalogTheme = false }: { catalogTheme?: boolean }) {
   return (
-    <footer className="portal-footer" style={{ background: "var(--navy)", color: "#C4B5FD", paddingTop: 40, paddingBottom: 32 }}>
+    <footer className={`portal-footer${catalogTheme ? " portal-footer--catalog" : ""}`} style={{ background: "var(--navy)", color: "#C4B5FD", paddingTop: 40, paddingBottom: 32 }}>
       <div className="container">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 32, marginBottom: 32 }}>
           {/* Coluna 1: Marca & Info */}
           <div>
             <div className="footer-brand" style={{ marginBottom: 12 }}>
-              <div className="brand-icon brand-icon-sm" aria-hidden="true">
-                <Star size={14} aria-hidden="true" />
-              </div>
+              <img className="footer-brand-logo" src="/cmpcc-logo.png" alt="" width={42} height={36} />
               <span style={{ fontWeight: 700, fontSize: 16, color: "#EDE9FE" }}>Cadastro de Artistas</span>
             </div>
             <p style={{ fontSize: 13, color: "#A78BFA", lineHeight: 1.6, margin: 0 }}>

@@ -3,7 +3,7 @@ import { PasswordInput } from "../../components/PasswordInput";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-import { Palette, LogIn, Loader } from "lucide-react";
+import { LogIn, Loader } from "lucide-react";
 import "./Login.css";
 
 export default function Login() {
@@ -34,7 +34,7 @@ export default function Login() {
     <main className="login-page">
       <div className="login-card card">
         <div className="login-brand">
-          <div className="brand-icon" aria-hidden="true"><Palette size={24} aria-hidden="true" /></div>
+          <img className="login-brand-logo" src="/cmpcc-logo.png" alt="Logo do Conselho Municipal de Políticas Culturais de Bagé" width={72} height={62} />
           <h1>Painel Administrativo</h1>
           <p>Gestão de Cadastros de Artistas</p>
         </div>

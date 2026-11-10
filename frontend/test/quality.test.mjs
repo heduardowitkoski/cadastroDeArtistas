@@ -9,6 +9,15 @@ const artists=[{nome:'João Souza',nome_artistico:'Voz do Pampa',area_atuacao:'M
 for(const [id,query,category,expected] of [
  ['CT-RF06-01','João Souza','all',1],['CT-RF06-02','João','all',1],['CT-RF06-03','','Música',1],['CT-RF06-04','João','Teatro',0],['CT-RF06-05','Festival','Música',1],['CT-RF06-06','inexistente','all',0],['CT-RF06-07','','Teatro',1],['nome artístico','Voz do Pampa','all',1],
 ])test(`${id}: busca textual combinada com categoria`,()=>assert.equal(filterArtists(artists,query,category).length,expected));
+test('CT-RF06-03/05: Artes Cênicas agrupa Teatro, Dança e Circo sem perder a busca por tag', () => {
+ const rows = [
+  ...artists,
+  {nome:'Companhia Fictícia',nome_artistico:null,area_atuacao:'Música, Dança',tags:['Oficina']},
+  {nome:'Trupe Fictícia',nome_artistico:null,area_atuacao:'Circo',tags:['Infantil']},
+ ];
+ assert.deepEqual(filterArtists(rows, '', 'Artes Cênicas').map(({nome}) => nome), ['Maria Rosa', 'Companhia Fictícia', 'Trupe Fictícia']);
+ assert.deepEqual(filterArtists(rows, ' Infantil ', 'Artes Cênicas').map(({nome}) => nome), ['Maria Rosa', 'Trupe Fictícia']);
+});
 test('mensagem de e-mail não confirmado não recomenda desabilitar proteção',()=>{
  const message=artistLoginError({code:'email_not_confirmed',message:'Email not confirmed'});
  assert.match(message,/ainda não foi confirmado/);assert.doesNotMatch(message,/Supabase|desmarque|Confirm email/);

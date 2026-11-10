@@ -285,23 +285,6 @@ export default function CadastroArtista() {
 
   return (
     <div className="cadastro-page">
-      {/* ─── Header ─── */}
-      <header className="artista-header">
-        <div className="container header-content">
-          <div className="header-brand">
-            <div className="brand-icon" aria-hidden="true"><Star size={16} aria-hidden="true" /></div>
-            <div>
-              <span className="brand-title block">Cadastro Municipal de Artistas</span>
-              <span className="artista-header-sub">Área do Artista</span>
-            </div>
-          </div>
-          <div className="artista-header-actions">
-            <HomeButton />
-            <div className="artista-avatar" aria-hidden="true"><User size={16} aria-hidden="true" /></div>
-          </div>
-        </div>
-      </header>
-
       <main className="container artista-container">
         {/* ─── Título ─── */}
         <div className="artista-title-wrap">

@@ -1,0 +1,96 @@
+{
+  "searchFocus": "busca-artistas",
+  "searchSubmit": {
+    "focus": "catalog-results",
+    "count": "1 artista encontrado"
+  },
+  "reset": "3 artistas encontrados",
+  "stage": {
+    "count": "1 artistas encontrados",
+    "matches": [
+      "Teatro"
+    ]
+  },
+  "open": "true",
+  "extra": {
+    "active": "Filtro ativo: Teatro",
+    "collapsed": "false",
+    "count": "1 artistas encontrados"
+  },
+  "links": [
+    [
+      "Cadastro Municipalde ArtistasBagé · A nossa cidade",
+      "/"
+    ],
+    [
+      "Catálogo",
+      "/"
+    ],
+    [
+      "Como funciona",
+      "/como-funciona"
+    ],
+    [
+      "Feedback",
+      "/feedback"
+    ],
+    [
+      "Entrar",
+      "/artista/login"
+    ],
+    [
+      "Sou artista",
+      "/cadastrar"
+    ],
+    [
+      "Painel Administrativo (Conselho)",
+      "/admin/login"
+    ]
+  ],
+  "console": [],
+  "viewports": [
+    {
+      "assets": true,
+      "client": 314,
+      "columns": "278px",
+      "scrollWidth": 314,
+      "width": 320
+    },
+    {
+      "assets": true,
+      "client": 384,
+      "columns": "348px",
+      "scrollWidth": 384,
+      "width": 390
+    },
+    {
+      "assets": true,
+      "client": 762,
+      "columns": "640px",
+      "scrollWidth": 762,
+      "width": 768
+    },
+    {
+      "assets": true,
+      "client": 1018,
+      "columns": "477.625px 201.344px",
+      "scrollWidth": 1018,
+      "width": 1024
+    },
+    {
+      "assets": true,
+      "client": 1434,
+      "columns": "672.812px 283.641px",
+      "scrollWidth": 1434,
+      "width": 1440
+    }
+  ],
+  "mobileMenu": {
+    "open": "true",
+    "admin": true,
+    "closed": "false",
+    "restoredFocus": "mobile-menu-btn"
+  },
+  "loginRoute": "http://127.0.0.1:5187/artista/login",
+  "signupRoute": "http://127.0.0.1:5187/cadastrar"
+}

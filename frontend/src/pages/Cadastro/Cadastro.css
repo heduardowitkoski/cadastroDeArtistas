@@ -43,6 +43,9 @@
 
 /* ─── Título ─── */
 .artista-container { width: 100%; min-width: 0; padding-top: 36px; padding-bottom: 72px; }
+.editar-cadastro-title { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.editar-cadastro-title > div { min-width: 0; }
+.editar-cadastro-title .btn { flex: 0 0 auto; }
 .artista-title-wrap h1 {
   font-size: 30px;
   font-weight: 800;
@@ -50,6 +53,9 @@
   margin-bottom: 6px;
 }
 .artista-title-wrap p { color: var(--text-secondary); font-size: 14px; }
+@media (max-width: 768px) {
+  .editar-cadastro-title { align-items: flex-start; flex-direction: column; }
+}
 
 /* ─── Status ─── */
 .artista-status {

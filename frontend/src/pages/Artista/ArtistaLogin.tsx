@@ -1,10 +1,9 @@
 import { artistLoginError } from "../../lib/authMessages";
-import { HomeButton } from "../../components/HomeButton";
 import { PasswordInput } from "../../components/PasswordInput";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-import { Palette, LogIn, Loader, Sparkles } from "lucide-react";
+import { LogIn, Loader, Sparkles } from "lucide-react";
 import "./Artista.css";
 
 export default function ArtistaLogin() {
@@ -29,13 +28,9 @@ export default function ArtistaLogin() {
 
   return (
     <main className="artista-login-page">
-      <div className="artista-login-top">
-        <HomeButton />
-      </div>
-
       <div className="artista-login-card">
         <div className="artista-login-brand">
-          <div className="brand-icon" aria-hidden="true"><Palette size={22} aria-hidden="true" /></div>
+          <img className="artista-login-brand-logo" src="/cmpcc-logo.png" alt="Logo do Conselho Municipal de Políticas Culturais de Bagé" width={72} height={62} />
           <h1>Área do Artista</h1>
           <p>Acesse sua conta do Cadastro de Artistas</p>
         </div>

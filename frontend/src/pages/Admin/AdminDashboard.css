@@ -1,5 +1,5 @@
 /* Painel Admin - Tema claro com sidebar navalha (Figma tela 3) */
-.admin-page { display: flex; min-height: 100vh; background: var(--bg-primary); min-width: 0; }
+.admin-page { display: flex; min-height: calc(100vh - 64px); background: var(--bg-primary); min-width: 0; }
 .admin-mobile-bar, .admin-sidebar-scrim { display: none; }
 
 /* ─── Sidebar ─── */
@@ -12,20 +12,12 @@
   flex-direction: column;
   padding: 24px 16px;
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: 64px;
+  height: calc(100vh - 64px);
   overflow-y: auto;
 }
 .sidebar-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(196,181,253,0.15); }
-.sidebar-brand .brand-icon {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: white;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(124,58,237,0.4);
-}
+.sidebar-brand-logo { width: 48px; height: 42px; object-fit: contain; background: white; border-radius: 5px; flex-shrink: 0; }
 .sidebar-brand .brand-title { display: block; font-size: 14px; font-weight: 700; color: white; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.3; }
 .sidebar-brand .brand-sub { display: block; font-size: 13px; color: #A78BFA; }
 

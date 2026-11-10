@@ -9,7 +9,7 @@ import { useDialogFocus } from "../../lib/useDialogFocus";
 import {
   CheckCircle, Clock, XCircle, LogOut, Star, Check, X, User,
   Pencil, Trash2, Save, AlertTriangle, MessageSquareHeart, Sparkles,
-  LayoutGrid, BarChart3, CalendarDays, Palette, Menu
+  LayoutGrid, BarChart3, CalendarDays, Menu
 } from "lucide-react";
 import "./AdminDashboard.css";
 
@@ -302,7 +302,7 @@ export default function AdminDashboard() {
       {/* ─── Sidebar ─── */}
       <aside id="admin-sidebar" className={`admin-sidebar ${sidebarOpen ? "is-open" : ""}`}>
         <div className="sidebar-brand">
-          <div className="brand-icon"><Palette size={18} /></div>
+          <img className="sidebar-brand-logo" src="/cmpcc-logo.png" alt="" width={48} height={42} />
           <div>
             <span className="brand-title">Gestores do Conselho Municipal de Políticas Culturais</span>
             <span className="brand-sub">painel administrativo</span>

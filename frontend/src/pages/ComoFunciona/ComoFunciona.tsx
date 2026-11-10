@@ -1,4 +1,3 @@
-import { HomeButton } from "../../components/HomeButton";
 import { Link } from "react-router-dom";
 import {
   Star, Award, UserPlus, FileCheck, Sparkles, Users, Building2,
@@ -23,29 +22,6 @@ const AUDIENCIAS = [
 export default function ComoFunciona() {
   return (
     <div className="portal-page">
-      {/* ─── Header ─── */}
-      <header className="portal-header">
-        <div className="container header-content">
-          <div className="header-brand">
-            <div className="brand-icon"><Star size={16} /></div>
-            <div className="brand-text">
-              <span className="brand-title">Cadastro Municipal</span>
-              <span className="brand-subtitle">de Artistas</span>
-            </div>
-          </div>
-
-          <nav className="header-nav-links">
-            <Link to="/como-funciona" className="header-nav-item active">Como funciona</Link>
-          </nav>
-
-          <div className="header-nav">
-            <HomeButton />
-            <Link to="/cadastrar" className="btn btn-outline btn-sm">Sou artista</Link>
-            <Link to="/admin/login" className="btn btn-primary btn-sm">Área administrativa</Link>
-          </div>
-        </div>
-      </header>
-
       <main>
       {/* ─── Hero ─── */}
       <section className="cf-hero">

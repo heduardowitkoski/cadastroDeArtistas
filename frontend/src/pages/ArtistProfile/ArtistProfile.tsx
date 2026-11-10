@@ -2,7 +2,6 @@ import { assetUrl } from '../../lib/mediaUrl'
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Heart, MapPin, Camera as Instagram, Globe, Phone, Share2, FileText, Image as ImageIcon, CalendarDays, Tag, Eye, UserRound, ExternalLink, Download, X, ChevronLeft, ChevronRight, House, Info } from 'lucide-react'
-import { Navbar } from '../../components/Navbar'
 import { Footer } from '../../components/Footer'
 import { API_URL } from '../../lib/apiConfig'
 import { httpUrl, instagramUrl, phoneUrl, profileVisit, type ArtistProfile as Profile } from '../../lib/artistProfile'
@@ -39,7 +38,7 @@ export default function ArtistProfile(){
   const nativeShare=async()=>{try{await navigator.share({title:`${name} — Cadastro de Artistas`,url:shareUrl()});setNotice('Perfil compartilhado.')}catch(e){if(!(e instanceof DOMException&&e.name==='AbortError'))setNotice(`Copie o link: ${shareUrl()}`)}setShareOpen(false);shareButton.current?.focus()}
 
   const move=(delta:number)=>setLightbox(i=>i===null?null:(i+delta+gallery.length)%gallery.length)
-  return <div className="portal-page artist-profile-page"><Navbar/><main className="artist-profile-shell" id="main-content">
+  return <div className="portal-page artist-profile-page"><main className="artist-profile-shell" id="main-content">
     <nav className="profile-breadcrumb" aria-label="Caminho de navegação"><Link to="/"><ArrowLeft size={17} aria-hidden="true"/> Voltar ao catálogo</Link></nav>
     {loading?<div className="profile-skeleton" role="status" aria-label="Carregando perfil"><div/><div/><div/><span>Carregando perfil do artista…</span></div>:error?<section className="profile-error"><UserRound size={40} aria-hidden="true"/><h1>{error==='missing'?'Artista não encontrado.':'Não foi possível carregar o perfil.'}</h1><p>{error==='missing'?'Confira o endereço ou encontre outros artistas no catálogo.':'Tente novamente em alguns instantes.'}</p><div><Link className="btn btn-primary" to="/">Voltar ao catálogo</Link><Link className="btn btn-secondary" to="/"><House size={17} aria-hidden="true"/> Home</Link>{error==='server'&&<button className="btn btn-secondary" onClick={()=>setRetry(r=>r+1)}>Tentar novamente</button>}</div></section>:profile&&<>
     <section className="profile-hero" id="visao-geral" aria-labelledby="profile-name">
